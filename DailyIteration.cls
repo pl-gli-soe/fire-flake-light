@@ -114,7 +114,7 @@ Private Sub test_on_downloaded_data()
     
     If ic.COUNT > 0 Then
         For Each ii In ic
-            Debug.Print "date: " & CStr(ii.getDate) & " rqm: " & CStr(ii.getRqm) & " COUNT: " & CStr(ii.getInTransits.COUNT)
+            ' Debug.Print "date: " & CStr(ii.getDate) & " rqm: " & CStr(ii.getRqm) & " COUNT: " & CStr(ii.getInTransits.COUNT)
             
         Next ii
     End If

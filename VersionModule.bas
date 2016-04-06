@@ -6,6 +6,17 @@ Attribute VB_Name = "VersionModule"
 ' w mysl o tym czego wlasciwie potrzebuje uzytkownik musze pomyslec ile faktycznie jest narzedzi potrzebnych a ile nie
 ' odchudzenie ffa rowniez wchodzi w gre aby chodzil odrobine szybciej
 
+'4.02.06
+' -------------------------------------------------------------
+' change on first runout & test run on change values whree first runout how now one arg
+' cos jest nie tak!
+' trza naprawic first runout robi blad typu #Value!
+
+
+'4.02.05
+' -------------------------------------------------------------
+' change on first runout
+
 '4.02.04
 ' -------------------------------------------------------------
 ' zmiany na definicjach kolorow raportu wyjsciowego
