@@ -7,59 +7,59 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-Private Sess0 As Object
+Private sess0 As Object
 
 Public Property Let sesja(ByRef arg As Object)
-    Set Sess0 = arg
+    Set sess0 = arg
 End Property
 
 Public Property Get sesja() As Object
-    Set sesja = Sess0
+    Set sesja = sess0
 End Property
 
 Public Property Get infocode() As String
-    infocode = Trim(Sess0.screen.getString(22, 2, 5))
+    infocode = Trim(sess0.screen.getString(22, 2, 5))
 End Property
 
 Public Property Get plt() As String
-    plt = Trim(Sess0.screen.getString(3, 8, 2))
+    plt = Trim(sess0.screen.getString(3, 8, 2))
 End Property
 
 Public Property Let plt(arg As String)
-    Sess0.screen.putString CStr(arg), 3, 8
+    sess0.screen.putString CStr(arg), 3, 8
 End Property
 
 Public Property Get pn() As String
-    pn = Trim(Sess0.screen.getString(4, 8, 8))
+    pn = Trim(sess0.screen.getString(4, 8, 8))
 End Property
 
 Public Property Let pn(arg As String)
-    Sess0.screen.putString CStr(arg), 4, 8
+    sess0.screen.putString CStr(arg), 4, 8
 End Property
 
 Public Property Get KANBAN() As String
-    KANBAN = Trim(Sess0.screen.getString(5, 10, 4))
+    KANBAN = Trim(sess0.screen.getString(5, 10, 4))
 End Property
 
 Public Property Let KANBAN(arg As String)
-    Sess0.screen.putString CStr(arg), 5, 10
+    sess0.screen.putString CStr(arg), 5, 10
 End Property
 
 Public Property Get PART_DESC() As String
-    PART_DESC = Trim(Sess0.screen.getString(4, 41, 10))
+    PART_DESC = Trim(sess0.screen.getString(4, 41, 10))
 End Property
 
 
 
 Public Function dates(SCREEN_COLUMN As Integer) As String
-    dates = Trim(Sess0.screen.getString(8, 24 + 8 * SCREEN_COLUMN, 5))
+    dates = Trim(sess0.screen.getString(8, 24 + 8 * SCREEN_COLUMN, 5))
 End Function
 
 
 
 ' metoda zostala zubozona i uzalezniona od metody ponizej, lecz dzieki temu kod zostanie zoptymalizowany i przyspieszony
 Public Function PLT_TOTAL(SCREEN_COLUMN As Integer, ByRef plttotalrow As Integer) As String
-    PLT_TOTAL = Trim(Sess0.screen.getString(plttotalrow, 22 + 8 * SCREEN_COLUMN, 7))
+    PLT_TOTAL = Trim(sess0.screen.getString(plttotalrow, 22 + 8 * SCREEN_COLUMN, 7))
 End Function
 
 
@@ -71,7 +71,7 @@ End Function
 Public Function findPLTTOTALrow() As Integer
 
     For x = 9 To 21
-        If Trim(Sess0.screen.getString(x, 2, 9)) Like "*PLT TOTAL*" Then
+        If Trim(sess0.screen.getString(x, 2, 9)) Like "*PLT TOTAL*" Then
             findPLTTOTALrow = x
             Exit For
         End If
