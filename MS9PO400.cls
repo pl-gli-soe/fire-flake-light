@@ -7,94 +7,94 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-Private Sess0 As Object
+Private sess0 As Object
 
 Public Property Let sesja(ByRef arg As Object)
-    Set Sess0 = arg
+    Set sess0 = arg
 End Property
 
 Public Property Get sesja() As Object
-    Set sesja = Sess0
+    Set sesja = sess0
 End Property
 
 Public Property Get pn() As String
-  pn = Trim(Sess0.screen.getString(3, 19, 8))
+  pn = Trim(sess0.screen.getString(3, 19, 8))
 End Property
 
 Public Property Let pn(arg As String)
-  Sess0.screen.putString CStr(arg), 3, 19
+  sess0.screen.putString CStr(arg), 3, 19
 End Property
 
 Public Property Get plt() As String
-  pn = Trim(Sess0.screen.getString(3, 7, 2))
+  pn = Trim(sess0.screen.getString(3, 7, 2))
 End Property
 
 Public Property Let plt(arg As String)
-  Sess0.screen.putString CStr(arg), 3, 7
+  sess0.screen.putString CStr(arg), 3, 7
 End Property
 
 Public Property Get KANBAN() As String
-  KANBAN = Trim(Sess0.screen.getString(3, 35, 4))
+  KANBAN = Trim(sess0.screen.getString(3, 35, 4))
 End Property
 
 Public Property Let KANBAN(arg As String)
-  Sess0.screen.putString CStr(arg), 3, 35
+  sess0.screen.putString CStr(arg), 3, 35
 End Property
 
 
 
 Public Function qty(i As Integer) As String
-    qty = Trim(Sess0.screen.getString(6 + 2 * i, 5, 8))
+    qty = Trim(sess0.screen.getString(6 + 2 * i, 5, 8))
 End Function
 Public Function SDATE(i As Integer) As String
-    SDATE = Trim(Sess0.screen.getString(6 + 2 * i, 14, 6))
+    SDATE = Trim(sess0.screen.getString(6 + 2 * i, 14, 6))
 End Function
 Public Function PCS(i As Integer) As String
-    PCS = Trim(Sess0.screen.getString(6 + 2 * i, 23, 3))
+    PCS = Trim(sess0.screen.getString(6 + 2 * i, 23, 3))
 End Function
 Public Function WGT(i As Integer) As String
-    WGT = Trim(Sess0.screen.getString(6 + 2 * i, 27, 6))
+    WGT = Trim(sess0.screen.getString(6 + 2 * i, 27, 6))
 End Function
 Public Function mode(i As Integer) As String
-    mode = Trim(Sess0.screen.getString(6 + 2 * i, 35, 2))
+    mode = Trim(sess0.screen.getString(6 + 2 * i, 35, 2))
 End Function
 Public Function cd(i As Integer) As String
-    cd = Trim(Sess0.screen.getString(6 + 2 * i, 42, 1))
+    cd = Trim(sess0.screen.getString(6 + 2 * i, 42, 1))
 End Function
 Public Function EDA(i As Integer) As String
-    EDA = Trim(Sess0.screen.getString(6 + 2 * i, 46, 6))
+    EDA = Trim(sess0.screen.getString(6 + 2 * i, 46, 6))
 End Function
 Public Function ETA(i As Integer) As String
-    ETA = Trim(Sess0.screen.getString(6 + 2 * i, 53, 4))
+    ETA = Trim(sess0.screen.getString(6 + 2 * i, 53, 4))
 End Function
 Public Function st(i As Integer) As String
-    st = Trim(Sess0.screen.getString(6 + 2 * i, 58, 1))
+    st = Trim(sess0.screen.getString(6 + 2 * i, 58, 1))
 End Function
 Public Function SID(i As Integer) As String
-    SID = Trim(Sess0.screen.getString(6 + 2 * i, 61, 9))
+    SID = Trim(sess0.screen.getString(6 + 2 * i, 61, 9))
 End Function
 Public Function route(i As Integer) As String
-    route = Trim(Sess0.screen.getString(6 + 2 * i, 71, 7))
+    route = Trim(sess0.screen.getString(6 + 2 * i, 71, 7))
 End Function
 Public Function DOCK(i As Integer) As String
-    DOCK = Trim(Sess0.screen.getString(7 + 2 * i, 71, 7))
+    DOCK = Trim(sess0.screen.getString(7 + 2 * i, 71, 7))
 End Function
 Public Function SHIP_CMNT(i As Integer) As String
-    SHIP_CMNT = Trim(Sess0.screen.getString(7 + 2 * i, 38, 32))
+    SHIP_CMNT = Trim(sess0.screen.getString(7 + 2 * i, 38, 32))
 End Function
 Public Function CARR(i As Integer) As String
-    CARR = Trim(Sess0.screen.getString(7 + 2 * i, 21, 16))
+    CARR = Trim(sess0.screen.getString(7 + 2 * i, 21, 16))
 End Function
 Public Function TRLR(i As Integer) As String
-    TRLR = Trim(Sess0.screen.getString(7 + 2 * i, 25, 11))
+    TRLR = Trim(sess0.screen.getString(7 + 2 * i, 25, 11))
 End Function
 Public Function SUPPLIER(i As Integer) As String
-    SUPPLIER = Trim(Sess0.screen.getString(7 + 2 * i, 5, 15))
+    SUPPLIER = Trim(sess0.screen.getString(7 + 2 * i, 5, 15))
 End Function
 Public Function s(i As Integer) As String
-    s = Trim(Sess0.screen.getString(6 + 2 * i, 3, 1))
+    s = Trim(sess0.screen.getString(6 + 2 * i, 3, 1))
 End Function
 
 Public Sub C_SHIP_CMNT(str As String)
-    Sess0.screen.putString CStr(str), 7, 38
+    sess0.screen.putString CStr(str), 7, 38
 End Sub

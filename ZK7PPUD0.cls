@@ -7,33 +7,33 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-Private Sess0 As Object
+Private sess0 As Object
 
 Public Property Let sesja(ByRef arg As Object)
-    Set Sess0 = arg
+    Set sess0 = arg
 End Property
 
 Public Property Get sesja() As Object
-    Set sesja = Sess0
+    Set sesja = sess0
 End Property
 
 Public Property Let pus(arg As String)
-    Sess0.screen.putString CStr(arg), 4, 39
+    sess0.screen.putString CStr(arg), 4, 39
 End Property
 
 Public Property Get pus() As String
-    pus = Trim(Sess0.screen.getString(4, 39, 9))
+    pus = Trim(sess0.screen.getString(4, 39, 9))
 End Property
 
 Public Property Let plt(arg As String)
-    Sess0.screen.putString CStr(arg), 4, 7
+    sess0.screen.putString CStr(arg), 4, 7
 End Property
 
 
 
 ' musisz tutaj mateuszek pamietac ze mamy tutaj surowe cztery liczby bez znaku ":"
 Public Property Get fst_pickup_time_window() As String
-    fst_pickup_time_window = Trim(Sess0.screen.getString(6, 39, 4))
+    fst_pickup_time_window = Trim(sess0.screen.getString(6, 39, 4))
 End Property
 
 
