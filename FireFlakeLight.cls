@@ -27,6 +27,10 @@ Private HOW_MANY_DAYS_FOR_PPUS0 As Range
 Private ontherun As Range
 
 
+' obiekt gragiczny reprezentujacy status
+Private sh As StatusHandler
+
+
 ' jak pieknie widac na zalaczonym obrazku - pseudo konstruktor klasy ff light
 ' sluzy tylko i wylacznie do okreslenia zakresow wejsciowych
 ' dosyc zabawne myslac z perspektywy nazwy tej metody
@@ -41,6 +45,10 @@ Private ontherun As Range
 Private Sub Class_Initialize()
     Set rep = Nothing
     Set imgo = New MGO
+    
+    Set sh = New StatusHandler
+    sh.init_statusbar 100
+    sh.show
     
     
     Set HOW_MANY_DAYS_FOR_PPUS0 = ThisWorkbook.Sheets("register").Range("HOW_MANY_DAYS_FOR_PPUS0")
@@ -61,6 +69,11 @@ Private Sub Class_Terminate()
     Set rep = Nothing
     Set imgo = Nothing
     ontherun = 0
+    
+    
+    sh.hide
+    Set sh = Nothing
+    MsgBox "ready!"
 End Sub
 
 
@@ -103,7 +116,7 @@ Public Sub runDaily(limit As Date, lt As LAYOUT_TYPE, st As START_TYPE, daily_rq
         '   z sesji mgo.
         
         rep.repInit firstColumnScopeOnInitWorksheet, limit, lt, st, CDate(daily_rqm_limit)
-        rep.repRun imgo
+        rep.repRun imgo, sh
         
         
         

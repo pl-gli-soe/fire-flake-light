@@ -163,11 +163,11 @@ Private Sub addRqmsAndDatesIntoItems(m As MGO)
             ' the prevDate ma pokazywac nie stan biezacy ale stan z poprzedniej iteracji
             currDate = CDate(m.convertToDateFromZK7PDRQMDate(m.pZK7PDRQM.dates(0)))
             prevDate = CDate(Format(Now, "yyyy-mm-dd")) - 1
-            ' zrobimy dwa scenariusze poniewaz jesli jest potrzeba F8 to jednak sporawo wiecej trzeba klikac i nie chcemy tego robic jesli faktycznie nie trzeba
+            ' zrobimy dwa scenariusze poniewaz jesli jest potrzeba F8 to jednak wiecej trzeba klikac i nie chcemy tego robic jesli faktycznie nie trzeba
             ' SCENARIO NO 1 - gdy nie ma tak duzo mY i wszystko miesci sie na raz bez potrzeby klikania F8
             '
             ' dodatkowo trzeba wziazc pod uwage ze obywa warunki tj. obydwa scenariusze sa do siebie ludzaco podobne i zakrawa i lamanie zasady DRY
-            ' co nie jest zbyt see jednak z drugiej strony wazy na jasnosci kodu i jego przejrzystosci dla przyszlosci gdy bede chcial optymalizowac go
+            ' co nie jest zbyt si, jednak z drugiej strony wazy na jasnosci kodu i jego przejrzystosci dla przyszlosci gdy bede chcial optymalizowac go
             ' w inny mozliwy sposob
             ' mozliwe ze mozna by nadac funkcje komponentowe tutaj jeszcze
             ' ===============================================================================================================
@@ -235,7 +235,7 @@ Private Sub addRqmsAndDatesIntoItems(m As MGO)
             ' ===============================================================================================================
         End If
     Else
-        ' plan jest taki ze jesli danych nie ma trzeba je jakos zastapic - mozna np zerami po prostu zgodnie z iloscia danych
+        ' plan jest taki ze jesli danych nie - ma trzeba je jakos zastapic - mozna np zerami po prostu zgodnie z iloscia danych
         ' jaka requestowal user
         ' aktualnie implementacja jest pusta to znaczy ze musze dac sam sobie na pozniej dac znac ze to jest do uzupelnienia :D
         ' ---------------------------------------------------------------------------------------------------
@@ -359,6 +359,19 @@ Private Sub addPusesIntoItems(m As MGO)
     ' ale zalozmy ze jest to szczegolny przypadek dla ktorego nie bede specjalnie wchodzil w ta metode
     
     
+    
+    ' =====================================
+    ' sprawa dodatkowa jest czasami dziwne zachowanie ekranu ms9po400
+    ' tj. zamiast wchodzic na niego bezposrednio zaczyna przechodzic
+    ' na jakis ekran warningowy, ktory uswiadamia ze limit asnow zostal przekroczony
+    ' z tego co pamietam, albo raczej to co dla mnie pamieta task outlooka to:
+    '
+    ' MS3P9800
+    ' ASNS EXCEED TABLE SIZE OF 900
+    '
+    ' =====================================
+    
+    
     m.sendKeys "<Clear>"
     m.sendKeys "zk7ppus0 <Enter>"
     
@@ -366,6 +379,8 @@ Private Sub addPusesIntoItems(m As MGO)
     m.pZK7PPUS0.pn = mcd.pn
     ' wersja wstepna zaklada zmienna globalna HOW_MANY_DAYS_FOR_PPUS0 jako stala 20 w Global Module
     ' bedzie potem mozliwosci modyfikowania tej wartosci z formularza startowego :D
+    ' powyzszy komentarz zostal juz chyba uniewazniony poniewaz form juz udostepnia wraz z sheetem register
+    ' mozliwosc odpowiedniej malwersacji na danych
     m.pZK7PPUS0.DELIVERY_DATE_FROM = m.convertToMgoLongDate(CDate(Now - HOW_MANY_DAYS_FOR_PPUS0))
     m.submit
     m.sendKeys "<pf12>"
@@ -378,7 +393,12 @@ Private Sub addPusesIntoItems(m As MGO)
         ' tutaj zabawa z pusami
         ' ======================================
         
-        
+        ' te 3 procedury sa schowane w fillTransitCollectionByPuses
+        ' szczegolnie nalezy zwrocic uwage na ph100 - ekran historii
+        ' jest to dosyc gleboko osadzona implementacja w logice
+        ' push.takeDataFromPPUM0 m
+        ' push.takeDataFromPH100 m, mcd
+        ' push.fillCollections notYetReceivedWithPastEdaCollection, ic
         fillTransitCollectionByPuses m
         
         ' ======================================
@@ -424,75 +444,80 @@ Private Sub fillTransitCollectionFromMs9po400(ByRef m As MGO)
     m.submit
     
     
+    ' sprawdz ladnie prosze czy przypadkiem nie przeszlismy na ekran ms3p9800
+    If UCase(CStr(m.actualScreen)) <> UCase(CStr(m.pMS3P9800.screenName)) Then
     
-    Do
-        For x = 0 To 7
-        
-            ' czy pusta linia to jest
-            If CStr(m.pMS9PO400.EDA(Int(x))) <> "______" Then
+        Do
+            For x = 0 To 7
             
-                If CDate(m.convertToDateFromMS9PO400Date(m.pMS9PO400.SDATE(Int(x)))) <= CDate(Format(mcd.pusLimit, "yyyy-mm-dd")) Then
-            
+                ' czy pusta linia to jest
+                If CStr(m.pMS9PO400.EDA(Int(x))) <> "______" Then
                 
-                    ' format pod czas
-                    txt_time = Left(m.pMS9PO400.ETA(Int(x)), 2) & ":" & Right(m.pMS9PO400.ETA(Int(x)), 2)
-                    If txt_time = "__:__" Then
-                        txt_time = "00:00"
-                    ElseIf txt_time = "24:00" Then
-                        txt_time = "23:59"
+                    If CDate(m.convertToDateFromMS9PO400Date(m.pMS9PO400.SDATE(Int(x)))) <= CDate(Format(mcd.pusLimit, "yyyy-mm-dd")) Then
+                
+                    
+                        ' format pod czas
+                        txt_time = Left(m.pMS9PO400.ETA(Int(x)), 2) & ":" & Right(m.pMS9PO400.ETA(Int(x)), 2)
+                        If txt_time = "__:__" Then
+                            txt_time = "00:00"
+                        ' tutaj fancy warunek gdyby ktos upadl na lep
+                        ' i dostal udaru zapisujac godzine 00:00 jako 24:00
+                        ElseIf txt_time = "24:00" Then
+                            txt_time = "23:59"
+                        End If
+                        
+                        Set t = Nothing
+                        Set t = New Transit
+                        t.mDeliveryDate = CDate(m.convertToDateFromMS9PO400Date(m.pMS9PO400.EDA(Int(x))))
+                        t.mDeliveryTime = CDate(Format(txt_time, "hh:mm"))
+                        t.mNotYetReceived = True
+                        
+                        ' you can also say that name is sid
+                        t.mName = m.pMS9PO400.SID(Int(x))
+                        t.mTRLR = m.pMS9PO400.TRLR(Int(x))
+                        t.mST = m.pMS9PO400.st(Int(x))
+                        t.mPickupDate = CDate(m.convertToDateFromMS9PO400Date(CStr(m.pMS9PO400.SDATE(Int(x)))))
+                        ' tutaj nie jest zdefiniowane
+                        ' t.mPickupTime = CDate(Format(Now, "hh:mm"))
+                        t.mQty = CLng(m.pMS9PO400.qty(Int(x)))
+                        t.mRoute = m.pMS9PO400.route(Int(x))
+                        t.mOnPo400 = True
+                        
+                        
+                        
+                        ' tutaj dziele jak trzeba tworze kolekcje elementow not yet received z przeszlosci i traktuje calkiem zwyczajnie te dane tak jak
+                        ' kolejna dana z ta roznica ze ten zbior posiada konkretne jeden if
+                        ' i nie ma potrzeby zawracac gitary petli not yer received
+                        If CDate(CStr(t.mDeliveryDate & " " & t.mDeliveryTime)) < Now Then
+                        
+                        
+                            notYetReceivedWithPastEdaCollection.Add t
+                        Else
+                            For Each ii In ic
+                                iidate = CStr(Format(CDate(ii.getDate), "yyyy-mm-dd"))
+                                tdate = CStr(Format(CDate(t.mDeliveryDate), "yyyy-mm-dd"))
+                                If iidate = tdate Then
+                                
+                                    ii.getInTransits.Add t
+                                    Exit For
+                                End If
+                            Next ii
+                        End If
+                        
+                        
                     End If
-                    
-                    Set t = Nothing
-                    Set t = New Transit
-                    t.mDeliveryDate = CDate(m.convertToDateFromMS9PO400Date(m.pMS9PO400.EDA(Int(x))))
-                    t.mDeliveryTime = CDate(Format(txt_time, "hh:mm"))
-                    t.mNotYetReceived = True
-                    
-                    ' you can also say that name is sid
-                    t.mName = m.pMS9PO400.SID(Int(x))
-                    t.mTRLR = m.pMS9PO400.TRLR(Int(x))
-                    t.mST = m.pMS9PO400.st(Int(x))
-                    t.mPickupDate = CDate(m.convertToDateFromMS9PO400Date(CStr(m.pMS9PO400.SDATE(Int(x)))))
-                    ' tutaj nie jest zdefiniowane
-                    ' t.mPickupTime = CDate(Format(Now, "hh:mm"))
-                    t.mQty = CLng(m.pMS9PO400.qty(Int(x)))
-                    t.mRoute = m.pMS9PO400.route(Int(x))
-                    t.mOnPo400 = True
-                    
-                    
-                    
-                    ' tutaj dziele jak trzeba tworze kolekcje elementow not yet received z przeszlosci i traktuje calkiem zwyczajnie te dane tak jak
-                    ' kolejna dana z ta roznica ze ten zbior posiada konkretne jeden if
-                    ' i nie ma potrzeby zawracac gitary petli not yer received
-                    If CDate(CStr(t.mDeliveryDate & " " & t.mDeliveryTime)) < Now Then
-                    
-                    
-                        notYetReceivedWithPastEdaCollection.Add t
-                    Else
-                        For Each ii In ic
-                            iidate = CStr(Format(CDate(ii.getDate), "yyyy-mm-dd"))
-                            tdate = CStr(Format(CDate(t.mDeliveryDate), "yyyy-mm-dd"))
-                            If iidate = tdate Then
-                            
-                                ii.getInTransits.Add t
-                                Exit For
-                            End If
-                        Next ii
-                    End If
-                    
-                    
+                
                 End If
-            
+                
+            Next x
+        
+            If m.getCode("ms9po400") = "I5487" Or m.getCode("ms9po400") = "I6155" Or m.getCode("ms9po400") = "I6293" Or m.getCode("ms9po400") = "I4528" Then
+                Exit Do
             End If
-            
-        Next x
-    
-        If m.getCode("ms9po400") = "I5487" Or m.getCode("ms9po400") = "I6155" Or m.getCode("ms9po400") = "I6293" Or m.getCode("ms9po400") = "I4528" Then
-            Exit Do
-        End If
-    
-        m.sendKeys "<pf8>"
-    Loop While True
+        
+            m.sendKeys "<pf8>"
+        Loop While True
+    End If
 End Sub
 
 

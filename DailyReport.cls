@@ -123,7 +123,7 @@ End Sub
 
 ' metoda najwazniejsza jesli chodzi o ffa
 ' czy run calego raportu
-Private Sub IReport_repRun(imgo As MGO)
+Private Sub IReport_repRun(imgo As MGO, sh As StatusHandler)
 
 
     ' no i teraz lecimy dalej
@@ -135,10 +135,19 @@ Private Sub IReport_repRun(imgo As MGO)
     
     
     
+    
+    
+    
     ' jednak warunkiem podstawowym, ktory w ogole pozwala na uruchomienie raportu jest fakt ze w naszej kolekcji w ogole wystepuje jakis item
     ' dzieki temu ze wykonalismy rusztowanie w repInit
     ' w repRun nie musimy poslugiwac sie juz tak duza iloscia
     If itersCollection.COUNT > 0 Then
+    
+    
+        ' troche zamieszenia wprowadze tym status handlerem
+        ' ale nie chce znowu wrzucac tutaj tego jako pola niech pracuje ino tutaj
+        sh.init_statusbar CLng(itersCollection.COUNT)
+    
         If MGO_active(imgo) Then
         
         
@@ -169,6 +178,8 @@ Private Sub IReport_repRun(imgo As MGO)
                 ' teraz jest ok
                 ' Debug.Print mitem.getItemsCollection.COUNT
                 mitem.addColorFlavour
+                
+                sh.progress_increase
             
             Next mitem
             ffld.buildLayoutForDatesLabels itersCollection

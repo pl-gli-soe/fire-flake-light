@@ -6,6 +6,37 @@ Attribute VB_Name = "VersionModule"
 ' w mysl o tym czego wlasciwie potrzebuje uzytkownik musze pomyslec ile faktycznie jest narzedzi potrzebnych a ile nie
 ' odchudzenie ffa rowniez wchodzi w gre aby chodzil odrobine szybciej
 
+'4.02.04
+' -------------------------------------------------------------
+' zmiany na definicjach kolorow raportu wyjsciowego
+' koloru o ref yellow, grey staly sie odniesieniem (kolumna J)
+' kolory faktycznie sterujace wygladem sa od teraz w kolumnie M
+' komorki glowne:
+' od M1 do M5:
+' - primaryColor
+' - secondaryColor
+' - minusColor
+' - warningColor
+'
+'
+' dodatkowo zmiana jest guzik w formularzu More/Less odpowiedzialny za odkrywanie dodatkowych funkcji wstepnej konfiguracji ffl
+' chodzi przede wszystkim o wyswietlanie takich danych jak weeknum
+' zmienianie danych common poprzez dwa comboboxy
+' limitowanie historii pusow
+' jak daleko chcemy patrzec w przeszlosc ekranu zk7ppus0
+'
+'
+' dodatkowa implementacja ekranu MS3P9800
+' sama klasa w sobie jest uboga jednak jest to glowny warunek spradzajacy czy w ogole mamy przejrzec dane na ekranie ms9po400
+
+'4.02.03
+' -------------------------------------------------------------
+' fix na klasie dynamic kolors w przyapdku gdy chcemy zobaczyc tylko jedno linie na raporcie
+
+'4.02.02
+' -------------------------------------------------------------
+' dodana klasa dynamic kolors ktora przelicza ruchliwe kolory
+
 
 '4.02.01
 ' -------------------------------------------------------------

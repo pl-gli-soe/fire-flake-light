@@ -23,6 +23,7 @@ Private scr_zk7ppum0 As ZK7PPUM0
 Private scr_zk7pprul As ZK7PPRUL
 Private scr_zk7pprhr As ZK7PPRHR
 Private scr_zk7ppud0 As ZK7PPUD0
+Private scr_ms3p9800 As MS3P9800
 
 
 
@@ -73,6 +74,10 @@ Private Sub Class_Initialize()
     
     Set scr_zk7ppud0 = New ZK7PPUD0
     scr_zk7ppud0.sesja = Sess0
+    waitForMgo
+    
+    Set scr_ms3p9800 = New MS3P9800
+    scr_ms3p9800.sesja = Sess0
     waitForMgo
     
 End Sub
@@ -228,6 +233,17 @@ Public Function MgoMonth(n_date As Date) As String
             MgoMonth = "DE"
     End Select
 End Function
+
+
+Public Property Let pMS3P9800(RHS As MS3P9800)
+    Set scr_ms3p9800 = RHS
+End Property
+
+Public Property Get pMS3P9800() As MS3P9800
+    Set pMS3P9800 = scr_ms3p9800
+End Property
+
+
 
 Public Property Let pMS7P5200(RHS As MS7P5200)
     Set scr_ms7p5200 = RHS

@@ -47,11 +47,11 @@ End Sub
 Private Sub IDynamicColors_assignDynamicColorsrange()
 
     If flagaLiczenia Then
-        Set zasiegDoNadaniaDynamicznychKolorow = ash.Range("b5")
+        Set zasiegDoNadaniaDynamicznychKolorow = ash.Range("b4")
         Set zasiegDoNadaniaDynamicznychKolorow = przeliczZasieg()
     End If
     
-
+    ' Debug.Print zasiegDoNadaniaDynamicznychKolorow.Address
 End Sub
 
 Private Function przeliczZasieg() As Range
@@ -59,22 +59,22 @@ Private Function przeliczZasieg() As Range
     
     Set przeliczZasieg = Nothing
     
+    Dim poczatek As Range
+    Dim ost_wiersz_pierwszej_kolumny As Range
+    Dim ost_kolumna As Range
+    
+    
+    Set ost_wiersz_pierwszej_kolumny = zasiegDoNadaniaDynamicznychKolorow.End(xlDown)
+    Set ost_kolumna = zasiegDoNadaniaDynamicznychKolorow.End(xlToRight)
+    
     Do
         Set zasiegDoNadaniaDynamicznychKolorow = zasiegDoNadaniaDynamicznychKolorow.Offset(0, 1)
-    Loop While CStr(zasiegDoNadaniaDynamicznychKolorow.Offset(-1, 0)) <> "Past due rqms"
+    Loop While CStr(zasiegDoNadaniaDynamicznychKolorow) <> "Past due rqms"
     
-        
-    Set zasiegDoNadaniaDynamicznychKolorow = zasiegDoNadaniaDynamicznychKolorow.Offset(0, 1)
-
-    If CStr(zasiegDoNadaniaDynamicznychKolorow.Offset(-1, 0)) <> "" Then
-        Set zasiegDoNadaniaDynamicznychKolorow = ash.Range(zasiegDoNadaniaDynamicznychKolorow, zasiegDoNadaniaDynamicznychKolorow.End(xlToRight))
-        Set zasiegDoNadaniaDynamicznychKolorow = ash.Range(zasiegDoNadaniaDynamicznychKolorow, zasiegDoNadaniaDynamicznychKolorow.End(xlDown))
-        ' zasiegDoNadaniaDynamicznychKolorow.Select
-        
-        Set przeliczZasieg = zasiegDoNadaniaDynamicznychKolorow
-    Else
-        Set przeliczZasieg = Nothing
-    End If
+    Set poczatek = zasiegDoNadaniaDynamicznychKolorow.Offset(1, 1)
+    
+    Set przeliczZasieg = Range(poczatek, Cells(ost_wiersz_pierwszej_kolumny.Row, ost_kolumna.Column))
+    
 End Function
 
 

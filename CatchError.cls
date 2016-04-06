@@ -29,10 +29,21 @@ Public Function dataAvail(screen_name As String, infocode As String) As Boolean
 End Function
 
 
-Public Function catchIfInDailyRqmsThereAreNoDates(strFromMGO As String) As Boolean
-    If strFromMGO = "" Then
+Public Function catchIfInDailyRqmsThereAreNoDates(strFromMgo As String) As Boolean
+    If strFromMgo = "" Then
         catchIfInDailyRqmsThereAreNoDates = True
     Else
         catchIfInDailyRqmsThereAreNoDates = False
+    End If
+End Function
+
+Public Function catchIfPartNotFoundInHistoryScreen(strFromMgo As String) As Boolean
+    catchIfPartNotFoundInHistoryScreen = False
+    
+    
+    If strFromMgo <> "I4017" Then
+        catchIfPartNotFoundInHistoryScreen = True
+    Else
+        catchIfPartNotFoundInHistoryScreen = False
     End If
 End Function

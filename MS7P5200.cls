@@ -74,3 +74,8 @@ Public Property Let duns(arg As String)
 End Property
 
 
+Public Property Get infocode() As String
+    infocode = Trim(Sess0.screen.getString(22, 2, 5))
+End Property
+
+
