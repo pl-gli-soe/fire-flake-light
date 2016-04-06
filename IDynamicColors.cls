@@ -14,3 +14,7 @@ End Sub
 Public Sub recalcColors()
 
 End Sub
+
+Public Function getDataScope() As Range
+
+End Function

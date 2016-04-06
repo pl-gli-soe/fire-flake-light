@@ -47,3 +47,9 @@ Public Sub setDate(d As Date)
 
 End Sub
 
+Public Function getSumOfQty() As Long
+
+End Function
+
+
+

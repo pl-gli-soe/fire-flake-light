@@ -69,10 +69,10 @@ End Property
 Property Let mTRLR(arg As String)
 End Property
 
-Property Get mST() As String
+Property Get mst() As String
 End Property
 
-Property Let mST(arg As String)
+Property Let mst(arg As String)
 End Property
 
 

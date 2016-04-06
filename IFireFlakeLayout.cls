@@ -11,11 +11,11 @@ Public Sub buildLayoutForCommonData()
 
 End Sub
 
-Public Sub buildIterationLayoutForCommonData(ic As Collection, mcd As CommonData, notYetReceivedWithPastEdaCollection As Collection)
+Public Sub buildIterationLayoutForCommonData(ByRef ic As Collection, ByRef mcd As CommonData, ByRef notYetReceivedWithPastEdaCollection As Collection)
 
 End Sub
 
-Public Sub buildLayoutForDatesLabels(c As Collection)
+Public Sub buildLayoutForDatesLabels(ByRef c As Collection)
 
 End Sub
 
@@ -23,6 +23,10 @@ Public Sub autoFitContent()
 
 End Sub
 
-Public Sub buildIterationLayoutForCoverage(ic As Collection, mcd As CommonData)
+Public Sub addFilterOnListLayout()
+
+End Sub
+
+Public Sub buildIterationLayoutForCoverage(ByRef ic As Collection, ByRef mcd As CommonData)
 
 End Sub

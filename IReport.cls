@@ -40,4 +40,12 @@ Public Function getCollectionOfIterations() As Collection
 
 End Function
 
+Public Sub fakeDataChangeToRecalcFirstRunoutFormula()
+
+End Sub
+
+Public Sub adjustLayoutAfterAllJobs()
+
+End Sub
+
 

@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} MainForm 
    Caption         =   "Main Form"
-   ClientHeight    =   8385
+   ClientHeight    =   8250
    ClientLeft      =   45
    ClientTop       =   375
-   ClientWidth     =   7905
+   ClientWidth     =   10575
    OleObjectBlob   =   "MainForm.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -52,8 +52,9 @@ Private Sub fillAllPopsDataByChar(ch As String)
     Set r = ThisWorkbook.Sheets("register").Range("begOfPopParams")
     
     Do
-    
-        r.Offset(0, 1) = ch
+        If CLng(r.Interior.Color) <> CLng(ThisWorkbook.Sheets("register").Range("black")) Then ' as black
+            r.Offset(0, 1) = ch
+        End If
         Set r = r.Offset(1, 0)
     Loop While r <> ""
 End Sub
@@ -196,6 +197,31 @@ End Sub
 
 
 
+Private Sub ComboBoxColorLayout_Change()
+
+
+    ThisWorkbook.Sheets("register").Range("actualColorLayoutChoice") = Me.ComboBoxColorLayout.Value
+    
+    Set item_on_layout_color_list = ThisWorkbook.Sheets("register").Range("m10")
+    Do
+        If Trim(CStr(item_on_layout_color_list)) = Trim(CStr(ThisWorkbook.Sheets("register").Range("actualColorLayoutChoice"))) Then
+            ' jestesmy w odpowiednim miejscu zeby zmienic aktualne kolory layoutu
+            ThisWorkbook.Sheets("register").Range("primary").Interior.Color = item_on_layout_color_list.Offset(0, 1).Interior.Color
+            ThisWorkbook.Sheets("register").Range("secondary").Interior.Color = item_on_layout_color_list.Offset(0, 2).Interior.Color
+            ThisWorkbook.Sheets("register").Range("weekendColor").Interior.Color = item_on_layout_color_list.Offset(0, 3).Interior.Color
+            
+            Me.TextBoxPrimaryColor.backColor = ThisWorkbook.Sheets("register").Range("primary").Interior.Color
+            Me.TextBoxSecondaryColor.backColor = ThisWorkbook.Sheets("register").Range("secondary").Interior.Color
+            Me.TextBoxWeekendColor.backColor = ThisWorkbook.Sheets("register").Range("weekendColor").Interior.Color
+            Me.TextBoxMinusColor.backColor = ThisWorkbook.Sheets("register").Range("minus").Interior.Color
+            Me.TextBoxWarningColor.backColor = ThisWorkbook.Sheets("register").Range("warning").Interior.Color
+        End If
+        
+        Set item_on_layout_color_list = item_on_layout_color_list.Offset(1, 0)
+    Loop Until Trim(item_on_layout_color_list) = ""
+    
+End Sub
+
 Private Sub UserForm_Initialize()
 
 
@@ -233,7 +259,7 @@ Private Sub UserForm_Initialize()
     Set r = ThisWorkbook.Sheets("register").Range("BegOfHistoryLimitRange")
     
     Do
-        Me.ComboBoxHistoryLimit.AddItem r
+        Me.ComboBoxHistoryLimit.AddItem CStr(r)
         Set r = r.Offset(1, 0)
     Loop While r <> ""
     
@@ -252,6 +278,39 @@ Private Sub UserForm_Initialize()
     
     ' tutaj zabawa z konfiguracja danych z popa
     set_pop_data_left_right_thing_take_data_from_regiser_worksheet_on_init
+    
+    
+    
+    
+    ' teraz zabawa z kolorami
+    Me.ComboBoxColorLayout.Clear
+    Dim item_on_layout_color_list As Range
+    Set item_on_layout_color_list = ThisWorkbook.Sheets("register").Range("m10")
+    Do
+    
+        Me.ComboBoxColorLayout.AddItem item_on_layout_color_list
+        Set item_on_layout_color_list = item_on_layout_color_list.Offset(1, 0)
+    Loop Until Trim(item_on_layout_color_list) = ""
+    
+    Me.ComboBoxColorLayout.Value = ThisWorkbook.Sheets("register").Range("actualColorLayoutChoice")
+    
+    Set item_on_layout_color_list = ThisWorkbook.Sheets("register").Range("m10")
+    Do
+        If Trim(CStr(item_on_layout_color_list)) = Trim(CStr(ThisWorkbook.Sheets("register").Range("actualColorLayoutChoice"))) Then
+            ' jestesmy w odpowiednim miejscu zeby zmienic aktualne kolory layoutu
+            ThisWorkbook.Sheets("register").Range("primary").Interior.Color = item_on_layout_color_list.Offset(0, 1).Interior.Color
+            ThisWorkbook.Sheets("register").Range("secondary").Interior.Color = item_on_layout_color_list.Offset(0, 2).Interior.Color
+            ThisWorkbook.Sheets("register").Range("weekendColor").Interior.Color = item_on_layout_color_list.Offset(0, 3).Interior.Color
+            
+            Me.TextBoxPrimaryColor.backColor = ThisWorkbook.Sheets("register").Range("primary").Interior.Color
+            Me.TextBoxSecondaryColor.backColor = ThisWorkbook.Sheets("register").Range("secondary").Interior.Color
+            Me.TextBoxWeekendColor.backColor = ThisWorkbook.Sheets("register").Range("weekendColor").Interior.Color
+            Me.TextBoxMinusColor.backColor = ThisWorkbook.Sheets("register").Range("minus").Interior.Color
+            Me.TextBoxWarningColor.backColor = ThisWorkbook.Sheets("register").Range("warning").Interior.Color
+        End If
+        
+        Set item_on_layout_color_list = item_on_layout_color_list.Offset(1, 0)
+    Loop Until Trim(item_on_layout_color_list) = ""
     
 End Sub
 

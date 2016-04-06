@@ -6,6 +6,93 @@ Attribute VB_Name = "VersionModule"
 ' w mysl o tym czego wlasciwie potrzebuje uzytkownik musze pomyslec ile faktycznie jest narzedzi potrzebnych a ile nie
 ' odchudzenie ffa rowniez wchodzi w gre aby chodzil odrobine szybciej
 
+
+'4.02.13
+' -------------------------------------------------------------
+' wersja 64 bitowa ma type mismatch to GlobalModule dalem dodatkowe deklaracje
+'#If VBA7 Then
+'Private Declare PtrSafe Function SHGetPathFromIDList Lib "shell32.dll" Alias "SHGetPathFromIDListA" (ByVal pidl As LongPtr, ByVal pszPath As String) As LongPtr
+'#Else
+'Private Declare Function SHGetPathFromIDList Lib "shell32.dll" Alias "SHGetPathFromIDListA" (ByVal pidl As Long, ByVal pszPath As String) As Long
+'#End If
+
+
+'4.02.12
+' -------------------------------------------------------------
+' zmiana pod wersji tylko w ramach bezpieczenstwa poniewaz od 12 planuje zmiany na addFlavourColor ktore moga spowodowac zawieszenie aplikacji powazne
+' dodatkowo kontrola kolorow - jakas rozszerzona paleta
+' ale skrajnosci ze mozna wybrac doslownie najglubszy kolor
+' albo ewentualnie tak jak jest na nowym weekly coverage
+' czyli kilka gotowych wyborow plus ewentualny custom - jak ktos bedzie chcial to sobie sam sobie zmieni
+
+'4.02.11
+' -------------------------------------------------------------
+' okazuje sie ze wersja 10 jest prawie 2 razy wolniejsza od poprzedniej wersji
+' ffh
+' plus czarno zolty to jednak beznadziejny kolor
+' zatem po krotce nowa paleta barw:
+' zielony (rgb, 115, 175, 173)
+' blado szaro zielono niebieski (rgb, 236, 234, 234)
+' blady pomarancz (rgb, 217, 163, 59)
+'
+'
+' innym ciekawym zagraniem jest wykorzystanie slownika Dictionary (dodatkowa biblioteka wiec be aware moze komus te rozwiazanie nie zadzialac)
+' w ktorym bawimy sie asocjacyjnie, gdzie keyami beda nazwy transportow SID?
+' dzieki temu rozwiazuje problem duplikatow gdy przejde na ms9po400 i znow bede chcial zaciagac dane ktore juz zostaly pobrane z zk7ppum0
+'
+'
+' dodatkowa logika sprawdzajaca czy warto w ogole przechodzic do ms9po400
+' bedzie musialo byc to polaczone zdecydowanie z implementacja ekranu ms9pop00
+' co ciekawe juz to implementacja jest na miejscu
+' i wiele faktycznie nie trzeba
+' tylko flaga na bardziej abstrakcyjnym obiekcie
+' dzieki ktoremu przechowamy odpowiednie info
+
+'
+' blad w formie wejsciowym po kliknieciu more
+' i rozwinieciu listy mamy guziki >> i <<
+' okazuje sie ze usuwaja z listy doslownie wszystko nawet te ktore powinny zostac jako nieusuwalne :(
+' nalezalo rowniez zrobic fix na tej wersji
+
+'4.02.10
+' -------------------------------------------------------------
+' teraz kolejna sprawa zwiazana z konfiguracjami komputerow
+' pojawia sie srogi temat mismatchy na innych komputerach niz moich
+' widac bez wszystkich jawnych dim'ow sie nie obedzie
+'
+' referencja na dodatkowych bibliotek z chartem i takie tam
+' zostawilem sobie kiedys na innych projektach no i przecko inni ludzi nie posiadaja takowych ustawien
+
+'4.02.09
+' -------------------------------------------------------------
+' wersja poprawiona z not yet received poniewaz sciaga dane z ms9po400 i zk7ppum0
+' jednak ze zrobilem logike nie uwzgledniania duplikatow tylko na regularach
+' not yet received sie duplikawolo
+' od wersji 4.02.09 ten problem zostal usuniety
+'
+'
+
+
+'4.02.08
+' -------------------------------------------------------------
+' no i niestety musialem zmienic implementacje na nowo zeby znow patrzyla sobie
+' i na zk7ppus0 jak i na ms9po400 poniewaz moze sie okazac ze pomimo tego ze czesc jest pusowa
+' i tak koniec koncow moze ktos zrobic help ship a przeciez to jest asn :(
+' glowny zmiany w klasie DailyIteration w sub:
+' fillTransitCollectionFromMs9po400 gdzie doszedl drugi argument opcjonalny
+' kiedy to ms9po400 dziala samodzielnie i kiedy dziala razem z zk7ppus0
+' i robi match na juz istniejacych danych
+
+
+'4.02.07
+' -------------------------------------------------------------
+' first runout fixed (assumption)
+' autofit on first runout
+' still static args on formula first runout look on calendar 7th of April
+' ' -
+' ' -
+' wlasciwie dziala bez zarzutu juz mozna pomalu sie zajac tematem run from break
+
 '4.02.06
 ' -------------------------------------------------------------
 ' change on first runout & test run on change values whree first runout how now one arg

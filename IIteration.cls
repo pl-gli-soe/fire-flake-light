@@ -31,7 +31,7 @@ Public Sub setCommonData(cd As CommonData)
 
 End Sub
 
-Public Sub czesciowyFillNaTejIteracji(ByRef r As Range, lt As LAYOUT_TYPE, st As START_TYPE, limit As Date, rqm_limit As Date)
+Public Sub czesciowyFillNaTejIteracji(ByRef r As Range, lt As LAYOUT_TYPE, st As START_TYPE, limit As Date, rqm_limit As Date, rowFlag)
 
 End Sub
 
