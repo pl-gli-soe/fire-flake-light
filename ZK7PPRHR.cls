@@ -7,59 +7,59 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-Private Sess0 As Object
+Private sess0 As Object
 ' zmienna przechowujaca reszte danych z zk7pdrqm
 
 Public Property Let sesja(ByRef arg As Object)
-    Set Sess0 = arg
+    Set sess0 = arg
 End Property
 
 Public Property Get sesja() As Object
-    Set sesja = Sess0
+    Set sesja = sess0
 End Property
 
 Public Property Get plt() As String
-    plt = Trim(Sess0.screen.getString(3, 8, 2))
+    plt = Trim(sess0.screen.getString(3, 8, 2))
 End Property
 
 Public Property Let plt(arg As String)
-    Sess0.screen.putString CStr(arg), 3, 8
+    sess0.screen.putString CStr(arg), 3, 8
 End Property
 
 Public Property Get pn() As String
-    pn = Trim(Sess0.screen.getString(4, 8, 8))
+    pn = Trim(sess0.screen.getString(4, 8, 8))
 End Property
 
 Public Property Let pn(arg As String)
-    Sess0.screen.putString CStr(arg), 4, 8
+    sess0.screen.putString CStr(arg), 4, 8
 End Property
 
 Public Property Get KANBAN() As String
-    KANBAN = Trim(Sess0.screen.getString(5, 10, 4))
+    KANBAN = Trim(sess0.screen.getString(5, 10, 4))
 End Property
 
 Public Property Let KANBAN(arg As String)
-    Sess0.screen.putString CStr(arg), 5, 10
+    sess0.screen.putString CStr(arg), 5, 10
 End Property
 
 Public Property Get ULOC() As String
-    ULOC = Trim(Sess0.screen.getString(4, 23, 8))
+    ULOC = Trim(sess0.screen.getString(4, 23, 8))
 End Property
 
 Public Property Let ULOC(arg As String)
-    Sess0.screen.putString CStr(arg), 4, 23
+    sess0.screen.putString CStr(arg), 4, 23
 End Property
 
 Public Function HRQMDATE(r As Integer, c As Integer) As String
-    HRQMDATE = Trim(Sess0.screen.getString(6 + 4 * r, 9 + 7 * c, 5))
+    HRQMDATE = Trim(sess0.screen.getString(6 + 4 * r, 9 + 7 * c, 5))
 End Function
 
 Public Function HRQMTIME(r As Integer, c As Integer) As String
-    HRQMTIME = Trim(Sess0.screen.getString(7 + 4 * r, 9 + 7 * c, 5))
+    HRQMTIME = Trim(sess0.screen.getString(7 + 4 * r, 9 + 7 * c, 5))
 End Function
 
 Public Function HQTY(r As Integer, c As Integer) As String
-    HQTY = Trim(Sess0.screen.getString(8 + 4 * r, 9 + 7 * c, 5))
+    HQTY = Trim(sess0.screen.getString(8 + 4 * r, 9 + 7 * c, 5))
 End Function
 
 

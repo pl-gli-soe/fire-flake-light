@@ -7,60 +7,60 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-Private Sess0 As Object
+Private sess0 As Object
 
 Public Property Let sesja(ByRef arg As Object)
-    Set Sess0 = arg
+    Set sess0 = arg
 End Property
 
 Public Property Get sesja() As Object
-    Set sesja = Sess0
+    Set sesja = sess0
 End Property
 
 Public Property Get REC() As String
-  REC = Trim(Sess0.screen.getString(3, 65, 5))
+  REC = Trim(sess0.screen.getString(3, 65, 5))
 End Property
 
 Public Property Get OF() As String
-  OF = Trim(Sess0.screen.getString(3, 75, 5))
+  OF = Trim(sess0.screen.getString(3, 75, 5))
 End Property
 
 
 
 Public Function plt(i As Integer) As String
-    plt = Trim(Sess0.screen.getString(7 + 1 * i, 5, 2))
+    plt = Trim(sess0.screen.getString(7 + 1 * i, 5, 2))
 End Function
 
 Public Function SUPPLIER(i As Integer) As String
-    SUPPLIER = Trim(Sess0.screen.getString(7 + 1 * i, 12, 9))
+    SUPPLIER = Trim(sess0.screen.getString(7 + 1 * i, 12, 9))
 End Function
 Public Function PU_DATE(i As Integer) As String
-    PU_DATE = Trim(Sess0.screen.getString(7 + 1 * i, 23, 8))
+    PU_DATE = Trim(sess0.screen.getString(7 + 1 * i, 23, 8))
 End Function
 
 Public Function PUS_NBR(i As Integer) As String
-    PUS_NBR = Trim(Sess0.screen.getString(7 + 1 * i, 33, 9))
+    PUS_NBR = Trim(sess0.screen.getString(7 + 1 * i, 33, 9))
 End Function
 
 Public Function route(i As Integer) As String
-    route = Trim(Sess0.screen.getString(7 + 1 * i, 44, 6))
+    route = Trim(sess0.screen.getString(7 + 1 * i, 44, 6))
 End Function
 
 Public Function DEL_DATE(i As Integer) As String
-    DEL_DATE = Trim(Sess0.screen.getString(7 + 1 * i, 52, 8))
+    DEL_DATE = Trim(sess0.screen.getString(7 + 1 * i, 52, 8))
 End Function
 
 Public Function DEL_WINDW(i As Integer) As String
-    DEL_WINDW = Trim(Sess0.screen.getString(7 + 1 * i, 62, 9))
+    DEL_WINDW = Trim(sess0.screen.getString(7 + 1 * i, 62, 9))
 End Function
 
 Public Function BEGIN_DEL(i As Integer) As String
-    BEGIN_DEL = Trim(Sess0.screen.getString(7 + 1 * i, 62, 4))
+    BEGIN_DEL = Trim(sess0.screen.getString(7 + 1 * i, 62, 4))
 End Function
 Public Function END_DEL(i As Integer) As String
-    END_DEL = Trim(Sess0.screen.getString(7 + 1 * i, 67, 4))
+    END_DEL = Trim(sess0.screen.getString(7 + 1 * i, 67, 4))
 End Function
 
 Public Function PART_QTY(i As Integer) As String
-    PART_QTY = Trim(Sess0.screen.getString(7 + 1 * i, 72, 9))
+    PART_QTY = Trim(sess0.screen.getString(7 + 1 * i, 72, 9))
 End Function

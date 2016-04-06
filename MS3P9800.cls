@@ -7,14 +7,14 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
-Private Sess0 As Object
+Private sess0 As Object
 
 Public Property Let sesja(ByRef arg As Object)
-    Set Sess0 = arg
+    Set sess0 = arg
 End Property
 
 Public Property Get sesja() As Object
-    Set sesja = Sess0
+    Set sesja = sess0
 End Property
 
 

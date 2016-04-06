@@ -47,3 +47,12 @@ Public Function catchIfPartNotFoundInHistoryScreen(strFromMgo As String) As Bool
         catchIfPartNotFoundInHistoryScreen = False
     End If
 End Function
+
+
+Public Function catchIfMGOIsNotActive(sess0) As Boolean
+    catchIfMGOIsNotActive = False
+    
+    If sess0 Is Nothing Then
+        catchIfMGOIsNotActive = True
+    End If
+End Function

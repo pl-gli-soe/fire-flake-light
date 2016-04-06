@@ -9,7 +9,7 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Private Sessions As Object
 Private System As Object
-Private Sess0 As Object
+Private sess0 As Object
 
 
 Private scr_ms9pop00 As MS9POP00
@@ -30,54 +30,62 @@ Private scr_ms3p9800 As MS3P9800
 Private Sub Class_Initialize()
     Set System = CreateObject("EXTRA.System")   ' Gets the system object
     Set Sessions = System.Sessions
-    Set Sess0 = System.ActiveSession
+    Set sess0 = System.ActiveSession
+    
+    Dim ce As CatchError
+    Set ce = New CatchError
+    
+    If ce.catchIfMGOIsNotActive(sess0) Then
+        MsgBox "please activate your MGO!"
+        End
+    End If
     
     Set scr_ms9pop00 = New MS9POP00
-    scr_ms9pop00.sesja = Sess0
+    scr_ms9pop00.sesja = sess0
     waitForMgo
     
     Set scr_ms9po400 = New MS9PO400
-    scr_ms9po400.sesja = Sess0
+    scr_ms9po400.sesja = sess0
     waitForMgo
     
     Set scr_zk7pwrqm = New ZK7PWRQM
-    scr_zk7pwrqm.sesja = Sess0
+    scr_zk7pwrqm.sesja = sess0
     waitForMgo
     
     Set scr_zk7pdrqm = New ZK7PDRQM
-    scr_zk7pdrqm.sesja = Sess0
+    scr_zk7pdrqm.sesja = sess0
     waitForMgo
     
     Set scr_zk7ppus0 = New ZK7PPUS0
-    scr_zk7ppus0.sesja = Sess0
+    scr_zk7ppus0.sesja = sess0
     waitForMgo
     
     Set scr_ms9ph100 = New MS9PH100
-    scr_ms9ph100.sesja = Sess0
+    scr_ms9ph100.sesja = sess0
     waitForMgo
     
     Set scr_ms7p5200 = New MS7P5200
-    scr_ms7p5200.sesja = Sess0
+    scr_ms7p5200.sesja = sess0
     waitForMgo
     
     Set scr_zk7ppum0 = New ZK7PPUM0
-    scr_zk7ppum0.sesja = Sess0
+    scr_zk7ppum0.sesja = sess0
     waitForMgo
     
     Set scr_zk7pprul = New ZK7PPRUL
-    scr_zk7pprul.sesja = Sess0
+    scr_zk7pprul.sesja = sess0
     waitForMgo
     
     Set scr_zk7pprhr = New ZK7PPRHR
-    scr_zk7pprhr.sesja = Sess0
+    scr_zk7pprhr.sesja = sess0
     waitForMgo
     
     Set scr_zk7ppud0 = New ZK7PPUD0
-    scr_zk7ppud0.sesja = Sess0
+    scr_zk7ppud0.sesja = sess0
     waitForMgo
     
     Set scr_ms3p9800 = New MS3P9800
-    scr_ms3p9800.sesja = Sess0
+    scr_ms3p9800.sesja = sess0
     waitForMgo
     
 End Sub
@@ -85,11 +93,11 @@ End Sub
 Private Sub Class_Terminate()
     Set System = Nothing
     Set Sessions = Nothing
-    Set Sess0 = Nothing
+    Set sess0 = Nothing
 End Sub
 
 Public Property Get actualScreen() As String
-    actualScreen = Sess0.screen.getString(1, 2, 8)
+    actualScreen = sess0.screen.getString(1, 2, 8)
 End Property
 
 
@@ -193,14 +201,14 @@ Public Function FromMGOMonth(mgo_month As String)
 End Function
 
 Public Function getString(x As Integer, y As Integer, size As Integer) As String
-    getString = Sess0.screen.getString(x, y, size)
+    getString = sess0.screen.getString(x, y, size)
     waitForMgo
 End Function
 
 Public Sub mgoInit()
     Set System = CreateObject("EXTRA.System")   ' Gets the system object
     Set Sessions = System.Sessions
-    Set Sess0 = System.ActiveSession
+    Set sess0 = System.ActiveSession
     
     waitForMgo
 End Sub
@@ -278,7 +286,7 @@ Public Property Get pMS9POP00() As MS9POP00
 End Property
 
 Public Sub putString(str As String, x As Integer, y As Integer)
-    Sess0.screen.putString str, x, y
+    sess0.screen.putString str, x, y
     waitForMgo
 End Sub
 
@@ -341,12 +349,12 @@ End Property
 
 
 Public Sub submit()
-    Sess0.screen.sendKeys ("<Enter>")
+    sess0.screen.sendKeys ("<Enter>")
     waitForMgo
 End Sub
 
 Public Sub sendKeys(str As String)
-    Sess0.screen.sendKeys (CStr(str))
+    sess0.screen.sendKeys (CStr(str))
     waitForMgo
 End Sub
 
@@ -363,5 +371,5 @@ End Function
 Public Sub waitForMgo()
     Do
         DoEvents
-    Loop Until Sess0.screen.OIA.XStatus = 0
+    Loop Until sess0.screen.OIA.XStatus = 0
 End Sub
