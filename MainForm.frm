@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} MainForm 
    Caption         =   "Main Form"
-   ClientHeight    =   7650
+   ClientHeight    =   8385
    ClientLeft      =   45
    ClientTop       =   375
-   ClientWidth     =   14610
+   ClientWidth     =   7905
    OleObjectBlob   =   "MainForm.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -20,6 +20,17 @@ End Sub
 
 Private Sub BtnHide_Click()
     Me.hide
+End Sub
+
+Private Sub BtnMoreLess_Click()
+    If Me.BtnMoreLess.Caption Like "*More*" Then
+        Me.Height = 440
+        Me.BtnMoreLess.Caption = "Less"
+    Else
+        Me.Height = 122
+        Me.BtnMoreLess.Caption = "More"
+    End If
+        
 End Sub
 
 Private Sub BtnMoveAllToLeft_Click()
@@ -186,6 +197,13 @@ End Sub
 
 
 Private Sub UserForm_Initialize()
+
+
+    ' dates now
+    Me.DTPickerPUSLimit = Now
+    Me.DTPickerRQMLimit = Now
+    
+    Me.Height = 122
 
 
 

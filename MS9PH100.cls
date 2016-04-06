@@ -66,3 +66,7 @@ End Function
 Public Function qty(i As Integer) As String
     qty = Trim(Sess0.screen.getString(11 + 1 * i, 35, 10))
 End Function
+
+Public Property Get infocode() As String
+    infocode = Trim(Sess0.screen.getString(22, 2, 5))
+End Property

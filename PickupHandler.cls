@@ -61,79 +61,90 @@ Public Sub takeDataFromPH100(m As MGO, mcd As CommonData)
         .DATE_FROM = m.convertToMgoShortDate(CDate(Now - HOW_MANY_DAYS_FOR_PPUS0))
         m.submit
         
-        Do
-            For x = 0 To 9
-                
-                ' kolejne wiersze z ph100 - ekran historii
-                If ppum0coll.COUNT > 0 Then
-                    For Each t In ppum0coll
-                        
-                        
-                        
-                        ' 3 warunki sprawdzajace czy recv jest na konkretny sid wraz z odowiednia wartoscia
-                        ' TERAZ SUPER WAZNE - ZACHOWANIE LOGIKI DLA RECV JAK I DLA ASN JEST IDENTYCZNE WIEC
-                        ' JESLI NIE ZAMIERZAM W POZNIEJSZYM CZASIE ZMIENIAC CZEGO KOLWIEK
-                        ' ALBO JESLI CZEGOS REWOLUCYJNEGO SIE NIE DOWIEM - BEDZIE MOZNA SCIAGANC JEDEN IF
-                        ' ROZROZNIAJACY ASN czy RECV
-                        
-                        
-                        ' pierwszy warunek jest dla wszystkich bo w ogole sprawdzam co mam zrobic z dopasowanym pusem w nazwie
-                        If Trim(CStr(.SID(Int(x)))) <> "" Then
-                            If CStr(t.mName) = CStr(.SID(Int(x))) Then
+        
+        ' teraz bardzo wazna rzecz
+        ' zeby to dzialalo poprawnie nalezy sprawdzic czy w ogole czesc jest znaleziona przez ekran historii
+        
+        ' check if there are no  issues like : I4017: PART NOT FOUND
+        
+        Dim ce As CatchError
+        Set ce = New CatchError
+        
+        If ce.catchIfPartNotFoundInHistoryScreen(.infocode) Then
+            Do
+                For x = 0 To 9
+                    
+                    ' kolejne wiersze z ph100 - ekran historii
+                    If ppum0coll.COUNT > 0 Then
+                        For Each t In ppum0coll
                             
-                                ' sprawdzamy czy mamy jakis recving na tym pusie
-                                ' i jesli mamy to przechodzimy i patrzymy jaka jest wartosc recv
-                                If .DTYP(Int(x)) = "RECV" Then
+                            
+                            
+                            ' 3 warunki sprawdzajace czy recv jest na konkretny sid wraz z odowiednia wartoscia
+                            ' TERAZ SUPER WAZNE - ZACHOWANIE LOGIKI DLA RECV JAK I DLA ASN JEST IDENTYCZNE WIEC
+                            ' JESLI NIE ZAMIERZAM W POZNIEJSZYM CZASIE ZMIENIAC CZEGO KOLWIEK
+                            ' ALBO JESLI CZEGOS REWOLUCYJNEGO SIE NIE DOWIEM - BEDZIE MOZNA SCIAGANC JEDEN IF
+                            ' ROZROZNIAJACY ASN czy RECV
+                            
+                            
+                            ' pierwszy warunek jest dla wszystkich bo w ogole sprawdzam co mam zrobic z dopasowanym pusem w nazwie
+                            If Trim(CStr(.SID(Int(x)))) <> "" Then
+                                If CStr(t.mName) = CStr(.SID(Int(x))) Then
                                 
-                                    ' jesli wartosc recv jest taka sama jak pusa to znaczy ze zostal on pieknie przyjety
-                                    If CLng(.qty(Int(x))) = CLng(t.mQty) Then
-                                        t.mNotYetReceived = False
-                                        t.mQty = 0
+                                    ' sprawdzamy czy mamy jakis recving na tym pusie
+                                    ' i jesli mamy to przechodzimy i patrzymy jaka jest wartosc recv
+                                    If .DTYP(Int(x)) = "RECV" Then
+                                    
+                                        ' jesli wartosc recv jest taka sama jak pusa to znaczy ze zostal on pieknie przyjety
+                                        If CLng(.qty(Int(x))) = CLng(t.mQty) Then
+                                            t.mNotYetReceived = False
+                                            t.mQty = 0
+                                            
+                                        ' druga wersja to sprawdzenie czy recv jest na zero - to trzeba jako tako zignorowac
+                                        ElseIf CLng(.qty(Int(x))) = 0 Then
+                                            ' NOP
                                         
-                                    ' druga wersja to sprawdzenie czy recv jest na zero - to trzeba jako tako zignorowac
-                                    ElseIf CLng(.qty(Int(x))) = 0 Then
-                                        ' NOP
-                                    
-                                    ' trzecia opcja to w ogole przyjecie pusa na wartosc inna niz wartosc pusa
-                                    ElseIf CLng(.qty(Int(x))) <> CLng(t.mQty) Then
-                                        t.mNotYetReceived = False
-                                        t.mQty = 0
-                                    
-                                    End If
-                                ElseIf .DTYP(Int(x)) = "ASN" Then
-                                    
-                                    ' to jest zsynchronizowane z recv na zero
-                                    ' tyle ze samo recv na zero to mozna ignorowac
-                                    ' natomiast asn dr jest na potrzeby dopisania gdy transport nie przychodzi do fabyrki
-                                    ' wartoscia zgodna z tym co bylo na pickup sheet
-                                    If CLng(.qty(Int(x))) = CLng(t.mQty) Then
-                                        t.mNotYetReceived = False
-                                        t.mQty = 0
-                                     ' druga wersja to sprawdzenie czy recv jest na zero - to trzeba jako tako zignorowac
-                                    ElseIf CLng(.qty(Int(x))) = 0 Then
-                                        ' NOP
-                                    
-                                    ' trzecia opcja to w ogole przyjecie pusa na wartosc inna niz wartosc pusa
-                                    ElseIf CLng(.qty(Int(x))) <> CLng(t.mQty) Then
-                                        t.mNotYetReceived = False
-                                        t.mQty = 0
-                                    
+                                        ' trzecia opcja to w ogole przyjecie pusa na wartosc inna niz wartosc pusa
+                                        ElseIf CLng(.qty(Int(x))) <> CLng(t.mQty) Then
+                                            t.mNotYetReceived = False
+                                            t.mQty = 0
+                                        
+                                        End If
+                                    ElseIf .DTYP(Int(x)) = "ASN" Then
+                                        
+                                        ' to jest zsynchronizowane z recv na zero
+                                        ' tyle ze samo recv na zero to mozna ignorowac
+                                        ' natomiast asn dr jest na potrzeby dopisania gdy transport nie przychodzi do fabyrki
+                                        ' wartoscia zgodna z tym co bylo na pickup sheet
+                                        If CLng(.qty(Int(x))) = CLng(t.mQty) Then
+                                            t.mNotYetReceived = False
+                                            t.mQty = 0
+                                         ' druga wersja to sprawdzenie czy recv jest na zero - to trzeba jako tako zignorowac
+                                        ElseIf CLng(.qty(Int(x))) = 0 Then
+                                            ' NOP
+                                        
+                                        ' trzecia opcja to w ogole przyjecie pusa na wartosc inna niz wartosc pusa
+                                        ElseIf CLng(.qty(Int(x))) <> CLng(t.mQty) Then
+                                            t.mNotYetReceived = False
+                                            t.mQty = 0
+                                        
+                                        End If
                                     End If
                                 End If
                             End If
-                        End If
-                    Next t
-                Else
-                    Exit Sub
+                        Next t
+                    Else
+                        Exit Sub
+                    End If
+                Next x
+                
+                If m.getCode("ms9ph100") = CStr("R6086") Then
+                    Exit Do
                 End If
-            Next x
-            
-            If m.getCode("ms9ph100") = CStr("R6086") Then
-                Exit Do
-            End If
-            
-            m.sendKeys "<pf8>"
-        Loop While True
+                
+                m.sendKeys "<pf8>"
+            Loop While True
+        End If
     End With
     
     

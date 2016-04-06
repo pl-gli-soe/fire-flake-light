@@ -9,6 +9,7 @@ Private Declare Function GetUserName& Lib "advapi32.dll" Alias "GetUserNameA" (B
 Global Const LETTERS = 26
 Global Const MAX_COLUMNS = 16384 ' ostatnia kolumna
 Global Const C_HOUR = (0.041 + 0.001 * (2 / 3))
+Global Const INITIAL_TIMING_FOR_ONE_PN = 6
 
 Global sh As StatusHandler
 
@@ -101,6 +102,4 @@ Public Sub refresh_register_worksheet()
 End Sub
 
 
-Public Function firstRunout() As Date
-    firstRunout = CDate(Now)
-End Function
+

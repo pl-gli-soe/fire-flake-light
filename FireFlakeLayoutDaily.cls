@@ -55,6 +55,12 @@ Private blackColor As Variant
 Private redColor As Variant
 Private purple1Color As Variant
 
+' my colors on my layout
+Private primaryColor As Variant
+Private secondaryColor As Variant
+Private minusColor As Variant
+Private warningColor As Variant
+
 
 ' flags for columns
 
@@ -72,6 +78,11 @@ Private Sub Class_Initialize()
     blackColor = ThisWorkbook.Sheets("register").Range("black").Interior.Color
     redColor = ThisWorkbook.Sheets("register").Range("red").Interior.Color
     purple1Color = ThisWorkbook.Sheets("register").Range("purple1").Interior.Color
+    
+    primaryColor = ThisWorkbook.Sheets("register").Range("primary").Interior.Color
+    secondaryColor = ThisWorkbook.Sheets("register").Range("secondary").Interior.Color
+    minusColor = ThisWorkbook.Sheets("register").Range("minus").Interior.Color
+    warningColor = ThisWorkbook.Sheets("register").Range("warning").Interior.Color
     
     
     
@@ -144,21 +155,21 @@ Public Sub budujemyPodIteracjeCommonDataListLayout(ic As Collection, mcd As Comm
     Set baza = sh.Cells(mcd.rowFlag, 2)
     baza = mcd.pn
     baza.Font.size = baza.Font.size + 1
-    tl.fillThinFrame baza, CDbl(greyColor)
+    tl.fillThinFrame baza, CDbl(secondaryColor)
     tl.backColor baza, CDbl(blackColor)
-    baza.Font.Color = CDbl(yellowColor)
+    baza.Font.Color = CDbl(primaryColor)
     
     baza.Offset(0, 1) = mcd.plt
-    tl.fillThinFrame baza.Offset(0, 1), CDbl(greyColor)
+    tl.fillThinFrame baza.Offset(0, 1), CDbl(secondaryColor)
     tl.backColor baza.Offset(0, 1), CDbl(blackColor)
-    baza.Offset(0, 1).Font.Color = CDbl(yellowColor)
+    baza.Offset(0, 1).Font.Color = CDbl(primaryColor)
     
     Dim i As Range
     flaga = 2
     For Each i In toShowFromPop
         If i = "x" Then
             run CStr(i.Offset(0, -1)), mcd, baza.Offset(0, flaga)
-            tl.fillThinFrame baza.Offset(0, flaga), CDbl(greyColor)
+            tl.fillThinFrame baza.Offset(0, flaga), CDbl(secondaryColor)
             
             flaga = flaga + 1
         End If
@@ -168,28 +179,28 @@ Public Sub budujemyPodIteracjeCommonDataListLayout(ic As Collection, mcd As Comm
     ' elementow posrednich jest w sumie 5
     
     ' first runout
-    tl.fillThinFrame baza.Offset(0, flaga), CDbl(greyColor)
-    baza.Offset(0, flaga).FormulaR1C1 = "=firstRunout()"
+    tl.fillThinFrame baza.Offset(0, flaga), CDbl(secondaryColor)
+    baza.Offset(0, flaga).FormulaR1C1 = "=firstRunout(" & baza.Address & ")"
     flaga = flaga + 1
     
     ' cmnt 1
-    tl.fillThinFrame baza.Offset(0, flaga), CDbl(greyColor)
+    tl.fillThinFrame baza.Offset(0, flaga), CDbl(secondaryColor)
     baza.Offset(0, flaga) = ThisWorkbook.Sheets("input").Cells(mcd.rowFlag - 3, 3)
     flaga = flaga + 1
     
     ' cmnt 2
-    tl.fillThinFrame baza.Offset(0, flaga), CDbl(greyColor)
+    tl.fillThinFrame baza.Offset(0, flaga), CDbl(secondaryColor)
     baza.Offset(0, flaga) = ThisWorkbook.Sheets("input").Cells(mcd.rowFlag - 3, 4)
     flaga = flaga + 1
     
     ' not yet rec
-    tl.fillThinFrame baza.Offset(0, flaga), CDbl(greyColor)
+    tl.fillThinFrame baza.Offset(0, flaga), CDbl(secondaryColor)
     baza.Offset(0, flaga) = calcTransQty(notYetReceivedWithPastEdaCollection)
     komentarzHandler.assignTransitsIntoComment baza.Offset(0, flaga), notYetReceivedWithPastEdaCollection
     flaga = flaga + 1
     
     ' past due rqm
-    tl.fillThinFrame baza.Offset(0, flaga), CDbl(greyColor)
+    tl.fillThinFrame baza.Offset(0, flaga), CDbl(secondaryColor)
     baza.Offset(0, flaga) = calcPastDueRqm(ic)
     
     Set ostatniElementCommonDataTejIteracji = baza.Offset(0, flaga)
@@ -271,11 +282,11 @@ Private Sub budowanieKowerydzaDniowegoNaLiscie(ic As Collection, mcd As CommonDa
         If Format(di.getDate(), "yyyy-mm-dd") >= Format(Now, "yyyy-mm-dd") Then
         
             b = di.getRqm
-            tl.fillSolidFrame b, CDbl(greyColor)
+            tl.fillSolidFrame b, CDbl(secondaryColor)
             b.Offset(0, 1) = calcTransQty(di.getInTransits())
             komentarzHandler.assignTransitsIntoComment b.Offset(0, 1), di.getInTransits()
             
-            tl.fillSolidFrame b.Offset(0, 1), CDbl(greyColor)
+            tl.fillSolidFrame b.Offset(0, 1), CDbl(secondaryColor)
             
             If Not firstTime Then
             
@@ -300,17 +311,17 @@ Private Sub budowanieKowerydzaDniowegoNaLiscie(ic As Collection, mcd As CommonDa
                 '    b.Offset(0, x).Font.Color = CDbl(yellowColor)
                 'Next x
                 
-                tl.backColor b.Offset(0, 2), CDbl(yellowColor)
+                tl.backColor b.Offset(0, 2), CDbl(primaryColor)
                 b.Offset(0, 2).Font.Color = CDbl(blackColor)
                 b.Offset(0, 2).Font.Bold = True
                 
-                tl.fillSolidFrame b.Offset(0, 2), CDbl(greyColor)
+                tl.fillSolidFrame b.Offset(0, 2), CDbl(secondaryColor)
             Else
-                tl.backColor b.Offset(0, 2), CDbl(greyColor)
-                b.Offset(0, 2).Font.Color = CDbl(yellowColor)
+                tl.backColor b.Offset(0, 2), CDbl(secondaryColor)
+                b.Offset(0, 2).Font.Color = CDbl(primaryColor)
                 b.Offset(0, 2).Font.Bold = True
                 
-                tl.fillSolidFrame b.Offset(0, 2), CDbl(yellowColor)
+                tl.fillSolidFrame b.Offset(0, 2), CDbl(primaryColor)
             End If
             
             
@@ -397,7 +408,7 @@ Private Sub IFireFlakeLayout_buildLayoutForCommonData()
     
     Set baza = Range(poczatekRaportuDaily, poczatekRaportuDaily.End(xlToRight))
     tl.changeTxtOrientation baza, 90
-    tl.fillSolidGridLines baza, ThisWorkbook.Sheets("register").Range("grey").Interior.Color
+    tl.fillSolidGridLines baza, CLng(secondaryColor)
     
     Dim r As Range
     
@@ -407,12 +418,12 @@ Private Sub IFireFlakeLayout_buildLayoutForCommonData()
             Or r = "MISC" _
             Or r = "CBAL" _
                 Then
-            r.Interior.Color = ThisWorkbook.Sheets("register").Range("yellow").Interior.Color
-            r.Font.Color = ThisWorkbook.Sheets("register").Range("black").Interior.Color
+            r.Interior.Color = primaryColor
+            r.Font.Color = blackColor
             r.Font.size = r.Font.size + 1
         Else
-            r.Interior.Color = ThisWorkbook.Sheets("register").Range("grey").Interior.Color
-            r.Font.Color = ThisWorkbook.Sheets("register").Range("yellow").Interior.Color
+            r.Interior.Color = secondaryColor
+            r.Font.Color = primaryColor
         End If
         
         r.Font.size = r.Font.size + 2
@@ -474,47 +485,47 @@ Private Sub IFireFlakeLayout_buildLayoutForDatesLabels(c As Collection)
         
         
         If Not addBackground Then
-            r.Font.Color = CDbl(greyColor)
-            tl.fillSolidFrame r, CDbl(greyColor)
+            r.Font.Color = CDbl(secondaryColor)
+            tl.fillSolidFrame r, CDbl(secondaryColor)
             
-            r.Offset(0, 1).Font.Color = CDbl(greyColor)
-            tl.fillSolidFrame r.Offset(0, 1), CDbl(greyColor)
+            r.Offset(0, 1).Font.Color = CDbl(secondaryColor)
+            tl.fillSolidFrame r.Offset(0, 1), CDbl(secondaryColor)
             
-            r.Offset(0, 2).Font.Color = CDbl(yellowColor)
+            r.Offset(0, 2).Font.Color = CDbl(primaryColor)
             'r.Offset(0, 2).Font.Bold = True
-            tl.fillSolidFrame r.Offset(0, 2), CDbl(yellowColor)
-            tl.backColor r.Offset(0, 2), CDbl(greyColor)
+            tl.fillSolidFrame r.Offset(0, 2), CDbl(primaryColor)
+            tl.backColor r.Offset(0, 2), CDbl(secondaryColor)
             
             
-            r.Offset(-1, 0).Font.Color = CDbl(yellowColor)
-            r.Offset(-2, 0).Font.Color = CDbl(yellowColor)
+            r.Offset(-1, 0).Font.Color = CDbl(primaryColor)
+            r.Offset(-2, 0).Font.Color = CDbl(primaryColor)
             
-            tl.backColor r.Offset(-1, 0), CDbl(greyColor)
-            tl.backColor r.Offset(-2, 0), CDbl(greyColor)
+            tl.backColor r.Offset(-1, 0), CDbl(secondaryColor)
+            tl.backColor r.Offset(-2, 0), CDbl(secondaryColor)
             
-            tl.fillSolidFrame Range(r.Offset(-1, 0), r.Offset(-1, 2)), CDbl(greyColor)
-            tl.fillSolidFrame Range(r.Offset(-2, 0), r.Offset(-2, 2)), CDbl(greyColor)
+            tl.fillSolidFrame Range(r.Offset(-1, 0), r.Offset(-1, 2)), CDbl(secondaryColor)
+            tl.fillSolidFrame Range(r.Offset(-2, 0), r.Offset(-2, 2)), CDbl(secondaryColor)
             
         Else
         
-            r.Font.Color = CDbl(greyColor)
-            tl.fillSolidFrame r, CDbl(greyColor)
+            r.Font.Color = CDbl(secondaryColor)
+            tl.fillSolidFrame r, CDbl(secondaryColor)
             
-            r.Offset(0, 1).Font.Color = CDbl(greyColor)
-            tl.fillSolidFrame r.Offset(0, 1), CDbl(greyColor)
+            r.Offset(0, 1).Font.Color = CDbl(secondaryColor)
+            tl.fillSolidFrame r.Offset(0, 1), CDbl(secondaryColor)
             r.Offset(0, 2).Font.Color = CDbl(blackColor)
             'r.Offset(0, 2).Font.Bold = True
-            tl.fillSolidFrame r.Offset(0, 2), CDbl(greyColor)
-            tl.backColor r.Offset(0, 2), CDbl(yellowColor)
+            tl.fillSolidFrame r.Offset(0, 2), CDbl(secondaryColor)
+            tl.backColor r.Offset(0, 2), CDbl(primaryColor)
             
             r.Offset(-1, 0).Font.Color = CDbl(blackColor)
             r.Offset(-2, 0).Font.Color = CDbl(blackColor)
             
-            tl.backColor r.Offset(-1, 0), CDbl(yellowColor)
-            tl.backColor r.Offset(-2, 0), CDbl(yellowColor)
+            tl.backColor r.Offset(-1, 0), CDbl(primaryColor)
+            tl.backColor r.Offset(-2, 0), CDbl(primaryColor)
             
-            tl.fillSolidFrame Range(r.Offset(-1, 0), r.Offset(-1, 2)), CDbl(yellowColor)
-            tl.fillSolidFrame Range(r.Offset(-2, 0), r.Offset(-2, 2)), CDbl(yellowColor)
+            tl.fillSolidFrame Range(r.Offset(-1, 0), r.Offset(-1, 2)), CDbl(primaryColor)
+            tl.fillSolidFrame Range(r.Offset(-2, 0), r.Offset(-2, 2)), CDbl(primaryColor)
             
         End If
         
@@ -522,11 +533,11 @@ Private Sub IFireFlakeLayout_buildLayoutForDatesLabels(c As Collection)
             tl.backColor r.Offset(-1, 0), CDbl(blackColor)
             tl.backColor r.Offset(-2, 0), CDbl(blackColor)
             
-            r.Offset(-1, 0).Font.Color = CDbl(yellowColor)
-            r.Offset(-2, 0).Font.Color = CDbl(yellowColor)
+            r.Offset(-1, 0).Font.Color = CDbl(primaryColor)
+            r.Offset(-2, 0).Font.Color = CDbl(primaryColor)
             
             tl.fillThinGridLines Range(r.Offset(-2, 0), r.Offset(-1, 2)), CDbl(blackColor)
-            tl.fillSolidFrame Range(r.Offset(-2, 0), r.Offset(-1, 2)), CDbl(yellowColor)
+            tl.fillSolidFrame Range(r.Offset(-2, 0), r.Offset(-1, 2)), CDbl(primaryColor)
             ' tl.fillSolidFrame Range(r.Offset(-2, 0), r.Offset(-2, 2)), CDbl(yellowColor)
         End If
         
