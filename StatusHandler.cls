@@ -94,11 +94,11 @@ Public Sub progress_increase()
         If collection_of_avr_on_pn.COUNT > 10 Then
             
             For x = act To collection_of_avr_on_pn.COUNT
-                Debug.Print collection_of_avr_on_pn.COUNT
+                'Debug.Print collection_of_avr_on_pn.COUNT
                 collection_of_avr_on_pn.Remove x
-                Debug.Print collection_of_avr_on_pn.COUNT
+                'Debug.Print collection_of_avr_on_pn.COUNT
                 collection_of_avr_on_pn.Add CLng(avr_on_one_pn)
-                Debug.Print collection_of_avr_on_pn.COUNT
+                'Debug.Print collection_of_avr_on_pn.COUNT
             Next x
         End If
 

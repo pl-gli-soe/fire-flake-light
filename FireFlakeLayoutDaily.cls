@@ -180,7 +180,7 @@ Public Sub budujemyPodIteracjeCommonDataListLayout(ic As Collection, mcd As Comm
     
     ' first runout
     tl.fillThinFrame baza.Offset(0, flaga), CDbl(secondaryColor)
-    baza.Offset(0, flaga).FormulaR1C1 = "=firstRunout(" & baza.Address & ")"
+    baza.Offset(0, flaga).FormulaR1C1 = "=firstRunout(RC[-8])"
     flaga = flaga + 1
     
     ' cmnt 1

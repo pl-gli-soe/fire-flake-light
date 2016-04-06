@@ -32,14 +32,6 @@ Private Sub Class_Initialize()
     Set Sessions = System.Sessions
     Set sess0 = System.ActiveSession
     
-    Dim ce As CatchError
-    Set ce = New CatchError
-    
-    If ce.catchIfMGOIsNotActive(sess0) Then
-        MsgBox "please activate your MGO!"
-        End
-    End If
-    
     Set scr_ms9pop00 = New MS9POP00
     scr_ms9pop00.sesja = sess0
     waitForMgo
