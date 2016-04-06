@@ -175,12 +175,14 @@ Public Property Get O() As String
     O = Trim(sess0.screen.getString(15, 4, 25))
 End Property
 
+Public Property Get F() As String
+    F = Trim(sess0.screen.getString(15, 43, 38))
+End Property
+
 
 Public Property Get infocode() As String
     infocode = Trim(sess0.screen.getString(23, 2, 5))
 End Property
-
-
 
 Public Function transQTY(i As Integer) As String
     transQTY = Trim(sess0.screen.getString(17 + (Int(i) * 2), 2, 9))

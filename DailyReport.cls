@@ -24,6 +24,10 @@ Private ffld As IFireFlakeLayout
 Private dc As IDynamicColors
 
 
+Private mlt As LAYOUT_TYPE
+Private mst As START_TYPE
+
+
 Private Sub Class_Initialize()
 
     Set mgo_handler = Nothing
@@ -41,8 +45,42 @@ Private Sub Class_Terminate()
     Set dc = Nothing
 End Sub
 
+Private Sub IReport_adjustLayoutAfterAllJobs()
+    
+    Dim rng As Range, sh As Worksheet
+
+    If mst = FROM_THE_BEGINNING Then
+        If mlt = LIST_LAYOUT Then
+            
+            Set sh = ThisWorkbook.ActiveSheet
+            Set rng = sh.Range("a3").End(xlToRight)
+            Set rng = sh.Range(sh.Cells(4, 2), sh.Cells(4, rng.Column - 1))
+            rng.EntireColumn.AutoFit
+        End If
+    End If
+End Sub
+
 Private Sub IReport_clearAndStop()
 
+End Sub
+
+Private Sub IReport_fakeDataChangeToRecalcFirstRunoutFormula()
+    Dim rng As Range, ir As Range
+    
+    If mlt = LIST_LAYOUT And mst = FROM_THE_BEGINNING Then
+        
+        dc.assignDynamicColorsrange
+        Set ir = dc.getDataScope().Item(1, 1)
+        Do
+            
+            tmp = ir
+            ir = -1
+            DoEvents
+            ir = tmp
+            
+            Set ir = ir.Offset(1, 0)
+        Loop Until Trim(ir) = ""
+    End If
 End Sub
 
 Private Sub IReport_fullyRefresh()
@@ -80,15 +118,24 @@ Private Sub IReport_repInit(zakres As Range, limit As Date, lt As LAYOUT_TYPE, s
     ' nalezy podkreslic ze wszystkie te dane ktore sa do siebie przypisywane to w dalszym ciagu zonglowanie danych offline
     ' czy nie ma jeszcze wartosci dodanej
     ' jest to tylko przygotowanie kolekcji pod dane z mgo - zeby bylo spojnie
+    ' plus dodatkowe pola przetrzymujace info jakie to wlasciwie raport ma byc
+    mlt = lt
+    mst = st
 
     Dim r As Range
     Set itersCollection = Nothing
     Set itersCollection = New Collection
     
+    ' z racji tego ze jak filtruje to nie patrze na wszystkie musi byc niezalezna flaga sprawdzajaco ktory
+    ' pn z kolej jest brany pod uwage
+    ' zaczynamy od pierwszego
+    rowFlag = 1
+    
     For Each r In zakres
     
         ' ten prosty warunek rozwiazuje problem
         ' schowanych wierszy przez filtr
+        
         If Not r.EntireRow.Hidden Then
     
             Set iter = Nothing
@@ -104,8 +151,9 @@ Private Sub IReport_repInit(zakres As Range, limit As Date, lt As LAYOUT_TYPE, s
             ' a jest nim:
             ' sub powstaly dnia 31 oct 2014: czesciowyFillNaTejIteracji jako komponenet subowy obiekty typu iiteracja
             ' ======================================
-            iter.czesciowyFillNaTejIteracji r, lt, st, limit, rqm_limit
-            
+            iter.czesciowyFillNaTejIteracji r, lt, st, limit, rqm_limit, rowFlag
+            ' inkrementacja zawsze po wykonaniu czesciowego wypelnienia
+            rowFlag = rowFlag + 1
             
             ' dodajemy szczatkowo iteracje tylko wejsciowymi danymi
             ' praca dalsza na juz istniejacych obiektach - z kwesita po kolei dodawania kolejno rqm, pus/asn / balance
@@ -165,27 +213,40 @@ Private Sub IReport_repRun(imgo As MGO, sh As StatusHandler)
             ffld.buildLayoutForCommonData
             
             iledni = 0
+            ' Debug.Print "0. start " & CStr(Now)
         
             For Each mitem In itersCollection
             
                 ' jestesmy w srodku iteracji kazdego elementu jednorazowo
                 ' mozemy teraz zrobic scenariusz
                 ' tutaj dzieje sie kazdy element zwiazany z mgo
+                'Debug.Print "1. start " & CStr(Now)
                 mitem.createFullIteration imgo
+                'Debug.Print "2. after fulliter " & CStr(Now)
                 ' po uzupelnieniu danych nakladamy layout co by dobrze wygladalo
                 ' i teraz tak - zakladam ze ta metoda ponizej oprocz samego koloru wyplenia rowniez
                 'odpowiednio dane wg ustalonego typu runu czy raczej layotutu
                 ' teraz jest ok
                 ' Debug.Print mitem.getItemsCollection.COUNT
                 mitem.addColorFlavour
+                ' Debug.Print "3. after addcolorflavor " & CStr(Now)
                 
+                'Debug.Print "pi1 " & CStr(Now)
                 sh.progress_increase
-            
+                'Debug.Print "pi2 " & CStr(Now)
             Next mitem
             ffld.buildLayoutForDatesLabels itersCollection
+            ffld.addFilterOnListLayout
+            
+            
+            'Debug.Print "4. end before assigning dynamic colors " & CStr(Now)
             
             dc.assignDynamicColorsrange
             dc.recalcColors
+            
+            'Debug.Print "5. after final recalc " & CStr(Now)
+            
+            ' ffld.autoFitContent
         End If
     End If
 

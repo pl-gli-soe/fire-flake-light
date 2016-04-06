@@ -17,6 +17,7 @@ Attribute VB_Exposed = False
 ' jedyna metoda przerwania jesli chodzi o ten form
 ' normalnie ma pracowac przez caly czas bez bolu
 Private Sub BtnPrzerwij_Click()
+    Application.EnableEvents = True
     End
 End Sub
 

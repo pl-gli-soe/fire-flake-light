@@ -7,7 +7,7 @@ End Sub
 
 Public Sub sSUPPLIER(mcd As CommonData, r As Range)
 
-    r = mcd.duns
+    r = mcd.supplierName
 
 End Sub
 

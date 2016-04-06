@@ -1,4 +1,12 @@
 Attribute VB_Name = "GlobalModule"
+#If VBA7 Then
+Private Declare PtrSafe Function SHGetPathFromIDList Lib "shell32.dll" Alias "SHGetPathFromIDListA" (ByVal pidl As LongPtr, ByVal pszPath As String) As LongPtr
+#Else
+Private Declare Function SHGetPathFromIDList Lib "shell32.dll" Alias "SHGetPathFromIDListA" (ByVal pidl As Long, ByVal pszPath As String) As Long
+#End If
+
+
+
 ' delay time
 Declare Sub Sleep Lib "kernel32" (ByVal dwMilliseconds As Long)
 
@@ -45,6 +53,7 @@ End Enum
 
 Public Enum COMMENT_TYPE
     IN_TRANSIT
+    DATA_FROM_POP
 End Enum
 
 

@@ -78,6 +78,10 @@ Private Function przeliczZasieg() As Range
 End Function
 
 
+Private Function IDynamicColors_getDataScope() As Range
+    Set IDynamicColors_getDataScope = zasiegDoNadaniaDynamicznychKolorow
+End Function
+
 Private Sub IDynamicColors_recalcColors()
 
 

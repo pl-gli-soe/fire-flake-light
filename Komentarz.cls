@@ -17,16 +17,48 @@ Public Sub assignTransitsIntoComment(r As Range, c As Collection)
         
         r.ClearComments
         txt = CStr(prepareComment(c))
+        ile = CLng(UBound(Split(txt, Chr(10))))
+        ile = ile / 10
         If Trim(txt) <> "" Then
             r.AddComment CStr(txt)
             ' wartosci dobrane heurstycznie
             r.comment.Shape.Width = 100
-            r.comment.Shape.Height = 120 * (c.COUNT)
+            r.comment.Shape.Height = 120 * (ile)
         End If
         
         
     End If
 End Sub
+
+Public Sub makeCommentBasedOnPopData(ByRef r As Range, ByRef mcd As CommonData)
+    
+    If typeOfComment = DATA_FROM_POP Then
+    
+    
+        cmnt_txt = assignHerePopData(mcd)
+        r.ClearComments
+        r.AddComment CStr(cmnt_txt)
+        r.comment.Shape.Width = 300
+        r.comment.Shape.Height = 140
+    End If
+End Sub
+
+Private Function assignHerePopData(ByRef mcd As CommonData) As String
+    assignHerePopData = ""
+    
+    assignHerePopData = "MS9POP00: " & Chr(10) & _
+        CStr(mcd.plt) & ", " & CStr(mcd.pn) & Chr(10) & Chr(10) & _
+        "COUNT_CMNT: " & CStr(mcd.count_cmnt) & Chr(10) & _
+        "O_CMNT: " & CStr(mcd.o_cmnt) & Chr(10) & Chr(10) & _
+        "MODE: " & CStr(mcd.mode) & ", BANK: " & CStr(mcd.bank) & Chr(10) & _
+        "OS: " & CStr(mcd.os) & ", DOH: " & CStr(mcd.doh) & Chr(10) & _
+        "PNAME: " & CStr(mcd.partName) & Chr(10) & _
+        "SUPP NAME: " & CStr(mcd.supplierName) & Chr(10) & _
+        "PCS TO GO: " & CStr(mcd.pcsToGo) & Chr(10) & _
+        "QHD: " & CStr(mcd.qhd) & ", TT: " & CStr(mcd.ttime) & Chr(10)
+
+End Function
+
 
 Private Function prepareComment(c As Collection) As String
 
@@ -43,7 +75,7 @@ Private Function prepareComment(c As Collection) As String
             "name: " & CStr(t.mName) & Chr(10) & _
             "qty: " & CStr(t.mQty) & Chr(10) & _
             "route: " & CStr(t.mRoute) & Chr(10) & _
-            "status: " & CStr(t.mST) & Chr(10) & _
+            "status: " & CStr(t.mst) & Chr(10) & _
             "trlr: " & CStr(t.mTRLR) & Chr(10) & _
             "--------------------" & Chr(10)
         End If

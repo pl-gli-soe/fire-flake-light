@@ -58,6 +58,7 @@ Private purple1Color As Variant
 ' my colors on my layout
 Private primaryColor As Variant
 Private secondaryColor As Variant
+Private weekendColor As Variant
 Private minusColor As Variant
 Private warningColor As Variant
 
@@ -81,6 +82,7 @@ Private Sub Class_Initialize()
     
     primaryColor = ThisWorkbook.Sheets("register").Range("primary").Interior.Color
     secondaryColor = ThisWorkbook.Sheets("register").Range("secondary").Interior.Color
+    weekendColor = ThisWorkbook.Sheets("register").Range("weekendColor").Interior.Color
     minusColor = ThisWorkbook.Sheets("register").Range("minus").Interior.Color
     warningColor = ThisWorkbook.Sheets("register").Range("warning").Interior.Color
     
@@ -126,13 +128,17 @@ Private Sub Class_Terminate()
     Set komentarzHandler = Nothing
 End Sub
 
+Private Sub IFireFlakeLayout_addFilterOnListLayout()
+    poczatekRaportuDaily.Parent.Range(poczatekRaportuDaily, poczatekRaportuDaily.End(xlToRight)).AutoFilter
+End Sub
+
 Private Sub IFireFlakeLayout_autoFitContent()
     
     
     Range(poczatekRaportuDaily, poczatekRaportuDaily.End(xlToRight)).EntireColumn.AutoFit
 End Sub
 
-Private Sub IFireFlakeLayout_buildIterationLayoutForCommonData(ic As Collection, mcd As CommonData, notYetReceivedWithPastEdaCollection As Collection)
+Private Sub IFireFlakeLayout_buildIterationLayoutForCommonData(ByRef ic As Collection, ByRef mcd As CommonData, ByRef notYetReceivedWithPastEdaCollection As Collection)
     
     ' ta procedura juz pracuje w srodku petli na kazdej iteracji po kolei
     ' na szczescie mcd zawiera mase danych dzieki czemu nie powinienem sie pogubic
@@ -150,26 +156,44 @@ End Sub
 
 
 
-Public Sub budujemyPodIteracjeCommonDataListLayout(ic As Collection, mcd As CommonData, notYetReceivedWithPastEdaCollection As Collection)
+Private Sub budujemyPodIteracjeCommonDataListLayout(ByRef ic As Collection, ByRef mcd As CommonData, ByRef notYetReceivedWithPastEdaCollection As Collection)
 
+    ' Debug.Print "budujemyPodIteracjeCommonDataListLayout beg " & CStr(Now)
+    ' init ref variable
+    ' this is a base from comment as well
+    ' ==========================================================================
     Set baza = sh.Cells(mcd.rowFlag, 2)
+
+    
+    ' fill data from pop screen into comment in first cell (pn)
+    ' ==========================================================================
+    Dim k As Komentarz
+    Set k = New Komentarz
+    k.typeOfComment = DATA_FROM_POP
+    k.makeCommentBasedOnPopData baza, mcd
+    Set k = Nothing
+
+    ' fill data in cells
+    ' ==========================================================================
+
+    
     baza = mcd.pn
-    baza.Font.size = baza.Font.size + 1
-    tl.fillThinFrame baza, CDbl(secondaryColor)
-    tl.backColor baza, CDbl(blackColor)
-    baza.Font.Color = CDbl(primaryColor)
+    ' baza.Font.size = baza.Font.size + 1
+    tl.fillThinFrame baza, CDbl(primaryColor)
+    tl.backColor baza, CDbl(secondaryColor)
+    baza.Font.Color = CDbl(blackColor)
     
     baza.Offset(0, 1) = mcd.plt
-    tl.fillThinFrame baza.Offset(0, 1), CDbl(secondaryColor)
-    tl.backColor baza.Offset(0, 1), CDbl(blackColor)
-    baza.Offset(0, 1).Font.Color = CDbl(primaryColor)
+    tl.fillThinFrame baza.Offset(0, 1), CDbl(primaryColor)
+    tl.backColor baza.Offset(0, 1), CDbl(secondaryColor)
+    baza.Offset(0, 1).Font.Color = CDbl(blackColor)
     
     Dim i As Range
     flaga = 2
     For Each i In toShowFromPop
         If i = "x" Then
             run CStr(i.Offset(0, -1)), mcd, baza.Offset(0, flaga)
-            tl.fillThinFrame baza.Offset(0, flaga), CDbl(secondaryColor)
+            tl.fillThinFrame baza.Offset(0, flaga), CDbl(primaryColor)
             
             flaga = flaga + 1
         End If
@@ -179,32 +203,54 @@ Public Sub budujemyPodIteracjeCommonDataListLayout(ic As Collection, mcd As Comm
     ' elementow posrednich jest w sumie 5
     
     ' first runout
-    tl.fillThinFrame baza.Offset(0, flaga), CDbl(secondaryColor)
-    baza.Offset(0, flaga).FormulaR1C1 = "=firstRunout(RC[-8])"
+    tl.fillThinFrame baza.Offset(0, flaga), CDbl(primaryColor)
+    ' RC[-8] - to nie jest zawsze prawda!
+    ile_na_minus = CStr(baza.Offset(0, flaga).Column - 1)
+    ' tu jest troche dupa bo statycznie przypisalem tylko 100 komorek co nie jest do konca prawda :D
+    ' ile_na_plus w sumie tez sie przyda :D
+    ' ile_na_plus = CStr(baza.Parent.Range("b4").End(xlToRight))
+    ile_na_plus = CStr(200)
+    ' bedzie te ile_na_plus treoche redundantne ale tylko o kilka zatem nie powinno robic problemu ostatecznie
+    baza.Offset(0, flaga).FormulaR1C1 = "=firstRunout(RC[-" & CStr(ile_na_minus) & "]:RC[-1], RC[1]:RC[" & ile_na_plus & "])"
     flaga = flaga + 1
     
     ' cmnt 1
-    tl.fillThinFrame baza.Offset(0, flaga), CDbl(secondaryColor)
+    tl.fillThinFrame baza.Offset(0, flaga), CDbl(primaryColor)
     baza.Offset(0, flaga) = ThisWorkbook.Sheets("input").Cells(mcd.rowFlag - 3, 3)
     flaga = flaga + 1
     
     ' cmnt 2
-    tl.fillThinFrame baza.Offset(0, flaga), CDbl(secondaryColor)
+    tl.fillThinFrame baza.Offset(0, flaga), CDbl(primaryColor)
     baza.Offset(0, flaga) = ThisWorkbook.Sheets("input").Cells(mcd.rowFlag - 3, 4)
     flaga = flaga + 1
     
     ' not yet rec
-    tl.fillThinFrame baza.Offset(0, flaga), CDbl(secondaryColor)
+    tl.fillThinFrame baza.Offset(0, flaga), CDbl(primaryColor)
     baza.Offset(0, flaga) = calcTransQty(notYetReceivedWithPastEdaCollection)
     komentarzHandler.assignTransitsIntoComment baza.Offset(0, flaga), notYetReceivedWithPastEdaCollection
     flaga = flaga + 1
     
     ' past due rqm
-    tl.fillThinFrame baza.Offset(0, flaga), CDbl(secondaryColor)
+    tl.fillThinFrame baza.Offset(0, flaga), CDbl(primaryColor)
     baza.Offset(0, flaga) = calcPastDueRqm(ic)
     
     Set ostatniElementCommonDataTejIteracji = baza.Offset(0, flaga)
+    
+    
+    ' Debug.Print "budujemyPodIteracjeCommonDataListLayout end " & CStr(Now)
 End Sub
+
+
+Private Function calcTransQty(c As Collection)
+    
+    calcTransQty = 0
+    Dim t As ITransit
+    If c.COUNT > 0 Then
+        For Each t In c
+            calcTransQty = calcTransQty + CLng(t.mQty)
+        Next t
+    End If
+End Function
 
 
 Private Function calcPastDueRqm(ic As Collection) As Long
@@ -226,10 +272,7 @@ Private Function calcPastDueRqm(ic As Collection) As Long
 End Function
 
 
-Private Sub IFireFlakeLayout_buildIterationLayoutForCoverage(ic As Collection, mcd As CommonData)
-
-
-    
+Private Sub IFireFlakeLayout_buildIterationLayoutForCoverage(ByRef ic As Collection, ByRef mcd As CommonData)
 
     Set pierwszyElementCoverageTejIteracji = ostatniElementCommonDataTejIteracji.Offset(0, 1)
     
@@ -259,22 +302,37 @@ Private Sub IFireFlakeLayout_buildIterationLayoutForCoverage(ic As Collection, m
 
 End Sub
 
-Private Sub budowanieKowerydzaDniowegoNaLiscie(ic As Collection, mcd As CommonData, b As Range)
+Private Sub budowanieKowerydzaDniowegoNaLiscie(ic As Collection, mcd As CommonData, ByRef b As Range)
 
 
+    ' algorytm z 14 kwietnia na tej procedurze zajmuje 4 sekundy!
+    ' [sic!]
+    Application.EnableEvents = False
+    Application.Calculation = xlCalculationManual
+
+    
     ' ok zatem b as range
     ' to pierwszy element na ktory ja jako tako mam zwrocic uwage budujac sobie dane kowerydzowe
     
     Dim pastDueRqmLbl As Range
-    Set pastDueRqmLbl = pierwszyElementCoverageTejIteracji.Parent.Cells(4, pierwszyElementCoverageTejIteracji.Column - 1)
+    Set pastDueRqmLbl = b.Parent.Cells(4, b.Column - 1)
     
     ileItemow = ic.COUNT
-    Dim addBackground As Boolean, firstTime As Boolean
-    addBackground = False
+    Dim firstTime As Boolean
+    ' addBackground = False
     firstTime = True
+    
+    
+    ' dodatkowo przed petla aby uniknac petli w petli
+    ' gdyz zawsze jest to problem dla vba
+    ' wczesniej zadeklarujemy odleglosci miedyz CBAL i MISC od pierwszego EBALA
+    ofst_CBAL = CStr(offsetFor("CBAL", pastDueRqmLbl))
+    ofst_MISC = CStr(offsetFor("MISC", pastDueRqmLbl))
+    for_first_time_formula = "=" & CStr(ofst_CBAL) & "-" & CStr(ofst_MISC) & "-RC[-3]+RC[-4]+RC[-1]-RC[-2]"
+    for_regular_formula = "=RC[-3]+RC[-1]-RC[-2]"
+    
     Dim di As IItem
     For Each di In ic
-    
     
         ' pierwszy warunek ktory unika danych przeszlych
         ' lecimy tylko i wylacznie wtedy gdy pierwszy dzien kowerydza to dzien conajmniej dzisiejszy
@@ -282,57 +340,63 @@ Private Sub budowanieKowerydzaDniowegoNaLiscie(ic As Collection, mcd As CommonDa
         If Format(di.getDate(), "yyyy-mm-dd") >= Format(Now, "yyyy-mm-dd") Then
         
             b = di.getRqm
-            tl.fillSolidFrame b, CDbl(secondaryColor)
-            b.Offset(0, 1) = calcTransQty(di.getInTransits())
+            tl.fillSolidFrame b, CDbl(primaryColor)
+            ' 1 sec obsolete
+            ' b.Offset(0, 1) = calcTransQty(di.getInTransits())
+            b.Offset(0, 1) = di.getSumOfQty()
             komentarzHandler.assignTransitsIntoComment b.Offset(0, 1), di.getInTransits()
             
-            tl.fillSolidFrame b.Offset(0, 1), CDbl(secondaryColor)
+            tl.fillSolidFrame b.Offset(0, 1), CDbl(primaryColor)
             
-            If Not firstTime Then
             
-                ' policz ile przesuwamy sie do tylu aby pobrac CBAL, MISC, NOT yet rec, past due rqms
-            
-                b.Offset(0, 2).FormulaR1C1 = "=RC[-3]+RC[-1]-RC[-2]"
-            ElseIf firstTime Then
+            If firstTime Then
             
                 ' -5 not yet rec
                 ' -4 past due rqm (sunday)
                 ' -1 trans
                 ' -2 rqm
                 ' to calc misc & cbal
-                b.Offset(0, 2).FormulaR1C1 = "=" & CStr(offsetFor("CBAL", pastDueRqmLbl)) & "-" & CStr(offsetFor("MISC", pastDueRqmLbl)) & "-RC[-3]+RC[-4]+RC[-1]-RC[-2]"
+                b.Offset(0, 2).FormulaR1C1 = CStr(for_first_time_formula)
                 firstTime = False
-            End If
-            
-            
-            If addBackground Then
-                'For x = 0 To 1
-                '    tl.backColor b.Offset(0, x), CDbl(blackColor)
-                '    b.Offset(0, x).Font.Color = CDbl(yellowColor)
-                'Next x
-                
-                tl.backColor b.Offset(0, 2), CDbl(primaryColor)
-                b.Offset(0, 2).Font.Color = CDbl(blackColor)
-                b.Offset(0, 2).Font.Bold = True
-                
-                tl.fillSolidFrame b.Offset(0, 2), CDbl(secondaryColor)
             Else
-                tl.backColor b.Offset(0, 2), CDbl(secondaryColor)
-                b.Offset(0, 2).Font.Color = CDbl(primaryColor)
-                b.Offset(0, 2).Font.Bold = True
-                
-                tl.fillSolidFrame b.Offset(0, 2), CDbl(primaryColor)
+            
+                ' policz ile przesuwamy sie do tylu aby pobrac CBAL, MISC, NOT yet rec, past due rqms
+            
+                b.Offset(0, 2).FormulaR1C1 = CStr(for_regular_formula)
             End If
             
             
-            addBackground = Not addBackground
+            b.Offset(0, 2).Font.Color = CDbl(blackColor)
+            b.Offset(0, 2).Font.Bold = True
+            'If addBackground Then
+            '
+            '    tl.backColor b.Offset(0, 2), CDbl(primaryColor)
+            '    b.Offset(0, 2).Font.Color = CDbl(blackColor)
+            '    b.Offset(0, 2).Font.Bold = True
+            '
+            '    tl.fillSolidFrame b.Offset(0, 2), CDbl(primaryColor)
+            'Else
+            '    tl.backColor b.Offset(0, 2), CDbl(secondaryColor)
+            '    b.Offset(0, 2).Font.Color = CDbl(blackColor)
+            '    b.Offset(0, 2).Font.Bold = True
+            '
+            '    tl.fillSolidFrame b.Offset(0, 2), CDbl(primaryColor)
+            'End If
+            
+        
+            ' addBackground = Not addBackground
             Set b = b.Offset(0, 3)
+            
         End If
         
+        
     Next di
-
     
-
+    
+    Application.EnableEvents = True
+    Application.Calculation = xlCalculationAutomatic
+    
+    
 End Sub
 
 Private Function offsetFor(cm As String, r As Range) As String
@@ -359,19 +423,6 @@ Private Function offsetFor(cm As String, r As Range) As String
     
     
 End Function
-
-Private Function calcTransQty(c As Collection)
-    
-    calcTransQty = 0
-    Dim t As ITransit
-    If c.COUNT > 0 Then
-        For Each t In c
-            calcTransQty = calcTransQty + CLng(t.mQty)
-        Next t
-    End If
-End Function
-
-
 
 Private Sub IFireFlakeLayout_buildLayoutForCommonData()
 
@@ -423,7 +474,7 @@ Private Sub IFireFlakeLayout_buildLayoutForCommonData()
             r.Font.size = r.Font.size + 1
         Else
             r.Interior.Color = secondaryColor
-            r.Font.Color = primaryColor
+            r.Font.Color = blackColor
         End If
         
         r.Font.size = r.Font.size + 2
@@ -438,7 +489,7 @@ Private Sub IFireFlakeLayout_buildLayoutForCommonData()
     
 End Sub
 
-Private Sub IFireFlakeLayout_buildLayoutForDatesLabels(c As Collection)
+Private Sub IFireFlakeLayout_buildLayoutForDatesLabels(ByRef c As Collection)
 
 
     ' c to glowna kolekcja - tak ta potezna zaiwerajaca wszystkie pnsy
@@ -485,20 +536,20 @@ Private Sub IFireFlakeLayout_buildLayoutForDatesLabels(c As Collection)
         
         
         If Not addBackground Then
-            r.Font.Color = CDbl(secondaryColor)
+            r.Font.Color = CDbl(blackColor)
             tl.fillSolidFrame r, CDbl(secondaryColor)
             
-            r.Offset(0, 1).Font.Color = CDbl(secondaryColor)
+            r.Offset(0, 1).Font.Color = CDbl(blackColor)
             tl.fillSolidFrame r.Offset(0, 1), CDbl(secondaryColor)
             
-            r.Offset(0, 2).Font.Color = CDbl(primaryColor)
+            r.Offset(0, 2).Font.Color = CDbl(blackColor)
             'r.Offset(0, 2).Font.Bold = True
             tl.fillSolidFrame r.Offset(0, 2), CDbl(primaryColor)
             tl.backColor r.Offset(0, 2), CDbl(secondaryColor)
             
             
-            r.Offset(-1, 0).Font.Color = CDbl(primaryColor)
-            r.Offset(-2, 0).Font.Color = CDbl(primaryColor)
+            r.Offset(-1, 0).Font.Color = CDbl(blackColor)
+            r.Offset(-2, 0).Font.Color = CDbl(blackColor)
             
             tl.backColor r.Offset(-1, 0), CDbl(secondaryColor)
             tl.backColor r.Offset(-2, 0), CDbl(secondaryColor)
@@ -508,10 +559,10 @@ Private Sub IFireFlakeLayout_buildLayoutForDatesLabels(c As Collection)
             
         Else
         
-            r.Font.Color = CDbl(secondaryColor)
+            r.Font.Color = CDbl(blackColor)
             tl.fillSolidFrame r, CDbl(secondaryColor)
             
-            r.Offset(0, 1).Font.Color = CDbl(secondaryColor)
+            r.Offset(0, 1).Font.Color = CDbl(blackColor)
             tl.fillSolidFrame r.Offset(0, 1), CDbl(secondaryColor)
             r.Offset(0, 2).Font.Color = CDbl(blackColor)
             'r.Offset(0, 2).Font.Bold = True
@@ -530,14 +581,14 @@ Private Sub IFireFlakeLayout_buildLayoutForDatesLabels(c As Collection)
         End If
         
         If Application.WorksheetFunction.Weekday(r.Offset(-1, 0), 2) = 6 Or Application.WorksheetFunction.Weekday(r.Offset(-1, 0), 2) = 7 Then
-            tl.backColor r.Offset(-1, 0), CDbl(blackColor)
-            tl.backColor r.Offset(-2, 0), CDbl(blackColor)
+            tl.backColor r.Offset(-1, 0), CDbl(weekendColor)
+            tl.backColor r.Offset(-2, 0), CDbl(weekendColor)
             
-            r.Offset(-1, 0).Font.Color = CDbl(primaryColor)
-            r.Offset(-2, 0).Font.Color = CDbl(primaryColor)
+            r.Offset(-1, 0).Font.Color = CDbl(blackColor)
+            r.Offset(-2, 0).Font.Color = CDbl(blackColor)
             
-            tl.fillThinGridLines Range(r.Offset(-2, 0), r.Offset(-1, 2)), CDbl(blackColor)
-            tl.fillSolidFrame Range(r.Offset(-2, 0), r.Offset(-1, 2)), CDbl(primaryColor)
+            'tl.fillThinGridLines Range(r.Offset(-2, 0), r.Offset(-1, 2)), CDbl(blackColor)
+            'tl.fillSolidFrame Range(r.Offset(-2, 0), r.Offset(-1, 2)), CDbl(blackColor)
             ' tl.fillSolidFrame Range(r.Offset(-2, 0), r.Offset(-2, 2)), CDbl(yellowColor)
         End If
         

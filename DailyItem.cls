@@ -17,10 +17,16 @@ Private t As ITransit
 Private transCollection As Collection
 Private ebal As Range
 
+' te pole powstalo w zwiazku z potrzeba na koncowych akcjach tworzenia layoutu
+' wpisywanie danych w komorki fizycznie zajmowalo zbyt duzo czasu
+' zatem dobrze by bylo aby istniala juz gotowa wartosc z ktorej po prostu zbieramy dane
+Private sumOfQty As Long
+
 
 
 Private Sub Class_Initialize()
     Set transCollection = New Collection
+    sumOfQty = 0
 End Sub
 
 Private Sub Class_Terminate()
@@ -33,6 +39,7 @@ End Sub
 
 Private Sub IItem_addTtransit(pus As ITransit)
     transCollection.Add pus
+    sumOfQty = sumOfQty + CLng(pus.mQty)
 End Sub
 
 Private Function IItem_getDate() As Date
@@ -49,6 +56,10 @@ End Function
 
 Private Function IItem_getRqm() As Long
     IItem_getRqm = CLng(rqm)
+End Function
+
+Private Function IItem_getSumOfQty() As Long
+    IItem_getSumOfQty = CLng(sumOfQty)
 End Function
 
 Private Function IItem_getTransitItem() As ITransit

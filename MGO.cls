@@ -100,6 +100,13 @@ Public Function convertToDateFromMS9PO400Date(ms9po400_date As String) As Date
     convertToDateFromMS9PO400Date = CDate(CStr(2000 + Int(Right(ms9po400_date, 2))) & "-" & CStr(FromMGOMonth(Right(Left(ms9po400_date, 4), 2))) & "-" & CStr(Int(Left(ms9po400_date, 2))))
 End Function
 
+Public Function convertToDateFromMS9POP00Date(ms9po400_date As String) As Date
+
+    ' format daty dla scr MS9PO400 -    ' 27MR12
+    ' -----------------------------------------------------------YEAR----------------------------------------MONTH-------------------------------------------------------YEAR-------------------------------
+    convertToDateFromMS9POP00Date = CDate(CStr(2000 + Int(Right(ms9po400_date, 2))) & "-" & CStr(FromMGOMonth(Right(Left(ms9po400_date, 5), 2))) & "-" & CStr(Int(Left(ms9po400_date, 2))))
+End Function
+
 
 
 Public Function convertToDateFromZK7PDRQMDate(zk7pdrqm_date As String) As Date

@@ -18,8 +18,12 @@ Private ii As IItem
 
 ' handler pod prace z ekranami tranzytow
 Private t As ITransit
+' additional variable for synchro on between ms9po400 and zk7ppum0
+Private ttmp As ITransit
 ' i tak jest potrzebna dodatkowa kolekcja tranzytow ktore nie zostaly bookniete a maja eda juz przeszla
 Private notYetReceivedWithPastEdaCollection As Collection
+
+Private push As PickupHandler
 
 ' layout pojedynczo dla kazdej iteracji aby mozna bylo robic continue z broken report
 Private fireFlake_Layout As IFireFlakeLayout
@@ -40,6 +44,9 @@ Private Sub Class_Initialize()
     
     Set HOW_MANY_DAYS_FOR_PPUS0 = ThisWorkbook.Sheets("register").Range("HOW_MANY_DAYS_FOR_PPUS0")
     
+    
+    Set push = New PickupHandler
+    
 End Sub
 
 
@@ -50,6 +57,7 @@ Private Sub Class_Terminate()
     Set ii = Nothing
     Set fireFlake_Layout = Nothing
     Set notYetReceivedWithPastEdaCollection = Nothing
+    Set push = Nothing
 End Sub
 
 Private Sub IIteration_addColorFlavour()
@@ -57,7 +65,7 @@ Private Sub IIteration_addColorFlavour()
     ' tutaj bawimy sie tylko konkretnymi danymi
     fireFlake_Layout.buildIterationLayoutForCommonData ic, mcd, notYetReceivedWithPastEdaCollection
     fireFlake_Layout.buildIterationLayoutForCoverage ic, mcd
-    fireFlake_Layout.autoFitContent
+    ' fireFlake_Layout.autoFitContent
 
 End Sub
 
@@ -96,6 +104,24 @@ End Sub
 Private Sub fillItemCollection(m As MGO)
 
 
+    ' kwestia komponentow
+    ' przed addRqmsAndDatesIntoItems jestesmy jeszcze na ekranie ms9pop00
+    ' i mozemy jeszcze zaciagnac dane rqms
+    ' mozemy tez zrobic proste if else
+    ' tj albo sciagamy dane z popa albo tylko z zk7pdrqm
+    ' jesli user zarequestuje mniej niz 10 dni do ogladania nie ma potrzeby nawet zagladac na zk7pdrqm
+    ' =============================================================================
+    
+    ' psuedo code
+    ' =============================================================================
+    ' if days < 10 or component
+    '   ' here data downloaded from ms9pop00
+    '   addRqmsAndDatesIntoItemsButFromPopScreen
+    ' else
+    '   ' here data downloaded from zk7pdrqm
+    '   addRqmsAndDatesIntoItems
+    ' =============================================================================
+
     ' this very first one is not only for the rqms but also provides dates
     addRqmsAndDatesIntoItems m
     
@@ -123,7 +149,9 @@ End Sub
 Private Sub addRqmsAndDatesIntoItems(m As MGO)
 
 
-
+    ' narazie ten subroutine obsluguje tylko i wylacznie ekran daily rqm zk7pdrqm
+    ' ale musis przecko byc tez naddatek zwiazany z plt comp
+    ' i zatem to pomijamy w ogole
 
 
     m.sendKeys "<Clear>"
@@ -399,7 +427,16 @@ Private Sub addPusesIntoItems(m As MGO)
         ' push.takeDataFromPPUM0 m
         ' push.takeDataFromPH100 m, mcd
         ' push.fillCollections notYetReceivedWithPastEdaCollection, ic
-        fillTransitCollectionByPuses m
+        
+        
+        fillTransitCollectionByPuses m, push
+        ' niestety okazalo sie ze nie moge byc az tak restrykcyjny jesli chodzi o zaciaganie danych tylko i wylacznie z PPUS0
+        ' musze znow wejsc na ekran ms9po400 i sprawdzic przykladowo help shippy badz
+        ' tak czy siak sprawdzic asny poniewaz czesc jest w trakcie zmiany dostawcy z lokalnego na osea
+        ' i na odwrot
+        
+        ' cudowne uproszczenie implementacji dzieki zmiennej typu slownik
+        fillTransitCollectionFromMs9po400 m, push, mcd
         
         ' ======================================
     Else
@@ -408,116 +445,52 @@ Private Sub addPusesIntoItems(m As MGO)
         ' bierzemy pod uwage tylko i wylaczenie dane z ms9po400
         ' ======================================
         
-        
-        fillTransitCollectionFromMs9po400 m
+        ' cudowne uproszczenie implementacji dzieki zmiennej typu slownik
+        fillTransitCollectionFromMs9po400 m, push, mcd
         
         ' ======================================
     End If
+    
+    migrateDataFromDictionaryToCollections push, notYetReceivedWithPastEdaCollection, ic
+    
+    
+End Sub
+
+Private Sub migrateDataFromDictionaryToCollections(ByRef push As PickupHandler, ByRef nyr As Collection, ByRef ic As Collection)
+    push.migrateDataIntoCollections nyr, ic
 End Sub
 
 
-Private Sub fillTransitCollectionByPuses(ByRef m As MGO)
+Private Sub fillTransitCollectionByPuses(ByRef m As MGO, ByRef push As PickupHandler)
 
 
     ' kwestia zaimplementowania osobnej klasy sprawujacej wladze nad ekranami ppum0 oraz ph100
     ' ktora na wyjsciu daje dwa obiekty - uzupelnia odpowiednio itransity dla itemow std
     ' oraz wypelnia not yet recevied collection
-    Dim push As PickupHandler
-    Set push = New PickupHandler
+    
     
     push.takeDataFromPPUM0 m
     push.takeDataFromPH100 m, mcd
-    push.fillCollections notYetReceivedWithPastEdaCollection, ic
+    ' push.fillCollections notYetReceivedWithPastEdaCollection, ic
     
-    Set push = Nothing
 
 End Sub
 
-Private Sub fillTransitCollectionFromMs9po400(ByRef m As MGO)
+Private Sub fillTransitCollectionFromMs9po400(ByRef m As MGO, ByRef push As PickupHandler, ByRef mcd As CommonData)
 
-
-    m.sendKeys "<Clear>"
-    m.sendKeys "ms9po400 <Enter>"
-    m.pMS9PO400.plt = mcd.plt
-    m.pMS9PO400.pn = mcd.pn
-    m.pMS9PO400.KANBAN = ""
-    m.submit
+    If CBool(push.gotopo400) Then
     
-    
-    ' sprawdz ladnie prosze czy przypadkiem nie przeszlismy na ekran ms3p9800
-    If UCase(CStr(m.actualScreen)) <> UCase(CStr(m.pMS3P9800.screenName)) Then
-    
-        Do
-            For x = 0 To 7
-            
-                ' czy pusta linia to jest
-                If CStr(m.pMS9PO400.EDA(Int(x))) <> "______" Then
-                
-                    If CDate(m.convertToDateFromMS9PO400Date(m.pMS9PO400.SDATE(Int(x)))) <= CDate(Format(mcd.pusLimit, "yyyy-mm-dd")) Then
-                
-                    
-                        ' format pod czas
-                        txt_time = Left(m.pMS9PO400.ETA(Int(x)), 2) & ":" & Right(m.pMS9PO400.ETA(Int(x)), 2)
-                        If txt_time = "__:__" Then
-                            txt_time = "00:00"
-                        ' tutaj fancy warunek gdyby ktos upadl na lep
-                        ' i dostal udaru zapisujac godzine 00:00 jako 24:00
-                        ElseIf txt_time = "24:00" Then
-                            txt_time = "23:59"
-                        End If
-                        
-                        Set t = Nothing
-                        Set t = New Transit
-                        t.mDeliveryDate = CDate(m.convertToDateFromMS9PO400Date(m.pMS9PO400.EDA(Int(x))))
-                        t.mDeliveryTime = CDate(Format(txt_time, "hh:mm"))
-                        t.mNotYetReceived = True
-                        
-                        ' you can also say that name is sid
-                        t.mName = m.pMS9PO400.SID(Int(x))
-                        t.mTRLR = m.pMS9PO400.TRLR(Int(x))
-                        t.mST = m.pMS9PO400.st(Int(x))
-                        t.mPickupDate = CDate(m.convertToDateFromMS9PO400Date(CStr(m.pMS9PO400.SDATE(Int(x)))))
-                        ' tutaj nie jest zdefiniowane
-                        ' t.mPickupTime = CDate(Format(Now, "hh:mm"))
-                        t.mQty = CLng(m.pMS9PO400.qty(Int(x)))
-                        t.mRoute = m.pMS9PO400.route(Int(x))
-                        t.mOnPo400 = True
-                        
-                        
-                        
-                        ' tutaj dziele jak trzeba tworze kolekcje elementow not yet received z przeszlosci i traktuje calkiem zwyczajnie te dane tak jak
-                        ' kolejna dana z ta roznica ze ten zbior posiada konkretne jeden if
-                        ' i nie ma potrzeby zawracac gitary petli not yer received
-                        If CDate(CStr(t.mDeliveryDate & " " & t.mDeliveryTime)) < Now Then
-                        
-                        
-                            notYetReceivedWithPastEdaCollection.Add t
-                        Else
-                            For Each ii In ic
-                                iidate = CStr(Format(CDate(ii.getDate), "yyyy-mm-dd"))
-                                tdate = CStr(Format(CDate(t.mDeliveryDate), "yyyy-mm-dd"))
-                                If iidate = tdate Then
-                                
-                                    ii.getInTransits.Add t
-                                    Exit For
-                                End If
-                            Next ii
-                        End If
-                        
-                        
-                    End If
-                
-                End If
-                
-            Next x
+        m.sendKeys "<Clear>"
+        m.sendKeys "ms9po400 <Enter>"
+        m.pMS9PO400.plt = mcd.plt
+        m.pMS9PO400.pn = mcd.pn
+        m.pMS9PO400.KANBAN = ""
+        m.submit
         
-            If m.getCode("ms9po400") = "I5487" Or m.getCode("ms9po400") = "I6155" Or m.getCode("ms9po400") = "I6293" Or m.getCode("ms9po400") = "I4528" Then
-                Exit Do
-            End If
-        
-            m.sendKeys "<pf8>"
-        Loop While True
+        push.takeDataFromPO400 m, mcd
+    
     End If
+    
 End Sub
 
 
@@ -564,14 +537,43 @@ Private Sub fillRestOfCommonData(m As MGO)
         
         ' czego braklo i trzeba dopisac
         mcd.supplierName = CStr(m.pMS9POP00.SUPPLIER)
+        mcd.partName = CStr(m.pMS9POP00.PART_NAME)
         mcd.fupCode = CStr(m.pMS9POP00.F_U)
         mcd.fmaFupCode = CStr(m.pMS9POP00.a)
         mcd.mode = CStr(m.pMS9POP00.mode)
         mcd.count_cmnt = CStr(m.pMS9POP00.COUNT)
         mcd.o_cmnt = CStr(m.pMS9POP00.O)
         ' to jest jeszcze do poprawy
-        mcd.f_cmnt = CStr(m.pMS9POP00.O)
+        mcd.f_cmnt = CStr(m.pMS9POP00.F)
+        
+        
+        
+        ' teraz przejdzmy do czesci z asnami / pusami
+        ' i jesli jest mozliwosc to posciagaj dane od razu tutaj
+        
+        ' wyliczamy tak jak w przypadku std tablicy od zera
+        If CStr(m.pMS9POP00.transQTY(2)) = "" Then
+            push.gotopo400 = False
+            
+            ' tutaj znajduja sie przynajmniej 2 asny
+            
+            ' ten warunek sprawdza czy w ogole cos mamy
+            If CStr(m.pMS9POP00.transQTY(0)) = "" Then
+                ' tutaj nic nie ma wiec nawet nie uruchamiaj
+                ' nop at the end
+            Else
+                push.takeDataFromPOP m, mcd
+                
+            End If
+        ElseIf CStr(m.pMS9POP00.transQTY(2)) <> "" Then
+            push.gotopo400 = True
+        End If
+    
     End If
+    
+    
+    
+    
     
     
     
@@ -604,7 +606,7 @@ Private Function checkIsDouble(s As String) As Double
 End Function
 
 
-Private Sub IIteration_czesciowyFillNaTejIteracji(r As Range, lt As LAYOUT_TYPE, st As START_TYPE, limit As Date, rqm_limit As Date)
+Private Sub IIteration_czesciowyFillNaTejIteracji(r As Range, lt As LAYOUT_TYPE, st As START_TYPE, limit As Date, rqm_limit As Date, rowFlag)
 
     ' plt & pn - dzieki tym dwom paramsom jestem w stanie odtworzyc caly coverage przy pomocy oczywiscie rowniez danych z mgo
     
@@ -615,7 +617,7 @@ Private Sub IIteration_czesciowyFillNaTejIteracji(r As Range, lt As LAYOUT_TYPE,
     
     ' dodatkowy komentarz wejsciowy co by moze latwiej sie filtrowalo na gotowym raporcie
     mcd.comment = Trim(r.Offset(0, 2))
-    mcd.comment = Trim(r.Offset(0, 3))
+    mcd.additionalCommnet = Trim(r.Offset(0, 3))
     
     'component -> flaga czy w inne ekrany mam zagldac
     mcd.c = doubleCheckOnPlant(r.Offset(0, 4), r)
@@ -627,7 +629,7 @@ Private Sub IIteration_czesciowyFillNaTejIteracji(r As Range, lt As LAYOUT_TYPE,
     
     ' flaga pod wiersz - szczegolnie przydatne dla odtworzenia danych przy popsustym raporcie
     ' plus 2 poniewaz raport daily w output zaczyna sie od 5 wiersza - nieco gorzej bedzie z hourly ale to juz inna historia
-    mcd.rowFlag = CLng(r.Row) + 3
+    mcd.rowFlag = CLng(rowFlag) + 4
     
     
     ' limitacje i konfiguracje
@@ -638,7 +640,14 @@ Private Sub IIteration_czesciowyFillNaTejIteracji(r As Range, lt As LAYOUT_TYPE,
     mcd.rqmLimit = CDate(rqm_limit)
 End Sub
 
-Private Function getIterConfig(s As Range)
+' CONFIG
+' 5th column in input
+' auto change due to type of part number and the plant
+' auto recognize component for example
+' let zero be assembly
+' let one be component from ms9pop00
+' let 2 be sth else
+Private Function getIterConfig(ByRef s As Range)
     If s = "" Then
         getIterConfig = "0"
         s = "0"

@@ -120,6 +120,7 @@ Public Sub runDaily(limit As Date, lt As LAYOUT_TYPE, st As START_TYPE, daily_rq
         
         
         
+        
         ' =======================================================================================================
         
     ElseIf st = CONTINUE_BROKEN_ONE Then
@@ -129,6 +130,10 @@ Public Sub runDaily(limit As Date, lt As LAYOUT_TYPE, st As START_TYPE, daily_rq
         ' poza scopem tej procedury!
         MsgBox "ten msgbox nigdy nie moze sie pojawic"
     End If
+    
+    
+    rep.fakeDataChangeToRecalcFirstRunoutFormula
+    rep.adjustLayoutAfterAllJobs
 
 End Sub
 

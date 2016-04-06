@@ -15,6 +15,17 @@ Public Sub runReport(t As RUN_TYPE, p_limit As Date, l As LAYOUT_TYPE, st As STA
 
 
     If st = FROM_THE_BEGINNING Then
+    
+    
+        ' na koniec koncow light ma byc fire flak'iem tylko i wylacznie
+        ' tematem daily - wersja odchudzona bez zbednych dodatkow
+        ' nawet dochodzac do skrajnosci w ktorej dodalem tutaj pelno elementow
+        ' layoutu jako box, list, czy coverage
+        ' zostajmy tylko i wylacznie z tematem:
+        ' daily i list!
+        ' no i oczywiscie nowinka techniczna continue with broken :D
+        ' ale to jak widac znadjuje sie po drugiej stronie barykady
+        ' sam bedzie musial rozpoznac format danych jak i layout
         If t = DAILY Then
             ffl.runDaily CDate(p_limit), l, st, CDate(daily_rqm_limit)
         ElseIf t = HOURLY Then
@@ -32,7 +43,12 @@ Public Sub runReport(t As RUN_TYPE, p_limit As Date, l As LAYOUT_TYPE, st As STA
     
     Set ffl = Nothing
     Set sh = Nothing
+    
+    
     Application.ScreenUpdating = True
+    
+    ' poza wszelkim zasiegiem obietkowych zagrywek - po prostu przelicz arkusz
+    ' reset_report_inner
 End Sub
 
 
@@ -43,6 +59,11 @@ Public Sub run_ff(ictrl As IRibbonControl)
 End Sub
 
 Public Sub reset_report_inner()
+
+    ' dodatkowo przyda sie:
+    Application.EnableEvents = True
+    Application.Calculation = xlCalculationAutomatic
+
     ' tu ma byc reset jako taki dla odswiezenia dynamicznych kolorow
     ' teraz kwestia tylko z jakim rodzajem raportu mamy do czynienia
     Dim ash As Worksheet, dc As IDynamicColors
@@ -53,11 +74,15 @@ Public Sub reset_report_inner()
             Set dc = New DailyDynamicColors
             dc.assignDynamicColorsrange
             dc.recalcColors
+            
         End If
         
     Else
         Set ash = Nothing
     End If
+    
+    
+    
 End Sub
 
 Public Sub reset_report(ictrl As IRibbonControl)
