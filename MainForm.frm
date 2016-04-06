@@ -188,6 +188,11 @@ End Sub
 Private Sub UserForm_Initialize()
 
 
+    ' dates now
+    Me.DTPickerPUSLimit = Now
+    Me.DTPickerRQMLimit = Now
+
+
 
     ' week #
     Me.CheckBoxWeekNum.Value = True

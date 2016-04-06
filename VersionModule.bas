@@ -6,6 +6,14 @@ Attribute VB_Name = "VersionModule"
 ' w mysl o tym czego wlasciwie potrzebuje uzytkownik musze pomyslec ile faktycznie jest narzedzi potrzebnych a ile nie
 ' odchudzenie ffa rowniez wchodzi w gre aby chodzil odrobine szybciej
 
+'4.02.03
+' -------------------------------------------------------------
+' fix na klasie dynamic kolors w przyapdku gdy chcemy zobaczyc tylko jedno linie na raporcie
+
+'4.02.02
+' -------------------------------------------------------------
+' dodana klasa dynamic kolors ktora przelicza ruchliwe kolory
+
 
 '4.02.01
 ' -------------------------------------------------------------

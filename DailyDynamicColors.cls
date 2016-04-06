@@ -68,7 +68,10 @@ Private Function przeliczZasieg() As Range
 
     If CStr(zasiegDoNadaniaDynamicznychKolorow.Offset(-1, 0)) <> "" Then
         Set zasiegDoNadaniaDynamicznychKolorow = ash.Range(zasiegDoNadaniaDynamicznychKolorow, zasiegDoNadaniaDynamicznychKolorow.End(xlToRight))
-        Set zasiegDoNadaniaDynamicznychKolorow = ash.Range(zasiegDoNadaniaDynamicznychKolorow, zasiegDoNadaniaDynamicznychKolorow.End(xlDown))
+        
+        If CStr(zasiegDoNadaniaDynamicznychKolorow.Item(1, 1).Offset(1, 0)) <> "" Then
+            Set zasiegDoNadaniaDynamicznychKolorow = ash.Range(zasiegDoNadaniaDynamicznychKolorow, zasiegDoNadaniaDynamicznychKolorow.End(xlDown))
+        End If
         ' zasiegDoNadaniaDynamicznychKolorow.Select
         
         Set przeliczZasieg = zasiegDoNadaniaDynamicznychKolorow
