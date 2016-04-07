@@ -253,14 +253,14 @@ Private Sub addRqmsAndDatesIntoItems(m As MGO)
                     
                     
                     ' jesli inquiry complete nie trza przechodzic dalej
-                    If m.getCode("zk7pdrqm") = "R6086" Then
+                    If (m.getCode("zk7pdrqm") = "R6086") Or (Trim(m.getCode("zk7pdrqm")) = "R6120") Then
                         Exit Do
                     End If
                 
                     m.sendKeys "<Enter>"
                     ilerazyf11 = ilerazyf11 + 1
                     
-                Loop Until m.getCode("zk7pdrqm") = "R6120"
+                Loop Until Trim(m.getCode("zk7pdrqm")) = "R6120"
             End If
             ' ===============================================================================================================
         Else

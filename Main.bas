@@ -4,10 +4,11 @@ Attribute VB_Name = "Main"
 ' jej wszsytkie argumenty maja w pelni ogarnac konfiguracje run ff light
 ' myslalem nad kombinacja alpejska w stylu zeby user mial mozliwosc konfigurowalnosci widoku ale chyba bylo by to przedobrzone :D
 ' jeszcze obaczym - napisal to ja 2014 wrzesien 22.
-Public Sub runReport(t As RUN_TYPE, p_limit As Date, l As LAYOUT_TYPE, st As START_TYPE, daily_rqm_limit As Date)
+Public Sub runReport(t As RUN_TYPE, l As LAYOUT_TYPE, st As START_TYPE, p_limit As Date, daily_rqm_limit As Date)
 
 
     Application.ScreenUpdating = False
+    Application.EnableEvents = False
 
     Dim ffl As FireFlakeLight
     Set ffl = New FireFlakeLight
@@ -37,7 +38,7 @@ Public Sub runReport(t As RUN_TYPE, p_limit As Date, l As LAYOUT_TYPE, st As STA
     
         ' ten tutaj jest bystry na tyle zeby sam siebie skonfigurowac i pociagnac temat samemu
         ' :)
-        ffl.continueBrokenReport
+        ffl.continueBrokenReport LIST_LAYOUT, st
     End If
     
     
@@ -46,6 +47,7 @@ Public Sub runReport(t As RUN_TYPE, p_limit As Date, l As LAYOUT_TYPE, st As STA
     
     
     Application.ScreenUpdating = True
+    Application.EnableEvents = True
     
     ' poza wszelkim zasiegiem obietkowych zagrywek - po prostu przelicz arkusz
     ' reset_report_inner
@@ -58,10 +60,15 @@ Public Sub run_ff(ictrl As IRibbonControl)
     MainForm.show
 End Sub
 
+Public Sub continue_ff()
+    runReport DAILY, LIST_LAYOUT, CONTINUE_BROKEN_ONE, Now, Now
+End Sub
+
 Public Sub reset_report_inner()
 
     ' dodatkowo przyda sie:
     Application.EnableEvents = True
+    Application.ScreenUpdating = True
     Application.Calculation = xlCalculationAutomatic
 
     ' tu ma byc reset jako taki dla odswiezenia dynamicznych kolorow

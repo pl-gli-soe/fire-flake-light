@@ -10,6 +10,12 @@ Attribute VB_Exposed = False
 Private rep As IReport
 Private imgo As MGO
 
+
+' CeBeEr - continue broken report
+Private cebeer As ContinueBrokenReportHandler
+Private init_sh As Worksheet
+Private continue_this_sheet As Worksheet
+
 ' komorka a2 w arkuszu input
 Private begOfInputList As Range
 ' koniec listy wejsciowej za pomoca metody end xlDown
@@ -63,6 +69,11 @@ Private Sub Class_Initialize()
         Set endOfInputList = begOfInputList
         Set firstColumnScopeOnInitWorksheet = begOfInputList
     End If
+    
+    
+    Set init_sh = begOfInputList.Parent
+    Set continue_this_sheet = Nothing
+    Set cebeer = New ContinueBrokenReportHandler
 End Sub
 
 Private Sub Class_Terminate()
@@ -73,6 +84,7 @@ Private Sub Class_Terminate()
     
     sh.hide
     Set sh = Nothing
+    Set cebeer = Nothing
     MsgBox "ready!"
 End Sub
 
@@ -174,7 +186,7 @@ Public Sub runWeekly(limit As Date, lt As LAYOUT_TYPE, st As START_TYPE, daily_r
 
 End Sub
 
-Public Sub continueBrokenReport()
+Public Sub continueBrokenReport(lt As LAYOUT_TYPE, st As START_TYPE)
     ' nie ptorzebuje zadnych dodatkowych danych
     ' sprawdz czy lista wejsciowa dalej jest zsynchr razem ze zepsutym reportem
     
@@ -182,9 +194,90 @@ Public Sub continueBrokenReport()
     ' poniewaz procedura i tak nie przyjmuje zadnego argumentu :D
     ' lecimy od razu z algorytm odzyskiwania informacji jak dalej wykonac niedokonczony raport ff
     ' =======================================================================================================
+    '
+    ' SUPER WAZNE
+    ' continue broken report dziala tylko i wylacznie daily i list!
+    ' stad if nawet w ogole nie jest brane pod uwage sprawdzania
+    '
+    ' =======================================================================================================
+    
+    ' troche kontrowersyjna ta zmienna stworzona tylko na potrzeby tej procedury wlasciwie
+    ' wiec musze sie zastanowic nad sensem jej istnienia jako pola
+    ' a wrzucic jako zmienna lokalna
+    Set continue_this_sheet = ActiveSheet
+    ' init_sh - tutaj mam liste czesci
+    ' teraz te dwa akursze nalezy odpowiednio sprawdzic
+    ' CeBeEr - continue broken report
+    ' Private cebeer As ContinueBrokenReportHandler
+    
+    ' sprawdzamy czy mozemy w ogole kontynuowac ten raport
+    ' -4 = dane za stare
+    ' -3 = to nie jest rarpot DAILY - sprawdzanie ogólenie routingu na a1
+    ' -2 = to nie jest raport LIST - sprawdzanie ogólenie routingu na a1
+    ' -1 = nie mozna kontynuowac tego reportu - super critical nawet nie przeszedl logiki
+    ' 0 = nie ma dopasowania danych miedy lista wejsciowa a raportem
+    ' 1 = wyrzucamy ostatnia czesc i lecimy z kontynuacja
+    Dim d As Dictionary
+    Set d = New Dictionary
+    d.Add -4, "Data at least from yesterday, report can not be completed"
+    d.Add -3, "It's not even Daily FF Report"
+    d.Add -2, "This is not LIST Layout"
+    d.Add -1, "Ciritical error, run on continue broken report can not be completed"
+    d.Add 0, "Init data are not inline with broken report"
+    d.Add 1, "Config OK, we can go on with report"
     
     
+    Dim wynik_funkcji As Integer
+    wynik_funkcji = cebeer.checkInputAndActiveSheetBeforeJunction(init_sh, continue_this_sheet)
+    If Int(wynik_funkcji) = 1 Then
     
+        ' ok wszystkie dane powinny byc ok
+        ' zatem pora przejsc do do uruchomienia raportu z odpowiedniego miejsca
+        ' teoretycznie sprawa jest prosta - odpwiednie przesuniecie rowFlag i po roboecie ? :>
+        
+        ' najpiew usune ostatni wiersz, gdy podczas zatrzymywania 0 zazwyczaj konczy sie w polowie zatem
+        ' nie bedziemy juz wchodzic w szczegoly ostatniej iteracji
+        ' po prostu zaczniemy ja od poczatku
+        cebeer.deleteLastRow continue_this_sheet
+        cebeer.prepareStart
+        
+        Dim rng As Range
+        Set rng = cebeer.getTheBeginning
+        
+        ' ok w input zaczynamy od 2 wiersza
+        ' lista od 5 wiersza roznica oczywista
+        Set rng = cebeer.prepareRestOfData()
+        
+        
+        
+        
+        ' kopiuj wklej z runRepDaily
+        Set rep = New DailyListReport
+        ' metoda connect with input list bardziej by nazwa pasowala
+        ' teraz wazna sprawa dzialanie calych iteracji opierac sie badzie na obiektach chwytajacych
+        ' i tutaj uwaga juz na startcie to jest na metodzie initujacej uruchamiam kolekcje wszsytkich iteracji
+        ' oczywiscie na poczatku wypelnione zostana tylko dane wejsciowe w postaci pn & plt itd
+        ' cala reszta pozostanie nothing dopoty dopoki nie uruchomie nastpenych metod.
+        
+        
+        ' trzy glowne metody pracy na kazdym raporcie light fire flake
+        ' 1. init - przygotowuje rusztowanie pod wszystkie dane
+        
+        ' 2. connect with mgo chyba nie wymaga szerwszego komentarza
+        '   uruchamia nam przy okazji wszelkie pomocniki obiektowe ktore pozwalaja nam zapomniec o pracy na adresach ale bezposrednio
+        '   odnosiemy sie nazwami do pol sesji mgo - ale to chyba jest juz OBSOLETE?
+        
+        ' 3. repRun jest to juz gotowa metoda ktora czerpie z dwoch poprzednich czesciowo wypelniona kolekcja pustymi obiektami zostaje zapelniona wartosciami
+        '   z sesji mgo.
+        Dim pus_limit As Date, daily_rqm_limit As Date
+        pus_limit = cebeer.setPusLimit(continue_this_sheet.Range("A1"))
+        daily_rqm_limit = cebeer.setRqmLimit(continue_this_sheet.Range("A1"))
+        rep.repInit rng, CDate(pus_limit), lt, st, CDate(daily_rqm_limit)
+        rep.repRun imgo, sh
+        
+    Else
+        MsgBox CStr(d.Item(Int(wynik_funkcji)))
+    End If
     
     
     ' =======================================================================================================
