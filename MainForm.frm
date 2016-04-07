@@ -70,6 +70,9 @@ Private Sub BtnMoveToRight_Click()
 End Sub
 
 Private Sub BtnRunDaily_Click()
+
+
+    Application.EnableEvents = False
     Me.hide
     
     Dim wybor_typu_layoutu As LAYOUT_TYPE
@@ -94,6 +97,7 @@ Private Sub BtnRunDaily_Click()
     ThisWorkbook.Sheets("register").Range("START_TYPE") = FROM_THE_BEGINNING
     
     runReport DAILY, CDate(ThisWorkbook.Sheets("register").Range("pusLimit")), wybor_typu_layoutu, FROM_THE_BEGINNING, CDate(ThisWorkbook.Sheets("register").Range("rqmLimit"))
+    Application.EnableEvents = True
 End Sub
 
 Private Sub BtnRunWeekly_Click()

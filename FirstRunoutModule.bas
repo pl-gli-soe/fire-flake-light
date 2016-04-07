@@ -16,6 +16,11 @@ Public Function firstRunout(r As Range, caly_zasieg As Range) As String
         Set rng = sh.Range("a4")
         Do
             Set rng = rng.Offset(0, 1)
+                
+            If rng = "" Then
+                firstRunout = "no data"
+                Exit Function
+            End If
         Loop Until CStr(rng) = CStr("Ending Balance")
     End If
     
