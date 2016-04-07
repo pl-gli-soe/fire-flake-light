@@ -7,6 +7,10 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
+Public Sub endingBalanceBackgroundColor()
+
+End Sub
+
 Public Sub init(lt As LAYOUT_TYPE, st As START_TYPE)
 
 End Sub

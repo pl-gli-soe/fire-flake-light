@@ -102,6 +102,22 @@ Public Sub fillRightThinLine(rng As Range, kolor As Long)
     
 End Sub
 
+Public Sub fillBottomThinLine(rng As Range, kolor As Long)
+
+
+    'rng.Borders(xlDiagonalDown).LineStyle = xlNone
+    'rng.Borders(xlDiagonalUp).LineStyle = xlNone
+
+
+    With rng.Borders(xlEdgeBottom)
+        .LineStyle = xlContinuous
+        .Color = kolor
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    
+End Sub
+
 Public Sub fillSolidGridLines(rng As Range, kolor As Long)
     
     

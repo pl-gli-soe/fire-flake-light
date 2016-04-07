@@ -6,6 +6,12 @@ Attribute VB_Name = "VersionModule"
 ' w mysl o tym czego wlasciwie potrzebuje uzytkownik musze pomyslec ile faktycznie jest narzedzi potrzebnych a ile nie
 ' odchudzenie ffa rowniez wchodzi w gre aby chodzil odrobine szybciej
 
+'4.02.19
+' -------------------------------------------------------------
+' w miedzy czasie pojawil sie problem w klasie dynamic colors nie wiadomo czemu range nie chce sie dopasowac
+' pomimo tego ze skladnia jest cacy
+' nie wiem wlasciwie cos sie stalo ze raz dziala a raz nie
+' moze sie okazac ze z klasa dynamic colors beda jeszcze w przyszlosci problemy niewiadomego pochodzenia :D
 
 '4.02.18
 ' -------------------------------------------------------------

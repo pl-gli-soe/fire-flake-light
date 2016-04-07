@@ -62,6 +62,7 @@ Private yellowColor As Variant
 Private blackColor As Variant
 Private redColor As Variant
 Private purple1Color As Variant
+Private whiteColor As Variant
 
 ' my colors on my layout
 Private primaryColor As Variant
@@ -95,7 +96,7 @@ Private Sub Class_Initialize()
     blackColor = ThisWorkbook.Sheets("register").Range("black").Interior.Color
     redColor = ThisWorkbook.Sheets("register").Range("red").Interior.Color
     purple1Color = ThisWorkbook.Sheets("register").Range("purple1").Interior.Color
-    
+    whiteColor = ThisWorkbook.Sheets("register").Range("white").Interior.Color
     primaryColor = ThisWorkbook.Sheets("register").Range("primary").Interior.Color
     secondaryColor = ThisWorkbook.Sheets("register").Range("secondary").Interior.Color
     weekendColor = ThisWorkbook.Sheets("register").Range("weekendColor").Interior.Color
@@ -180,6 +181,26 @@ Private Sub IFireFlakeLayout_closingDayLines()
         Set r = r.Item(1, 1).Offset(0, 3)
     Loop Until Trim(r) = ""
     
+End Sub
+
+Private Sub IFireFlakeLayout_endingBalanceBackgroundColor()
+
+    Dim r As Range, b_pirmary As Boolean
+    Set r = poczatekCovLabels.Offset(0, 2)
+    b_primary = True
+    Do
+        Set r = r.Parent.Range(Cells(r.Row, r.Column), Cells(ostatni_wiersz.Row, r.Column))
+        If b_primary Then
+            tl.backColor r, CDbl(primaryColor)
+        ElseIf Not b_primary Then
+            tl.backColor r, CDbl(secondaryColor)
+        End If
+        tl.fillThinGridLines r, CLng(whiteColor)
+        Set r = r.Item(1, 1).Offset(0, 3)
+        
+        b_primary = Not b_primary
+    Loop Until Trim(r) = ""
+
 End Sub
 
 Private Sub IFireFlakeLayout_finalAdjustOnColumnsWidth()

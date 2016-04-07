@@ -250,6 +250,7 @@ Private Sub IReport_repRun(imgo As MGO, sh As StatusHandler)
             Next mitem
             ffld.buildLayoutForDatesLabels itersCollection
             ffld.buildLayoutTheThinLines itersCollection ' ten argument to wlasciwie tak just in case
+            ffld.endingBalanceBackgroundColor
             ffld.closingDayLines
             ffld.finalAdjustOnColumnsWidth
             ffld.addFilterOnListLayout
