@@ -69,6 +69,8 @@ Public Sub deleteLastRow(ByRef actives As Worksheet)
     ' checkInput.. juz zostalo wypisane zatem pomimo przesuniecia argumentu zostawie to tak jak jest
     ' tj nie bede znow nadpisywal tych pol
     'Set active_sh = actives
+    ' Set report_rng_flag = active_sh.Range("b5")
+    
     Set report_rng_flag = active_sh.Range("b5")
     If active_sh.Range("b6") <> "" Then
         Set report_rng_flag = report_rng_flag.End(xlDown)

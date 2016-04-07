@@ -230,6 +230,12 @@ Private Sub IReport_repRun(imgo As MGO, sh As StatusHandler)
         
             For Each mitem In itersCollection
             
+            
+                ' ok teraz jeszcze dobrze by bylo sprawdzic czy jestesmy w stanie w ogole robic po kolei dane iteracje tj
+                ' przed uruchomieniem kazdej warto by nadac warunek czy mgo dziala, czy excel w wariata sie nie zmienia
+                ' przez dziwny przypadek badz z powodu niewlasciwego zachowania uzytkownika podczas lotu raportu
+                ' =================================================================================================================
+            
                 ' jestesmy w srodku iteracji kazdego elementu jednorazowo
                 ' mozemy teraz zrobic scenariusz
                 ' tutaj dzieje sie kazdy element zwiazany z mgo
@@ -250,6 +256,7 @@ Private Sub IReport_repRun(imgo As MGO, sh As StatusHandler)
             Next mitem
             ffld.buildLayoutForDatesLabels itersCollection
             ffld.buildLayoutTheThinLines itersCollection ' ten argument to wlasciwie tak just in case
+            ffld.endingBalanceBackgroundColor
             ffld.closingDayLines
             ffld.finalAdjustOnColumnsWidth
             ffld.addFilterOnListLayout

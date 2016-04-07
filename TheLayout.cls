@@ -13,7 +13,7 @@ Public Sub initLayout()
     ' Sheets("daily").Activate
     ' Sheets("register").Range("lastRow") = last_row() + 4
     ' Sheets("register").Range("allParts") = last_row() - 5
-    Sheets.Add
+    Sheets.Add Before:=Worksheets(Worksheets.COUNT)
     ' If IsMissing(for_template) Then
         ' ActiveSheet.NAME = "daily " & CStr(Sheets.COUNT)
     Sheets("register").Range("sheetName") = ActiveSheet.Name
@@ -94,6 +94,22 @@ Public Sub fillRightThinLine(rng As Range, kolor As Long)
 
 
     With rng.Borders(xlEdgeRight)
+        .LineStyle = xlContinuous
+        .Color = kolor
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    
+End Sub
+
+Public Sub fillBottomThinLine(rng As Range, kolor As Long)
+
+
+    'rng.Borders(xlDiagonalDown).LineStyle = xlNone
+    'rng.Borders(xlDiagonalUp).LineStyle = xlNone
+
+
+    With rng.Borders(xlEdgeBottom)
         .LineStyle = xlContinuous
         .Color = kolor
         .TintAndShade = 0
