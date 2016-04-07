@@ -23,6 +23,19 @@ Public Function noNSRissue(m As MGO) As Boolean
     End If
 End Function
 
+Public Function inputDataAvail(r As Range) As Boolean
+
+
+    inputDataAvail = False
+
+    If Not r Is Nothing Then
+        inputDataAvail = True
+    Else
+        inputDataAvail = False
+        feedback_info = feedback_info & "no input data!"
+    End If
+End Function
+
 Public Function dataAvail(screen_name As String, infocode As String) As Boolean
     
     

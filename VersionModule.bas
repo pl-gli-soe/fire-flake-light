@@ -7,6 +7,52 @@ Attribute VB_Name = "VersionModule"
 ' odchudzenie ffa rowniez wchodzi w gre aby chodzil odrobine szybciej
 
 
+'4.02.18
+' -------------------------------------------------------------
+' cebeer poczatek
+' udalo sie zrobic prosty continue broken report
+' jednak nieprawidlowo obsluguje przerwanie lacza internetowego
+' musze wykonac symulacje wylaczenia internetu
+' zrobienia disconnected
+' zmieny aktywnosci arkusza
+' kazdy ekran musi posiadac obslugo wyjatku do tego stopnia zeby ff sie zwieszal mocniej a nie ignorowal bledy
+
+
+'4.02.17
+' -------------------------------------------------------------
+' ta wersja bedzie slodko uzbrojona w dodatek continue broken report!
+
+' cala idea polega na kontynuowaniu zatrzymanego ff'a
+' cala logika skaldac sie bedzie z dwoch akcji:
+' spradzenie czy lista wejsciowa jest kompatybilna z czesciowo wypelnionym ff'em
+' uruchomienie ff'a od odpowiedniego miejsca :D
+' warunki do sprawdzenia
+' to czy lista jest kompatyblina
+' to czy lista jest swieza - to znaczy, czy dane z ff sa w miare inline z rzeczywistoscia pokazywana na MGO
+' tutaj do przemyslenia jaki czas to czas danych jako obsoletowych
+' Set input_rng_flag = init_sh.Range("a2")
+' Set report_rng_flag = active_sh.Range("b5")
+'
+' CEBEER! :D
+
+'4.02.16
+' -------------------------------------------------------------
+' poprawa logiki na zaciaganiu daily rqm
+' plus zaczatek logiki na continue broken report
+
+'4.02.15
+' -------------------------------------------------------------
+' poprwawiona implementacja first runout formula
+' If rng = "" Then
+'     firstRunout = "no data"
+'     Exit Function
+' End If
+'
+'
+' dorzucony element sprawdzania gdyby jednak nie bylo jeszcze wpisanych kolumn ending balance bo w koncu nie jest to musem
+' zawsze moze sie okazac ze wszystkie part numbery beda puste z punktu widzenia zk7pdrqm
+
+
 '4.02.14
 ' -------------------------------------------------------------
 ' pickup limit zaimplementowany znow

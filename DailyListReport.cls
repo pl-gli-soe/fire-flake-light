@@ -27,14 +27,17 @@ Private dc As IDynamicColors
 Private mlt As LAYOUT_TYPE
 Private mst As START_TYPE
 
+Private ce As CatchError
+
 
 Private Sub Class_Initialize()
 
     Set mgo_handler = Nothing
     Set iter = New DailyIteration
     Set itersCollection = New Collection
-    Set ffld = New FireFlakeLayoutDailyList
     Set dc = New DailyDynamicColors
+    
+    Set ce = New CatchError
 End Sub
 
 Private Sub Class_Terminate()
@@ -43,6 +46,8 @@ Private Sub Class_Terminate()
     Set itersCollection = Nothing
     Set ffld = Nothing
     Set dc = Nothing
+    
+    Set ce = Nothing
 End Sub
 
 Private Sub IReport_adjustLayoutAfterAllJobs()
@@ -113,56 +118,66 @@ End Sub
 ' jak stowrzyc interfejs w vba ktory ma dynamiczna ilosc argumentow :D
 Private Sub IReport_repInit(zakres As Range, limit As Date, lt As LAYOUT_TYPE, st As START_TYPE, rqm_limit As Date)
 
+    If ce.inputDataAvail(zakres) Then
 
-
-    ' nalezy podkreslic ze wszystkie te dane ktore sa do siebie przypisywane to w dalszym ciagu zonglowanie danych offline
-    ' czy nie ma jeszcze wartosci dodanej
-    ' jest to tylko przygotowanie kolekcji pod dane z mgo - zeby bylo spojnie
-    ' plus dodatkowe pola przetrzymujace info jakie to wlasciwie raport ma byc
-    mlt = lt
-    mst = st
-
-    Dim r As Range
-    Set itersCollection = Nothing
-    Set itersCollection = New Collection
-    
-    ' z racji tego ze jak filtruje to nie patrze na wszystkie musi byc niezalezna flaga sprawdzajaco ktory
-    ' pn z kolej jest brany pod uwage
-    ' zaczynamy od pierwszego
-    rowFlag = 1
-    
-    For Each r In zakres
-    
-        ' ten prosty warunek rozwiazuje problem
-        ' schowanych wierszy przez filtr
+        ' nalezy podkreslic ze wszystkie te dane ktore sa do siebie przypisywane to w dalszym ciagu zonglowanie danych offline
+        ' czy nie ma jeszcze wartosci dodanej
+        ' jest to tylko przygotowanie kolekcji pod dane z mgo - zeby bylo spojnie
+        ' plus dodatkowe pola przetrzymujace info jakie to wlasciwie raport ma byc
+        mlt = lt
+        mst = st
         
-        If Not r.EntireRow.Hidden Then
+        ' sprawa zwiazana przede wszystkim z koniecznoscia rozroznienia kiedy mamy do czynienia
+        ' z elementami raport new czy continue?
+        Set ffld = New FireFlakeLayoutDailyList
+        ' pod lt i st kryje sie info od init args
+        ffld.init lt, st
+        
     
-            Set iter = Nothing
-            Set iter = New DailyIteration
-            iter.connectFireFlakeLayout ffld
+        Dim r As Range
+        Set itersCollection = Nothing
+        Set itersCollection = New Collection
+        
+        ' z racji tego ze jak filtruje to nie patrze na wszystkie musi byc niezalezna flaga sprawdzajaco ktory
+        ' pn z kolej jest brany pod uwage
+        ' zaczynamy od pierwszego
+        ' rowFlag = 1 - tylko w przypadku gdy pracuje od poczatku
+        ' w przypadku continue broken report moze byc odrobine inaczej
+        
+        rowFlag = zakres.Item(1, 1).Row - 1
+        
+        For Each r In zakres
+        
+            ' ten prosty warunek rozwiazuje problem
+            ' schowanych wierszy przez filtr
             
-            
-            ' do dnia ostatniego pazdziernika 2014 rozwiazanie krzyzowalo sie pomiedzy komponentami obiektowki co nieco myli podczas realizacji
-            ' i wracania poraz kolejny do implementacji i nie wiedziec co sie dzieje do okola
-            
-            ' zatem co by nie meczyc tematu za bardzo nalezy dodac suba w implementacji iterfejsu co robi czesciowe uzupelnianie danych
-            ' w obiekcie typu IIteration
-            ' a jest nim:
-            ' sub powstaly dnia 31 oct 2014: czesciowyFillNaTejIteracji jako komponenet subowy obiekty typu iiteracja
-            ' ======================================
-            iter.czesciowyFillNaTejIteracji r, lt, st, limit, rqm_limit, rowFlag
-            ' inkrementacja zawsze po wykonaniu czesciowego wypelnienia
-            rowFlag = rowFlag + 1
-            
-            ' dodajemy szczatkowo iteracje tylko wejsciowymi danymi
-            ' praca dalsza na juz istniejacych obiektach - z kwesita po kolei dodawania kolejno rqm, pus/asn / balance
-            itersCollection.Add iter
-            
-            Set iter = Nothing
-        End If
-    Next r
-    
+            If Not r.EntireRow.Hidden Then
+        
+                Set iter = Nothing
+                Set iter = New DailyIteration
+                iter.connectFireFlakeLayout ffld
+                
+                
+                ' do dnia ostatniego pazdziernika 2014 rozwiazanie krzyzowalo sie pomiedzy komponentami obiektowki co nieco myli podczas realizacji
+                ' i wracania poraz kolejny do implementacji i nie wiedziec co sie dzieje do okola
+                
+                ' zatem co by nie meczyc tematu za bardzo nalezy dodac suba w implementacji iterfejsu co robi czesciowe uzupelnianie danych
+                ' w obiekcie typu IIteration
+                ' a jest nim:
+                ' sub powstaly dnia 31 oct 2014: czesciowyFillNaTejIteracji jako komponenet subowy obiekty typu iiteracja
+                ' ======================================
+                iter.czesciowyFillNaTejIteracji r, lt, st, limit, rqm_limit, rowFlag
+                ' inkrementacja zawsze po wykonaniu czesciowego wypelnienia
+                rowFlag = rowFlag + 1
+                
+                ' dodajemy szczatkowo iteracje tylko wejsciowymi danymi
+                ' praca dalsza na juz istniejacych obiektach - z kwesita po kolei dodawania kolejno rqm, pus/asn / balance
+                itersCollection.Add iter
+                
+                Set iter = Nothing
+            End If
+        Next r
+    End If
     
 
 End Sub
