@@ -220,7 +220,7 @@ Public Sub takeDataFromPPUM0(m As MGO, mcd As CommonData)
         For x = 0 To 19 - 7
         
             If Trim(m.pZK7PPUM0.plt(Int(x))) <> "" Then
-                If CDate(m.convertToDateFromZK7PPUM0Date(.PU_DATE(Int(x)))) <= CDate(Format(mcd.pusLimit, "yyyy-mm-dd")) Then
+                If CDate(m.convertToDateFromZK7PPUM0Date(m.pZK7PPUM0.PU_DATE(Int(x)))) <= CDate(Format(mcd.pusLimit, "yyyy-mm-dd")) Then
             
                     Set t = Nothing
                     Set t = New Transit
