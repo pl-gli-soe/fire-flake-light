@@ -47,14 +47,14 @@ End Sub
 Private Sub IDynamicColors_assignDynamicColorsrange()
 
     If flagaLiczenia Then
-        Set zasiegDoNadaniaDynamicznychKolorow = ash.Range("b4")
-        Set zasiegDoNadaniaDynamicznychKolorow = przeliczZasieg()
+        ' Set zasiegDoNadaniaDynamicznychKolorow = ash.Range("b4")
+        Set zasiegDoNadaniaDynamicznychKolorow = przeliczZasieg(ash.Range("b4"))
     End If
     
     ' Debug.Print zasiegDoNadaniaDynamicznychKolorow.Address
 End Sub
 
-Private Function przeliczZasieg() As Range
+Private Function przeliczZasieg(ByRef rr As Range) As Range
 
     
     ' Set przeliczZasieg = Nothing
@@ -64,14 +64,14 @@ Private Function przeliczZasieg() As Range
     Dim ost_kolumna As Range
     
     
-    Set ost_wiersz_pierwszej_kolumny = zasiegDoNadaniaDynamicznychKolorow.End(xlDown)
-    Set ost_kolumna = zasiegDoNadaniaDynamicznychKolorow.End(xlToRight)
+    Set ost_wiersz_pierwszej_kolumny = rr.End(xlDown)
+    Set ost_kolumna = rr.End(xlToRight)
     
     Do
-        Set zasiegDoNadaniaDynamicznychKolorow = zasiegDoNadaniaDynamicznychKolorow.Offset(0, 1)
-    Loop While CStr(zasiegDoNadaniaDynamicznychKolorow) <> "Past due rqms"
+        Set rr = rr.Offset(0, 1)
+    Loop While Trim(CStr(rr)) <> "Past due rqms"
     
-    Set poczatek = zasiegDoNadaniaDynamicznychKolorow.Offset(1, 1)
+    Set poczatek = rr.Offset(1, 1)
     
     Set poczatek = ash.Range(poczatek, ash.Cells(ost_wiersz_pierwszej_kolumny.Row, ost_kolumna.Column))
     Set przeliczZasieg = poczatek
