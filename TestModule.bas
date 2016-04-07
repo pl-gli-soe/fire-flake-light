@@ -1,4 +1,20 @@
 Attribute VB_Name = "TestModule"
+Public Sub cebeer_test()
+    Dim c As ContinueBrokenReportHandler
+    Set c = New ContinueBrokenReportHandler
+    
+    c.setPusLimit Range("a1")
+End Sub
+
+
+Public Sub continueReport()
+    Dim ffl As FireFlakeLight
+    Set ffl = New FireFlakeLight
+    ffl.continueBrokenReport LIST_LAYOUT, CONTINUE_BROKEN_ONE
+    
+End Sub
+
+
 Private Sub closingLine()
 '
 ' closingLine Macro

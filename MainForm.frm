@@ -96,7 +96,7 @@ Private Sub BtnRunDaily_Click()
     ThisWorkbook.Sheets("register").Range("RUN_TYPE") = DAILY
     ThisWorkbook.Sheets("register").Range("START_TYPE") = FROM_THE_BEGINNING
     
-    runReport DAILY, CDate(ThisWorkbook.Sheets("register").Range("pusLimit")), wybor_typu_layoutu, FROM_THE_BEGINNING, CDate(ThisWorkbook.Sheets("register").Range("rqmLimit"))
+    runReport DAILY, wybor_typu_layoutu, FROM_THE_BEGINNING, CDate(ThisWorkbook.Sheets("register").Range("pusLimit")), CDate(ThisWorkbook.Sheets("register").Range("rqmLimit"))
     Application.EnableEvents = True
 End Sub
 

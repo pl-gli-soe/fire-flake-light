@@ -135,15 +135,7 @@ Private Sub Class_Initialize()
     ' czyli dodatkowo 5 kolumn
     commonDataColumns = commonDataColumns + 5
     
-    tl.initLayout
-    ' a zostawie historyczne ze po initLayout moja jedyna flaga jest active worksheet
-    Set sh = ActiveSheet
     
-    Set reportRoute = sh.Range("a1")
-    reportRoute = "REPORT;DAILY;LIST;" & CStr(Now) & ";RQM_LIM:" & CStr(ThisWorkbook.Sheets("register").Range("rqmLimit")) & ";PUS_LIM:" & CStr(ThisWorkbook.Sheets("register").Range("pusLimit"))
-    
-    Set poczatekRaportuDaily = sh.Range("b4")
-    ' MsgBox commonDataColumns
 End Sub
 
 Private Sub Class_Terminate()
@@ -687,3 +679,22 @@ Private Sub IFireFlakeLayout_buildLayoutForDatesLabels(ByRef c As Collection)
 End Sub
 
 
+Private Sub IFireFlakeLayout_init(lt As LAYOUT_TYPE, st As START_TYPE)
+
+
+    If lt = LIST_LAYOUT And st = FROM_THE_BEGINNING Then
+        tl.initLayout
+        ' a zostawie historyczne ze po initLayout moja jedyna flaga jest active worksheet
+        Set sh = ActiveSheet
+        
+        Set reportRoute = sh.Range("a1")
+        reportRoute = "REPORT;DAILY;LIST;" & CStr(Now) & ";RQM_LIM:" & CStr(ThisWorkbook.Sheets("register").Range("rqmLimit")) & ";PUS_LIM:" & CStr(ThisWorkbook.Sheets("register").Range("pusLimit"))
+        
+        Set poczatekRaportuDaily = sh.Range("b4")
+        ' MsgBox commonDataColumns
+    ElseIf lt = LIST_LAYOUT And st = CONTINUE_BROKEN_ONE Then
+        Set sh = ActiveSheet
+        Set reportRoute = sh.Range("a1")
+        Set poczatekRaportuDaily = sh.Range("b4")
+    End If
+End Sub
