@@ -1,10 +1,37 @@
 Attribute VB_Name = "VersionModule"
 ' Version Module
 
+
+Public Sub msgbox_about(ictrl As IRibbonControl)
+    MsgBox "This is Fire Flake Light - the 4th generation of this tool" & Chr(10) & _
+    "" & Chr(10) & _
+    "VERSION 4.02.23" & Chr(10) & _
+    "FIXED: " & Chr(10) & _
+    " - Freeze Panes Bug fixed" & Chr(10) & _
+    " - Delete sheet button group added" & Chr(10) & _
+    " - About Group added (for validation)" & Chr(10) & _
+    "" & Chr(10) & _
+    "TO BE IMPLEMENTED: " & Chr(10) & _
+    " - CONTINUE BROKEN REPORT still not working for internet connection breakdowns" & Chr(10) & _
+    ""
+
+End Sub
+
 ' no to start
 ' modul ten powstal od czwartej generacji ffa
 ' w mysl o tym czego wlasciwie potrzebuje uzytkownik musze pomyslec ile faktycznie jest narzedzi potrzebnych a ile nie
 ' odchudzenie ffa rowniez wchodzi w gre aby chodzil odrobine szybciej
+
+
+'4.02.22
+' -------------------------------------------------------------
+' okazuje sie ze zapomnialem dodac kolory na cbalu
+' oczywiscie rowniez podtrzymuje temat z 20 i 21
+' slawkowi na wersji 02.21 freeze panes odmowil posluszenstwa z losowych przyczyn :(
+' dobrze by jakis test rzucic :D
+'
+'
+'
 
 
 '4.02.21

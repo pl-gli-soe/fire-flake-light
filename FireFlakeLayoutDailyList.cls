@@ -217,6 +217,7 @@ End Sub
 Private Sub IFireFlakeLayout_freezePanesAtTheEnd(ByRef lt As LAYOUT_TYPE)
     If lt = LIST_LAYOUT Then
         Range("D5").Select
+        On Error Resume Next
         ActiveWindow.freezePanes = True
     End If
 End Sub
