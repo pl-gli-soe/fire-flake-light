@@ -272,7 +272,7 @@ Public Sub continueBrokenReport(lt As LAYOUT_TYPE, st As START_TYPE)
         Dim pus_limit As Date, daily_rqm_limit As Date
         pus_limit = cebeer.setPusLimit(continue_this_sheet.Range("A1"))
         daily_rqm_limit = cebeer.setRqmLimit(continue_this_sheet.Range("A1"))
-        rep.repInit rng, CDate(pus_limit), lt, st, CDate(daily_rqm_limit)
+        rep.repInit rng, CDate(pus_limit), lt, st, CDate(daily_rqm_limit), cebeer.getTheBeginning.Row
         rep.repRun imgo, sh
         
     Else

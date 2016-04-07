@@ -2,26 +2,80 @@ Attribute VB_Name = "VersionModule"
 ' Version Module
 
 
-Public Sub msgbox_about(ictrl As IRibbonControl)
-    MsgBox "This is Fire Flake Light - the 4th generation of this tool" & Chr(10) & _
-    "" & Chr(10) & _
-    "VERSION 4.02.23" & Chr(10) & _
-    "FIXED: " & Chr(10) & _
-    " - Freeze Panes Bug fixed" & Chr(10) & _
-    " - Delete sheet button group added" & Chr(10) & _
-    " - About Group added (for validation)" & Chr(10) & _
-    "" & Chr(10) & _
-    "TO BE IMPLEMENTED: " & Chr(10) & _
-    " - CONTINUE BROKEN REPORT still not working for internet connection breakdowns" & Chr(10) & _
-    ""
 
-End Sub
+
+
+
+
 
 ' no to start
 ' modul ten powstal od czwartej generacji ffa
 ' w mysl o tym czego wlasciwie potrzebuje uzytkownik musze pomyslec ile faktycznie jest narzedzi potrzebnych a ile nie
 ' odchudzenie ffa rowniez wchodzi w gre aby chodzil odrobine szybciej
+Public Sub msgbox_about(ictrl As IRibbonControl)
 
+
+
+    '4.03.02
+    ' -------------------------------------------------------------
+    version_4_03_02 = "This is Fire Flake Light - the 4th generation of this tool" & Chr(10) & _
+        "" & Chr(10) & _
+        "VERSION 4.03.02" & Chr(10) & _
+        "NEW RULES FOR COMPONENT PLANTS: " & Chr(10) & _
+        " - add logic for plants that not exists in register list" & Chr(10) & _
+        Chr(10) & _
+        "TO BE IMPLEMENTED: " & Chr(10) & _
+        " - rules form" & Chr(10) & _
+        ""
+
+    '4.03.01
+    ' -------------------------------------------------------------
+    version_4_03_01 = "This is Fire Flake Light - the 4th generation of this tool" & Chr(10) & _
+        "" & Chr(10) & _
+        "VERSION 4.03.01" & Chr(10) & _
+        "NEW RULES FOR COMPONENT PLANTS: " & Chr(10) & _
+        " - this is init version for fire flake light with component logic" & Chr(10) & _
+        " - idea is week because we need to work inline with plans that are in the list" & Chr(10) & _
+        Chr(10) & _
+        "TO BE IMPLEMENTED: " & Chr(10) & _
+        " - rules form" & Chr(10) & _
+        ""
+
+    
+    
+    '4.02.24
+    ' -------------------------------------------------------------
+    version_4_02_24 = "This is Fire Flake Light - the 4th generation of this tool" & Chr(10) & _
+        "" & Chr(10) & _
+        "VERSION 4.02.24" & Chr(10) & _
+        "FIXED: " & Chr(10) & _
+        " - Broken report reimplemented & fixed, but need to have additional tests" & Chr(10) & _
+        " - Simlation on continue broken report done with OK status" & Chr(10) & _
+        " - Scaffold changed on primary and secondary color on dates and weeknums" & Chr(10) & _
+        " - Extend text comment with POP screen data (second column in list layout - fix)" & Chr(10) & _
+        " - Filtered input list - wrong cmnt 1 & cmnt 2 (fixed)" & Chr(10) & _
+        "" & Chr(10) & _
+        "TO BE IMPLEMENTED: " & Chr(10) & _
+        " - to be finnaly done as stable version" & Chr(10) & _
+        ""
+    
+    '4.02.23 od tej wersji dane beda w zmiennej globalnej
+    ' -------------------------------------------------------------
+    version_4_02_23 = "This is Fire Flake Light - the 4th generation of this tool" & Chr(10) & _
+        "" & Chr(10) & _
+        "VERSION 4.02.23" & Chr(10) & _
+        "FIXED: " & Chr(10) & _
+        " - Freeze Panes Bug fixed" & Chr(10) & _
+        " - Delete sheet button group added" & Chr(10) & _
+        " - About Group added (for validation)" & Chr(10) & _
+        "" & Chr(10) & _
+        "TO BE IMPLEMENTED: " & Chr(10) & _
+        " - CONTINUE BROKEN REPORT still not working for internet connection breakdowns" & Chr(10) & _
+        ""
+    
+    ' MsgBox CStr(version_4_02_23)
+    MsgBox CStr(version_4_03_02)
+End Sub
 
 '4.02.22
 ' -------------------------------------------------------------
@@ -356,3 +410,7 @@ End Sub
 ' nie posiada zadnego contentu
 ' - tak jakby byla pusta kolekcja nie wiadomo dlaczego
 ' =============================================================================
+
+
+
+

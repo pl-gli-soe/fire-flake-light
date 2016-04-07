@@ -116,7 +116,7 @@ End Sub
 ' zapisu i kazdy projekt jaki zaczynam zaczac od interfejsu w stylu IObject
 ' ktora wymuszac bedzie uruchomieniu swoistego dynamicznego konstrktora jednak z drugiej strony
 ' jak stowrzyc interfejs w vba ktory ma dynamiczna ilosc argumentow :D
-Private Sub IReport_repInit(zakres As Range, limit As Date, lt As LAYOUT_TYPE, st As START_TYPE, rqm_limit As Date)
+Private Sub IReport_repInit(zakres As Range, limit As Date, lt As LAYOUT_TYPE, st As START_TYPE, rqm_limit As Date, Optional mrowFlag As Long)
 
     If ce.inputDataAvail(zakres) Then
 
@@ -144,7 +144,14 @@ Private Sub IReport_repInit(zakres As Range, limit As Date, lt As LAYOUT_TYPE, s
         ' rowFlag = 1 - tylko w przypadku gdy pracuje od poczatku
         ' w przypadku continue broken report moze byc odrobine inaczej
         
-        rowFlag = zakres.Item(1, 1).Row - 1
+        If CLng(mrowFlag) > 0 Then
+            ' ta tutaj logika przesuwa mimo wszystko sie na jeden wiersz w dol
+            ' okazuje sie ze parametr z klasy cebeer nie do konca jest w linii ze swoja nazwa
+            ' w rzeczywistosci pokazuje ostatni element juz wpisanych danych
+            rowFlag = mrowFlag - 3
+        Else
+            rowFlag = zakres.Item(1, 1).Row - 1
+        End If
         
         For Each r In zakres
         
@@ -230,29 +237,33 @@ Private Sub IReport_repRun(imgo As MGO, sh As StatusHandler)
         
             For Each mitem In itersCollection
             
-            
-                ' ok teraz jeszcze dobrze by bylo sprawdzic czy jestesmy w stanie w ogole robic po kolei dane iteracje tj
-                ' przed uruchomieniem kazdej warto by nadac warunek czy mgo dziala, czy excel w wariata sie nie zmienia
-                ' przez dziwny przypadek badz z powodu niewlasciwego zachowania uzytkownika podczas lotu raportu
-                ' =================================================================================================================
-            
-                ' jestesmy w srodku iteracji kazdego elementu jednorazowo
-                ' mozemy teraz zrobic scenariusz
-                ' tutaj dzieje sie kazdy element zwiazany z mgo
-                'Debug.Print "1. start " & CStr(Now)
-                mitem.createFullIteration imgo
-                'Debug.Print "2. after fulliter " & CStr(Now)
-                ' po uzupelnieniu danych nakladamy layout co by dobrze wygladalo
-                ' i teraz tak - zakladam ze ta metoda ponizej oprocz samego koloru wyplenia rowniez
-                'odpowiednio dane wg ustalonego typu runu czy raczej layotutu
-                ' teraz jest ok
-                ' Debug.Print mitem.getItemsCollection.COUNT
-                mitem.addColorFlavour
-                ' Debug.Print "3. after addcolorflavor " & CStr(Now)
+                ' mgo active wersja 24 poprawiona czyli teraz bede sprawdzal czy mgo jest aktywne na kazdej iteracji
+                If MGO_active(imgo) Then
+                    ' ok teraz jeszcze dobrze by bylo sprawdzic czy jestesmy w stanie w ogole robic po kolei dane iteracje tj
+                    ' przed uruchomieniem kazdej warto by nadac warunek czy mgo dziala, czy excel w wariata sie nie zmienia
+                    ' przez dziwny przypadek badz z powodu niewlasciwego zachowania uzytkownika podczas lotu raportu
+                    ' =================================================================================================================
                 
-                'Debug.Print "pi1 " & CStr(Now)
-                sh.progress_increase
-                'Debug.Print "pi2 " & CStr(Now)
+                    ' jestesmy w srodku iteracji kazdego elementu jednorazowo
+                    ' mozemy teraz zrobic scenariusz
+                    ' tutaj dzieje sie kazdy element zwiazany z mgo
+                    'Debug.Print "1. start " & CStr(Now)
+                    mitem.createFullIteration imgo
+                    'Debug.Print "2. after fulliter " & CStr(Now)
+                    ' po uzupelnieniu danych nakladamy layout co by dobrze wygladalo
+                    ' i teraz tak - zakladam ze ta metoda ponizej oprocz samego koloru wyplenia rowniez
+                    'odpowiednio dane wg ustalonego typu runu czy raczej layotutu
+                    ' teraz jest ok
+                    ' Debug.Print mitem.getItemsCollection.COUNT
+                    mitem.addColorFlavour
+                    ' Debug.Print "3. after addcolorflavor " & CStr(Now)
+                    
+                    'Debug.Print "pi1 " & CStr(Now)
+                    sh.progress_increase
+                    'Debug.Print "pi2 " & CStr(Now)
+                Else
+                    End
+                End If
             Next mitem
             ffld.buildLayoutForDatesLabels itersCollection
             ffld.buildLayoutTheThinLines itersCollection ' ten argument to wlasciwie tak just in case

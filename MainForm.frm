@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} MainForm 
    Caption         =   "Main Form"
-   ClientHeight    =   1785
+   ClientHeight    =   9585
    ClientLeft      =   45
    ClientTop       =   375
-   ClientWidth     =   7005
+   ClientWidth     =   7215
    OleObjectBlob   =   "MainForm.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -18,13 +18,66 @@ Private Sub BtnClose_Click()
     Application.ThisWorkbook.Close
 End Sub
 
-Private Sub BtnHide_Click()
+Private Sub BtnDownloadingRules_Click()
+    
+    ' DownloadingRulesForm
+    
+    
+    'Global Const OFFSET_FOR_NEW_PLT = 20
+    'Global Const INIT_RULES_FORM_WIDTH = 320
+    'Global Const INIT_RULES_FORM_HEIGHT = 108
+    '
+    'Global Const INIT_RULES_FORM_BTN_TOP = 54
+    '
+    'Global Const TEXTBOX_PLT_0_LEFT = 12
+    'Global Const TEXTBOX_RQM_0_LEFT = 54
+    '
+    'Global Const TEXTBOX_PLT_0_TOP = 30
+    'Global Const TEXTBOX_RQM_0_TOP = 30
+    '
+    'Global Const TEXTBOX_PLT_0_W = 36
+    'Global Const TEXTBOX_RQM_0_W = 72
+    '
+    'Global Const TEXTBOX_PLT_0_H = 18
+    'Global Const TEXTBOX_RQM_0_H = 18
+    '
+    'Global Const LABEL_CMNT_0_L = 132
+    'Global Const LABEL_CMNT_0_T = 30
+    'Global Const LABEL_CMNT_0_W = 174
+    'Global Const LABEL_CMNT_0_H = 18
+    
+    
+    
+    
+    drh.inicjacja
+    drh.ile_bedzie_plantow = CLng(drh.getPlants().COUNT)
+    drh.okresl_wielkosc_forma_i_przesun_guziki_w_dol
+    
+
+    For x = 1 To drh.ile_bedzie_plantow
+    
+    
+    
+        drh.iteracja Int(x)
+        
+        
+    Next x
+    
+    'tb.Left = TEXTBOX_PLT_0_LEFT
+    'tb.Top = TEXTBOX_PLT_0_TOP + OFFSET_FOR_NEW_PLT
+    
+    
+    ' wlasciwie show bedzie na samym koncu
+    DownloadingRulesForm.show
+End Sub
+
+Private Sub BTNHide_Click()
     Me.hide
 End Sub
 
 Private Sub BtnMoreLess_Click()
     If Me.BtnMoreLess.Caption Like "*More*" Then
-        Me.Height = 465
+        Me.Height = 500
         Me.BtnMoreLess.Caption = "Less"
     Else
         Me.Height = 110
@@ -218,13 +271,18 @@ Private Sub ComboBoxColorLayout_Change()
 End Sub
 
 Private Sub UserForm_Initialize()
-
+    
+    
+    
+    
+    Set drh = New DownloadingRulesHandler
 
     ' dates now
     Me.DTPickerPUSLimit = Now
     Me.DTPickerRQMLimit = Now
     
     Me.Height = 110
+    Me.Width = 365
 
 
 

@@ -27,7 +27,18 @@ Public Function prepareRestOfData() As Range
     
     wiersz = poczatek_danych_dla_continue_broken_report.Row - 2
     
-    Set input_rng_flag = init_sh.Cells(wiersz, 1)
+    Set input_rng_flag = init_sh.Cells(1, 1)
+    x = 1
+    Do
+        Set input_rng_flag = input_rng_flag.Offset(1, 0)
+        
+        If Not input_rng_flag.EntireRow.Hidden Then
+            x = x + 1
+        End If
+    Loop Until x = wiersz
+    
+    ' Set prepareRestOfData = input_rng_flag
+    
     
     If Trim(input_rng_flag.Offset(1, 0)) <> "" Then
         Set input_rng_flag = init_sh.Range(input_rng_flag, input_rng_flag.End(xlDown))
@@ -133,6 +144,14 @@ Public Function checkInputAndActiveSheetBeforeJunction(ByRef inits As Worksheet,
                 ' ale musze pamietac
                 ' ze tutaj slabo wpisane zostalo na stale i mody na layoucie spowoduje errory
                 Set input_rng_flag = init_sh.Range("a2")
+                If Not input_rng_flag.EntireRow.Hidden Then
+                    ' Set input_rng_flag = init_sh.Range("a2")
+                    ' no additional operation needed
+                ElseIf input_rng_flag.EntireRow.Hidden Then
+                    Do
+                        Set input_rng_flag = input_rng_flag.Offset(1, 0)
+                    Loop Until (Not input_rng_flag.EntireRow.Hidden)
+                End If
                 Set report_rng_flag = active_sh.Range("b5")
                 
                 Do
@@ -145,6 +164,14 @@ Public Function checkInputAndActiveSheetBeforeJunction(ByRef inits As Worksheet,
                     End If
                 
                     Set input_rng_flag = input_rng_flag.Offset(1, 0)
+                    If Not input_rng_flag.EntireRow.Hidden Then
+                        ' Set input_rng_flag = init_sh.Range("a2")
+                        ' no additional operation needed
+                    ElseIf input_rng_flag.EntireRow.Hidden Then
+                        Do
+                            Set input_rng_flag = input_rng_flag.Offset(1, 0)
+                        Loop Until (Not input_rng_flag.EntireRow.Hidden)
+                    End If
                     Set report_rng_flag = report_rng_flag.Offset(1, 0)
                     
                     ' teraz wazna rzecz

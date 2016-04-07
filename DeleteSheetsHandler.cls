@@ -20,17 +20,12 @@ Public Sub deleteCurrentSheet()
 End Sub
 
 Public Sub deleteAllSheets()
-    ret = MsgBox("Czy na pewno usun¹æ?", vbQuestion + vbYesNo)
+    ret = MsgBox("Delete all?", vbQuestion + vbYesNo)
     If ret = vbYes Then
         Application.DisplayAlerts = False
         
         
         Dim sh As Worksheet
-        Set sh = Sheets("chart register")
-        For x = 1 To sh.Shapes.COUNT
-            sh.Shapes(x).Delete
-        Next x
-        
         x = 1
         Do
             If (Sheets(x).Name Like "*input*") Or (Sheets(x).Name Like "*register*") Then
