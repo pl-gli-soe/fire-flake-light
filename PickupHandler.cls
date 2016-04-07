@@ -271,9 +271,10 @@ Public Sub takeDataFromPH100(m As MGO, mcd As CommonData)
         Dim ce As CatchError
         Set ce = New CatchError
         
+        tylko_na_poczatku_jest_to_zerem_zwiazane_z_ukladem_ekranu_historii = 0
         If ce.catchIfPartNotFoundInHistoryScreen(.infocode) Then
             Do
-                For x = 0 To 9
+                For x = (0 + tylko_na_poczatku_jest_to_zerem_zwiazane_z_ukladem_ekranu_historii) To 9
                     
                     ' kolejne wiersze z ph100 - ekran historii
                     If dic.COUNT > 0 Then
@@ -352,6 +353,7 @@ Public Sub takeDataFromPH100(m As MGO, mcd As CommonData)
                 End If
                 
                 m.sendKeys "<pf8>"
+                tylko_na_poczatku_jest_to_zerem_zwiazane_z_ukladem_ekranu_historii = 1
             Loop While True
         Else
             mcd.errorLog = CStr(ce.getFeedbackInfo())

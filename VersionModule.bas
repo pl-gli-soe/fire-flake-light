@@ -14,7 +14,37 @@ Attribute VB_Name = "VersionModule"
 ' odchudzenie ffa rowniez wchodzi w gre aby chodzil odrobine szybciej
 Public Sub msgbox_about(ictrl As IRibbonControl)
 
+    ' big changes in addRqmsAndDatesIntoItems in DailyIteration class
+    '4.03.04 - ma poprawe z wersji 4.02.25
+    ' -------------------------------------------------------------
+    version_4_03_04 = "This is Fire Flake Light - the 4th generation of this tool" & Chr(10) & _
+        "" & Chr(10) & _
+        "VERSION 4.03.04" & Chr(10) & _
+        " - big changes in addRqmsAndDatesIntoItems in DailyIteration class" & Chr(10) & _
+        " - extra private subroutines zk7pdrqm_logic & ms9pop00_logic to seperate config on component" & Chr(10) & _
+        " - rqm from zk7pdrqm logic added - config 0" & Chr(10) & _
+        " - rqm from ms9pop00 logic to be added - config 1" & Chr(10) & _
+        " - first 03.xx with fix on XFR from 02.25 important!" & Chr(10) & _
+        Chr(10) & _
+        "TO BE IMPLEMENTED: " & Chr(10) & _
+        " - dynamic wizard for new plants (unrecognized plants)" & Chr(10) & _
+        ""
 
+
+    '4.03.03 - ma poprawe z wersji 4.02.25
+    ' -------------------------------------------------------------
+    version_4_03_03 = "This is Fire Flake Light - the 4th generation of this tool" & Chr(10) & _
+        "" & Chr(10) & _
+        "VERSION 4.03.03" & Chr(10) & _
+        " - input list config added" & Chr(10) & _
+        " - rqm from zk7pdrqm logic to be added - config 0" & Chr(10) & _
+        " - rqm from ms9pop00 logic to be added - config 1" & Chr(10) & _
+        " - first 03.xx with fix on XFR from 02.25 important!" & Chr(10) & _
+        " - also point on ms9ph100 tylko_na_poczatku_jest_to_zerem_zwiazane_z_ukladem_ekranu_historii! PickupHandler PH100" & Chr(10) & _
+        Chr(10) & _
+        "TO BE IMPLEMENTED: " & Chr(10) & _
+        " - rules form with connections with real data" & Chr(10) & _
+        ""
 
     '4.03.02
     ' -------------------------------------------------------------
@@ -22,13 +52,13 @@ Public Sub msgbox_about(ictrl As IRibbonControl)
         "" & Chr(10) & _
         "VERSION 4.03.02" & Chr(10) & _
         "NEW RULES FOR COMPONENT PLANTS: " & Chr(10) & _
+        " - from data downloading perspective still no value added (only zk7pdrqm screen implemented)" & Chr(10) & _
         " - add logic for plants that not exists in register list" & Chr(10) & _
+        " - only actions on form added with no actions on input list" & Chr(10) & _
         Chr(10) & _
-        "TO BE IMPLEMENTED: " & Chr(10) & _
-        " - rules form" & Chr(10) & _
         ""
 
-    '4.03.01
+    '4.03.01 - wersja jeszcze nie udostepniona ma blad z wersji 02.24
     ' -------------------------------------------------------------
     version_4_03_01 = "This is Fire Flake Light - the 4th generation of this tool" & Chr(10) & _
         "" & Chr(10) & _
@@ -38,10 +68,20 @@ Public Sub msgbox_about(ictrl As IRibbonControl)
         " - idea is week because we need to work inline with plans that are in the list" & Chr(10) & _
         Chr(10) & _
         "TO BE IMPLEMENTED: " & Chr(10) & _
-        " - rules form" & Chr(10) & _
+        " - rules form without further connections" & Chr(10) & _
         ""
 
     
+    '4.02.25
+    ' -------------------------------------------------------------
+    version_4_02_25 = "This is Fire Flake Light - the 4th generation of this tool" & Chr(10) & _
+        "" & Chr(10) & _
+        "VERSION 4.02.25" & Chr(10) & _
+        "FIXED: " & Chr(10) & _
+        " - XFR without EDA brokes running" & Chr(10) & _
+        " - also point on ms9ph100 tylko_na_poczatku_jest_to_zerem_zwiazane_z_ukladem_ekranu_historii! PickupHandler PH100" & Chr(10) & _
+        ""
+
     
     '4.02.24
     ' -------------------------------------------------------------
@@ -73,8 +113,8 @@ Public Sub msgbox_about(ictrl As IRibbonControl)
         " - CONTINUE BROKEN REPORT still not working for internet connection breakdowns" & Chr(10) & _
         ""
     
-    ' MsgBox CStr(version_4_02_23)
-    MsgBox CStr(version_4_03_02)
+
+    MsgBox CStr(version_4_03_04)
 End Sub
 
 '4.02.22

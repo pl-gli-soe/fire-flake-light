@@ -10,7 +10,12 @@ Attribute VB_Exposed = False
 Implements IIteration
 
 
+
+' dzieki mcd iec jest zbedne poniewaz zawiera juz w srodku kluczowa informacyje
+' Private iec As ITERATION_CONFIG
+' mcd.iter_config !!!
 Private mcd As CommonData
+
 
 ' kolekcja itemow- juz zunifikowanych - czyli po wyrzuceniu duplikatow
 Private ic As Collection
@@ -32,6 +37,8 @@ Private fireFlake_Layout As IFireFlakeLayout
 Private imgo As MGO
 
 Private HOW_MANY_DAYS_FOR_PPUS0 As Range
+
+
 
 
 Private ce As CatchError
@@ -125,7 +132,14 @@ Private Sub fillItemCollection(m As MGO)
     ' =============================================================================
 
     ' this very first one is not only for the rqms but also provides dates
-    addRqmsAndDatesIntoItems m
+    'Public Enum ITERATION_CONFIG
+    '    CONFIG_ASM
+    '    CONFIG_POP
+    '    CONFIG_M
+    '    CONFIG_NULL
+    'End Enum
+    ' tutaj pieknie dopasowanie poniewaz addRqms... faktycznie jako drugi argument posiada typ ITERATION_CONFIG :D
+    addRqmsAndDatesIntoItems m, mcd.iter_config
     
     ' teraz trzeba sprawdzic czy w ogole jest gdzie wsadzic pozostale dane
     ' to znaczy czy kolekcja itemow nie jest pusta tj. czy przynjamniej jeden rqm z data jest widoczny z perspektywy fire flake'a
@@ -148,14 +162,39 @@ Private Sub test_on_downloaded_data()
     End If
 End Sub
 
-Private Sub addRqmsAndDatesIntoItems(m As MGO)
+Private Sub addRqmsAndDatesIntoItems(m As MGO, eic As ITERATION_CONFIG)
 
 
     ' narazie ten subroutine obsluguje tylko i wylacznie ekran daily rqm zk7pdrqm
     ' ale musis przecko byc tez naddatek zwiazany z plt comp
     ' i zatem to pomijamy w ogole
+    
+    If eic = CONFIG_ASM Then
+        ' std assembly
+        zk7pdrqm_logic m
+    ElseIf eic = CONFIG_POP Then
+        ' wlasciwie dopasowana struktura pod dane komponentowe
+        ' bo nie ma zadnej lepszej alternatywy
+        ms9pop00_logic m
+    ElseIf eic = CONFIG_M Then
+        ' dane manualne z zewnetrznego pliku
+        ' narazie jeszcze brak idei :D
+    ElseIf eic = CONFIG_NULL Then
+        ' puste
+        ' for now - no operation implemented
+    Else
+        MsgBox "Ten text nie moze sie pojawic!"
+        End
+    End If
 
 
+    
+    
+
+End Sub
+
+Private Sub zk7pdrqm_logic(m As MGO)
+    
     m.sendKeys "<Clear>"
     m.sendKeys "zk7pdrqm <Enter>"
     m.pZK7PDRQM.KANBAN = ""
@@ -274,14 +313,14 @@ Private Sub addRqmsAndDatesIntoItems(m As MGO)
         mcd.errorLog = CStr(ce.getFeedbackInfo())
         
         
-        ' PLEASE INSERT CODE HERE FOR CUSTOM DAILY RQMS - NO DATA IN MGO
+        ' PLEASE INSERT CODE HERE FOR CUSTOM DAILY RQMS - NO DATA IN MGO - OBSOLETE FOR NOW - this place according to above code should never start.
         ' ---------------------------------------------------------------------------------------------------
         
+            ' koniec koncow rezygnuje z tej koncpecji, poniewaz kod bedzie zbyt gleboko zagniezdzony
+            ' ostatecznie odseparowalem logike w poziomie wyzej dzieki temu kod stanie sie nieco bardziej klarowny
         
         ' ---------------------------------------------------------------------------------------------------
     End If
-    
-
 End Sub
 
 Private Function petlaForX04(m As MGO, prevDate As Date, currDate As Date, PLT_TOTAL_ROW As Integer) As Boolean
@@ -376,6 +415,27 @@ Private Sub zjedzNaDolZaPomocaF8(m As MGO)
     While m.getCode("zk7pdrqm") = "R6693"
         m.sendKeys "<pf8>"
     Wend
+End Sub
+
+Private Sub ms9pop00_logic(m As MGO)
+
+    ' assumption: we're still on ms9pop00 just double check it:
+    Dim ce As CatchError
+    Set ce = New CatchError
+    
+    If CStr(m.actualScreen) = "MS9POP00" Then
+    
+        ' slusznie jedynie tutaj kod moze sie uruchomic jesli wszystko poszlo tak jak nalezy
+        With m.pMS9POP00
+            
+        End With
+    
+    Else
+        ' test nie poszedl pomyslnie cos jest nie tak skoro bylem na ekranie ms9pop00 a teraz juz nie jestem :/
+        ce.sth_went_wrong_with_mgo_on_ms9pop00_screen_download_rqm_attempt
+        mcd.errorLog = CStr(ce.getFeedbackInfo())
+        Exit Sub
+    End If
 End Sub
 
 Private Sub addPusesIntoItems(m As MGO)
@@ -627,11 +687,22 @@ Private Sub IIteration_czesciowyFillNaTejIteracji(r As Range, lt As LAYOUT_TYPE,
     mcd.additionalCommnet = Trim(r.Offset(0, 3))
     
     'component -> flaga czy w inne ekrany mam zagldac
-    mcd.c = doubleCheckOnPlant(r.Offset(0, 4), r)
+    ' OBSOLETE - najpierw spradzamy config
+    ' potem sprawdzamy czy  ten konkretny plant to komponent
+    ' mcd.c = doubleCheckOnPlant(r.Offset(0, 4), r)
     
     ' config enum - nie pamietam czy od zera czy od jedynki
     ' potem temat bede meczyl :D
-    mcd.iter_config = getIterConfig(r.Offset(0, 5))
+    ' teraz wazna rzecz drh.getIUterConfig robi juz dwie pieczenie na jednym ruszcie
+    ' wyrzuca do iter_config nowa wartosc
+    ' plus modyfikuje argument dzieki temu ze jest z przyrostkiem byref
+    mcd.iter_config = drh.getIterConfig(r)
+    
+    ' juz iter config ready zatem mozna jeszcze przypisac
+    ' nalezy pamietac o tym ze ifComponent jest dosc mocno powiazany z pracy z poprzednia funkcja getIterConfig z racji tego
+    ' wynik czy dany plant jest componentowy wynika z wartosci jaka przechwyci ogolna konfiguracja dane part numberu, czy tez
+    ' bardziej akurat tutaj plantu, poniewaz w glownej mierze to plant decyduje czy mamy do czynienia z asm, czy moze z comp, czy moze jeszcze z czyms innym
+    mcd.c = drh.ifComponent(mcd, r)
     
     
     ' flaga pod wiersz - szczegolnie przydatne dla odtworzenia danych przy popsustym raporcie
@@ -647,28 +718,15 @@ Private Sub IIteration_czesciowyFillNaTejIteracji(r As Range, lt As LAYOUT_TYPE,
     mcd.rqmLimit = CDate(rqm_limit)
 End Sub
 
-' CONFIG
-' 5th column in input
-' auto change due to type of part number and the plant
-' auto recognize component for example
-' let zero be assembly
-' let one be component from ms9pop00
-' let 2 be sth else
-Private Function getIterConfig(ByRef s As Range)
-    If s = "" Then
-        getIterConfig = "0"
-        s = "0"
-    Else
-        getIterConfig = s
-    End If
-End Function
+
 
 
 ' metoda ta sprawdza czy napewno dany plant powinien zagladac w takie a nie inne screeny na mgo
-Private Function doubleCheckOnPlant(c As Range, plt As Range)
-    ' wstepna uproszczona implementacja poniewaz nie chce mi sie narazie logiki pisac :D
-    doubleCheckOnPlant = Trim(c)
-End Function
+' ta procedura bedzie teraz pracowac w klasie DownloadingRuleshandler
+'Private Function doubleCheckOnPlant(c As Range, plt As Range)
+'    ' wstepna uproszczona implementacja poniewaz nie chce mi sie narazie logiki pisac :D
+'    doubleCheckOnPlant = Trim(c)
+'End Function
 
 Private Function IIteration_getCommonData() As CommonData
     Set IIteration_getCommonData = mcd
