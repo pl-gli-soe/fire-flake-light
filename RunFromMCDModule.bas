@@ -105,3 +105,7 @@ End Sub
 Public Sub sLOG(mcd As CommonData, r As Range)
     r = mcd.errorLog
 End Sub
+
+Public Sub sC(mcd As CommonData, r As Range)
+    r = mcd.c
+End Sub

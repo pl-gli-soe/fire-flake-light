@@ -87,10 +87,14 @@ Public Function catchIfMGOIsNotActive(sess0) As Boolean
     
     If sess0 Is Nothing Then
         catchIfMGOIsNotActive = True
-        feedback_info = feedback_info & "MGO is no active"
+        feedback_info = feedback_info & "MGO is not active"
     End If
 End Function
 
 Private Sub Class_Initialize()
     feedback_info = ""
+End Sub
+
+Public Sub sth_went_wrong_with_mgo_on_ms9pop00_screen_download_rqm_attempt()
+    feedback_info = feedback_info & "unrecognized failure on ms9pop00 during rqm downloading for special config"
 End Sub
