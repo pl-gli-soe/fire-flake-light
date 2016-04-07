@@ -287,9 +287,13 @@ Public Sub continueBrokenReport(lt As LAYOUT_TYPE, st As START_TYPE)
         rep.repInit rng, CDate(pus_limit), lt, st, CDate(daily_rqm_limit), cebeer.getTheBeginning.Row
         rep.repRun imgo, sh
         
+        ' wsadzone swiezo - by przeliczyc fakowo first runouty
+        rep.fakeDataChangeToRecalcFirstRunoutFormula
     Else
         MsgBox CStr(d.Item(Int(wynik_funkcji)))
     End If
+    
+    
     
     
     ' =======================================================================================================

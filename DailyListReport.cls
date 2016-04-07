@@ -72,7 +72,7 @@ End Sub
 Private Sub IReport_fakeDataChangeToRecalcFirstRunoutFormula()
     Dim rng As Range, ir As Range
     
-    If mlt = LIST_LAYOUT And mst = FROM_THE_BEGINNING Then
+    If mlt = LIST_LAYOUT And (mst = FROM_THE_BEGINNING Or mst = CONTINUE_BROKEN_ONE) Then
         
         dc.assignDynamicColorsrange
         Set ir = dc.getDataScope().Item(1, 1)
