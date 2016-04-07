@@ -57,7 +57,7 @@ End Sub
 Private Function przeliczZasieg() As Range
 
     
-    Set przeliczZasieg = Nothing
+    ' Set przeliczZasieg = Nothing
     
     Dim poczatek As Range
     Dim ost_wiersz_pierwszej_kolumny As Range
@@ -73,8 +73,8 @@ Private Function przeliczZasieg() As Range
     
     Set poczatek = zasiegDoNadaniaDynamicznychKolorow.Offset(1, 1)
     
-    Set przeliczZasieg = Range(poczatek, Cells(ost_wiersz_pierwszej_kolumny.Row, ost_kolumna.Column))
-    
+    Set poczatek = ash.Range(poczatek, ash.Cells(ost_wiersz_pierwszej_kolumny.Row, ost_kolumna.Column))
+    Set przeliczZasieg = poczatek
 End Function
 
 

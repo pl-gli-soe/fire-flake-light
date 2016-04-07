@@ -7,6 +7,17 @@ Attribute VB_Name = "VersionModule"
 ' odchudzenie ffa rowniez wchodzi w gre aby chodzil odrobine szybciej
 
 
+'4.02.18
+' -------------------------------------------------------------
+' cebeer poczatek
+' udalo sie zrobic prosty continue broken report
+' jednak nieprawidlowo obsluguje przerwanie lacza internetowego
+' musze wykonac symulacje wylaczenia internetu
+' zrobienia disconnected
+' zmieny aktywnosci arkusza
+' kazdy ekran musi posiadac obslugo wyjatku do tego stopnia zeby ff sie zwieszal mocniej a nie ignorowal bledy
+
+
 '4.02.17
 ' -------------------------------------------------------------
 ' ta wersja bedzie slodko uzbrojona w dodatek continue broken report!
@@ -22,7 +33,7 @@ Attribute VB_Name = "VersionModule"
 ' Set input_rng_flag = init_sh.Range("a2")
 ' Set report_rng_flag = active_sh.Range("b5")
 '
-'
+' CEBEER! :D
 
 '4.02.16
 ' -------------------------------------------------------------
