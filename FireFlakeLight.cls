@@ -97,7 +97,7 @@ Public Sub runDaily(limit As Date, lt As LAYOUT_TYPE, st As START_TYPE, daily_rq
         ' oczywiscie catch error musi byc na miejscu aby latwo by wylapac czy to aby napewno to o co nam chodzi
         ' =======================================================================================================
         
-        Set rep = New DailyReport
+        Set rep = New DailyListReport
         ' metoda connect with input list bardziej by nazwa pasowala
         ' teraz wazna sprawa dzialanie calych iteracji opierac sie badzie na obiektach chwytajacych
         ' i tutaj uwaga juz na startcie to jest na metodzie initujacej uruchamiam kolekcje wszsytkich iteracji
@@ -133,7 +133,7 @@ Public Sub runDaily(limit As Date, lt As LAYOUT_TYPE, st As START_TYPE, daily_rq
     
     
     rep.fakeDataChangeToRecalcFirstRunoutFormula
-    rep.adjustLayoutAfterAllJobs
+    ' rep.adjustLayoutAfterAllJobs
 
 End Sub
 

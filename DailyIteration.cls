@@ -34,6 +34,8 @@ Private imgo As MGO
 Private HOW_MANY_DAYS_FOR_PPUS0 As Range
 
 
+Private ce As CatchError
+
 Private Sub Class_Initialize()
 
     Set ic = New Collection
@@ -261,13 +263,15 @@ Private Sub addRqmsAndDatesIntoItems(m As MGO)
                 Loop Until m.getCode("zk7pdrqm") = "R6120"
             End If
             ' ===============================================================================================================
+        Else
+            mcd.errorLog = CStr(ce.getFeedbackInfo())
         End If
     Else
         ' plan jest taki ze jesli danych nie - ma trzeba je jakos zastapic - mozna np zerami po prostu zgodnie z iloscia danych
         ' jaka requestowal user
         ' aktualnie implementacja jest pusta to znaczy ze musze dac sam sobie na pozniej dac znac ze to jest do uzupelnienia :D
         ' ---------------------------------------------------------------------------------------------------
-        
+        mcd.errorLog = CStr(ce.getFeedbackInfo())
         
         
         ' PLEASE INSERT CODE HERE FOR CUSTOM DAILY RQMS - NO DATA IN MGO
@@ -319,6 +323,7 @@ Private Function petlaForX04(m As MGO, prevDate As Date, currDate As Date, PLT_T
             
             prevDate = currDate
         Else
+            mcd.errorLog = CStr(ce.getFeedbackInfo())
             Exit Function
         End If
     Next x
@@ -469,7 +474,7 @@ Private Sub fillTransitCollectionByPuses(ByRef m As MGO, ByRef push As PickupHan
     ' oraz wypelnia not yet recevied collection
     
     
-    push.takeDataFromPPUM0 m
+    push.takeDataFromPPUM0 m, mcd
     push.takeDataFromPH100 m, mcd
     ' push.fillCollections notYetReceivedWithPastEdaCollection, ic
     
@@ -568,7 +573,8 @@ Private Sub fillRestOfCommonData(m As MGO)
         ElseIf CStr(m.pMS9POP00.transQTY(2)) <> "" Then
             push.gotopo400 = True
         End If
-    
+    Else
+        mcd.errorLog = CStr(ce.getFeedbackInfo())
     End If
     
     

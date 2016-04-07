@@ -33,6 +33,11 @@ Public Function firstRunout(r As Range, caly_zasieg As Range) As String
         Set ebal_flag = ebal_flag.Offset(0, 3)
     Loop Until Trim(ebal_flag) = ""
     
+    If firstRunout = "" Then
+        Set ebal_flag = ebal_flag.Offset(0, -3)
+        firstRunout = CStr(CDate(CDate(ebal_flag.Offset(-1, -2)) + 1))
+    End If
+    
     
     ' to jest przeklamanie!
     ' firstRunout = ebal_flag.Offset(-1, -5)

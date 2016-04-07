@@ -18,6 +18,7 @@ Public gotopo400 As Boolean
 
 Private HOW_MANY_DAYS_FOR_PPUS0 As Range
 
+Private ce As CatchError
 
 
 
@@ -33,6 +34,10 @@ Private HOW_MANY_DAYS_FOR_PPUS0 As Range
 '
 '
 '
+
+
+
+
 Public Function getDictionary() As Dictionary
     Set getDictionary = dic
 End Function
@@ -107,37 +112,38 @@ Public Sub takeDataFromPOP(m As MGO, mcd As CommonData)
     ' pierwszy asn
     For x = 0 To 1
         If CStr(m.pMS9POP00.transQTY(Int(x))) <> "" Then
-        
-            ' format pod czas
-            txt_time = Left(m.pMS9POP00.transETA(Int(x)), 2) & ":" & Right(m.pMS9POP00.transETA(Int(x)), 2)
-            If txt_time = "__:__" Then
-                txt_time = "00:00"
-            ' tutaj fancy warunek gdyby ktos upadl na lep
-            ' i dostal udaru zapisujac godzine 00:00 jako 24:00
-            ElseIf txt_time = "24:00" Then
-                txt_time = "23:59"
+            If CDate(m.convertToDateFromMS9POP00Date(CStr(m.pMS9POP00.transSDATE(Int(x))))) <= CDate(Format(mcd.pusLimit, "yyyy-mm-dd")) Then
+            
+                ' format pod czas
+                txt_time = Left(m.pMS9POP00.transETA(Int(x)), 2) & ":" & Right(m.pMS9POP00.transETA(Int(x)), 2)
+                If txt_time = "__:__" Then
+                    txt_time = "00:00"
+                ' tutaj fancy warunek gdyby ktos upadl na lep
+                ' i dostal udaru zapisujac godzine 00:00 jako 24:00
+                ElseIf txt_time = "24:00" Then
+                    txt_time = "23:59"
+                End If
+                
+                Set t = Nothing
+                Set t = New Transit
+                t.mDeliveryDate = CDate(m.convertToDateFromMS9POP00Date(m.pMS9POP00.transEDA(Int(x))))
+                t.mDeliveryTime = CDate(Format(txt_time, "hh:mm"))
+                t.mNotYetReceived = True
+                
+                ' you can also say that name is sid
+                t.mName = m.pMS9POP00.transBL(Int(x))
+                t.mTRLR = m.pMS9POP00.transCONT(Int(x))
+                t.mst = m.pMS9POP00.transST(Int(x))
+                t.mPickupDate = CDate(m.convertToDateFromMS9POP00Date(CStr(m.pMS9POP00.transSDATE(Int(x)))))
+                ' tutaj nie jest zdefiniowane
+                ' t.mPickupTime = CDate(Format(Now, "hh:mm"))
+                t.mQty = CLng(m.pMS9POP00.transQTY(Int(x)))
+                t.mRoute = m.pMS9POP00.transROUTE(Int(x))
+                t.mOnPo400 = False
+                
+                
+                If Not dic.Exists(CStr(t.mName)) Then dic.Add CStr(t.mName), t
             End If
-            
-            Set t = Nothing
-            Set t = New Transit
-            t.mDeliveryDate = CDate(m.convertToDateFromMS9POP00Date(m.pMS9POP00.transEDA(Int(x))))
-            t.mDeliveryTime = CDate(Format(txt_time, "hh:mm"))
-            t.mNotYetReceived = True
-            
-            ' you can also say that name is sid
-            t.mName = m.pMS9POP00.transBL(Int(x))
-            t.mTRLR = m.pMS9POP00.transCONT(Int(x))
-            t.mst = m.pMS9POP00.transST(Int(x))
-            t.mPickupDate = CDate(m.convertToDateFromMS9POP00Date(CStr(m.pMS9POP00.transSDATE(Int(x)))))
-            ' tutaj nie jest zdefiniowane
-            ' t.mPickupTime = CDate(Format(Now, "hh:mm"))
-            t.mQty = CLng(m.pMS9POP00.transQTY(Int(x)))
-            t.mRoute = m.pMS9POP00.transROUTE(Int(x))
-            t.mOnPo400 = False
-            
-            
-            If Not dic.Exists(CStr(t.mName)) Then dic.Add CStr(t.mName), t
-        
         End If
     Next x
     
@@ -145,7 +151,8 @@ End Sub
 
 Public Sub takeDataFromPO400(m As MGO, mcd As CommonData)
     ' sprawdz ladnie prosze czy przypadkiem nie przeszlismy na ekran ms3p9800
-    If UCase(CStr(m.actualScreen)) <> UCase(CStr(m.pMS3P9800.screenName)) Then
+    
+    If ce.noNSRissue(m) Then
     
         Do
             For x = 0 To 7
@@ -200,34 +207,38 @@ Public Sub takeDataFromPO400(m As MGO, mcd As CommonData)
         
             m.sendKeys "<pf8>"
         Loop While True
+    Else
+        mcd.errorLog = CStr(ce.getFeedbackInfo())
     End If
 End Sub
 
 
-Public Sub takeDataFromPPUM0(m As MGO)
+Public Sub takeDataFromPPUM0(m As MGO, mcd As CommonData)
 
     
     Do
         For x = 0 To 19 - 7
         
             If Trim(m.pZK7PPUM0.plt(Int(x))) <> "" Then
+                If CDate(m.convertToDateFromZK7PPUM0Date(.PU_DATE(Int(x)))) <= CDate(Format(mcd.pusLimit, "yyyy-mm-dd")) Then
             
-                Set t = Nothing
-                Set t = New Transit
-                
-                With m.pZK7PPUM0
-                    t.mDeliveryDate = CDate(m.convertToDateFromZK7PPUM0Date(.DEL_DATE(Int(x))))
-                    t.mDeliveryTime = CDate(Mid(.DEL_WINDW(Int(x)), 6, 2) & ":" & Right(.DEL_WINDW(Int(x)), 2))
-                    t.mOnPo400 = False
-                    t.mName = CStr(.PUS_NBR(Int(x)))
-                    t.mNotYetReceived = True
-                    t.mQty = CLng(.PART_QTY(Int(x)))
-                    t.mPickupDate = CDate(m.convertToDateFromZK7PPUM0Date(.PU_DATE(Int(x))))
-                    t.mRoute = CStr(.route(Int(x)))
-                    
-                    If Not dic.Exists(CStr(t.mName)) Then dic.Add CStr(t.mName), t
                     Set t = Nothing
-                End With
+                    Set t = New Transit
+                    
+                    With m.pZK7PPUM0
+                        t.mDeliveryDate = CDate(m.convertToDateFromZK7PPUM0Date(.DEL_DATE(Int(x))))
+                        t.mDeliveryTime = CDate(Mid(.DEL_WINDW(Int(x)), 6, 2) & ":" & Right(.DEL_WINDW(Int(x)), 2))
+                        t.mOnPo400 = False
+                        t.mName = CStr(.PUS_NBR(Int(x)))
+                        t.mNotYetReceived = True
+                        t.mQty = CLng(.PART_QTY(Int(x)))
+                        t.mPickupDate = CDate(m.convertToDateFromZK7PPUM0Date(.PU_DATE(Int(x))))
+                        t.mRoute = CStr(.route(Int(x)))
+                        
+                        If Not dic.Exists(CStr(t.mName)) Then dic.Add CStr(t.mName), t
+                        Set t = Nothing
+                    End With
+                End If
             End If
         Next x
         
@@ -336,6 +347,8 @@ Public Sub takeDataFromPH100(m As MGO, mcd As CommonData)
                 
                 m.sendKeys "<pf8>"
             Loop While True
+        Else
+            mcd.errorLog = CStr(ce.getFeedbackInfo())
         End If
     End With
 End Sub
@@ -346,10 +359,13 @@ Private Sub Class_Initialize()
     Set po400coll = New Collection
     Set dic = New Dictionary
     gotopo400 = False
+    
+    Set ce = New CatchError
 End Sub
 
 Private Sub Class_Terminate()
     Set ppum0coll = Nothing
     Set po400 = Nothing
     Set dic = Nothing
+    Set ce = Nothing
 End Sub

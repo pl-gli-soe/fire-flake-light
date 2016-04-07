@@ -19,11 +19,27 @@ Public Sub buildLayoutForDatesLabels(ByRef c As Collection)
 
 End Sub
 
+Public Sub buildLayoutTheThinLines(ByRef c As Collection)
+
+End Sub
+
+Public Sub closingDayLines()
+
+End Sub
+
+Public Sub finalAdjustOnColumnsWidth()
+
+End Sub
+
 Public Sub autoFitContent()
 
 End Sub
 
 Public Sub addFilterOnListLayout()
+
+End Sub
+
+Public Sub freezePanesAtTheEnd(ByRef lt As LAYOUT_TYPE)
 
 End Sub
 

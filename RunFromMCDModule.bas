@@ -101,3 +101,7 @@ End Sub
 Public Sub sTT(mcd As CommonData, r As Range)
     r = mcd.ttime
 End Sub
+
+Public Sub sLOG(mcd As CommonData, r As Range)
+    r = mcd.errorLog
+End Sub

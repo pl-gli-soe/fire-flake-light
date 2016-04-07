@@ -1,4 +1,47 @@
 Attribute VB_Name = "TestModule"
+Private Sub closingLine()
+'
+' closingLine Macro
+'
+
+'
+    Range("Q5:Q10").Select
+    Selection.Borders(xlDiagonalDown).LineStyle = xlNone
+    Selection.Borders(xlDiagonalUp).LineStyle = xlNone
+    With Selection.Borders(xlEdgeLeft)
+        .LineStyle = xlContinuous
+        .Color = -3618616
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeTop)
+        .LineStyle = xlContinuous
+        .Color = -3618616
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeBottom)
+        .LineStyle = xlContinuous
+        .Color = -3618616
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeRight)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThick
+    End With
+    Selection.Borders(xlInsideVertical).LineStyle = xlNone
+    With Selection.Borders(xlInsideHorizontal)
+        .LineStyle = xlContinuous
+        .Color = -3618616
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+End Sub
+
+
 Public Sub showStatusForm()
     Dim sh As StatusHandler
     Set sh = New StatusHandler
@@ -49,5 +92,25 @@ Private Sub filter_on()
     Range(Selection, Selection.End(xlToRight)).Select
     Selection.AutoFilter
     Range("B4").Select
+End Sub
+
+Private Sub freezePanesTest()
+'
+' freezePanesTest Macro
+'
+
+'
+    Range("D5").Select
+    ActiveWindow.freezePanes = True
+End Sub
+
+Private Sub shrinkColumns()
+'
+' shrinkColumns Macro
+'
+
+'
+    Columns("B:N").Select
+    Selection.ColumnWidth = 7.43
 End Sub
 

@@ -7,6 +7,22 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
+Private feedback_info As String
+
+
+Public Function getFeedbackInfo() As String
+    getFeedbackInfo = CStr(feedback_info)
+End Function
+
+Public Function noNSRissue(m As MGO) As Boolean
+    If UCase(CStr(m.actualScreen)) <> UCase(CStr(m.pMS3P9800.screenName)) Then
+        noNSRissue = True
+    Else
+        noNSRissue = False
+        feedback_info = feedback_info & "MS3P9800 screen issue / nsr issue"
+    End If
+End Function
+
 Public Function dataAvail(screen_name As String, infocode As String) As Boolean
     
     
@@ -16,6 +32,7 @@ Public Function dataAvail(screen_name As String, infocode As String) As Boolean
         ' I4266: DATA NOT FOUND FOR SCAN REQUEST - for example
         If infocode = "I4266" Then
             dataAvail = False
+            feedback_info = feedback_info & "ms9pop00 data not available"
         End If
 
     ElseIf screen_name = "zk7pdrqm" Or screen_name = "zk7pwrqm" Then
@@ -24,6 +41,7 @@ Public Function dataAvail(screen_name As String, infocode As String) As Boolean
         ' R6105: MUST INQUIRE BEFORE PF11 CAN BE USED
         If infocode = "R6116" Or infocode = "R6105" Then
             dataAvail = False
+            feedback_info = feedback_info & "zk7pdrqm/zk7pwrqm data not available"
         End If
     End If
 End Function
@@ -34,6 +52,7 @@ Public Function catchIfInDailyRqmsThereAreNoDates(strFromMgo As String) As Boole
         catchIfInDailyRqmsThereAreNoDates = True
     Else
         catchIfInDailyRqmsThereAreNoDates = False
+        feedback_info = feedback_info & "Daily Rqm Issue"
     End If
 End Function
 
@@ -45,6 +64,7 @@ Public Function catchIfPartNotFoundInHistoryScreen(strFromMgo As String) As Bool
         catchIfPartNotFoundInHistoryScreen = True
     Else
         catchIfPartNotFoundInHistoryScreen = False
+        feedback_info = feedback_info & "PART NOT FOUND IN MS9PH100"
     End If
 End Function
 
@@ -54,5 +74,10 @@ Public Function catchIfMGOIsNotActive(sess0) As Boolean
     
     If sess0 Is Nothing Then
         catchIfMGOIsNotActive = True
+        feedback_info = feedback_info & "MGO is no active"
     End If
 End Function
+
+Private Sub Class_Initialize()
+    feedback_info = ""
+End Sub
