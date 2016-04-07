@@ -233,7 +233,7 @@ Private Sub IReport_repRun(imgo As MGO, sh As StatusHandler)
             ffld.buildLayoutForCommonData
             
             iledni = 0
-            ' Debug.Print "0. start " & CStr(Now)
+            ' ' Debug.Print "0. start " & CStr(Now)
         
             For Each mitem In itersCollection
             
@@ -247,20 +247,20 @@ Private Sub IReport_repRun(imgo As MGO, sh As StatusHandler)
                     ' jestesmy w srodku iteracji kazdego elementu jednorazowo
                     ' mozemy teraz zrobic scenariusz
                     ' tutaj dzieje sie kazdy element zwiazany z mgo
-                    'Debug.Print "1. start " & CStr(Now)
+                    '' Debug.Print "1. start " & CStr(Now)
                     mitem.createFullIteration imgo
-                    'Debug.Print "2. after fulliter " & CStr(Now)
+                    '' Debug.Print "2. after fulliter " & CStr(Now)
                     ' po uzupelnieniu danych nakladamy layout co by dobrze wygladalo
                     ' i teraz tak - zakladam ze ta metoda ponizej oprocz samego koloru wyplenia rowniez
                     'odpowiednio dane wg ustalonego typu runu czy raczej layotutu
                     ' teraz jest ok
-                    ' Debug.Print mitem.getItemsCollection.COUNT
+                    ' ' Debug.Print mitem.getItemsCollection.COUNT
                     mitem.addColorFlavour
-                    ' Debug.Print "3. after addcolorflavor " & CStr(Now)
+                    ' ' Debug.Print "3. after addcolorflavor " & CStr(Now)
                     
-                    'Debug.Print "pi1 " & CStr(Now)
+                    '' Debug.Print "pi1 " & CStr(Now)
                     sh.progress_increase
-                    'Debug.Print "pi2 " & CStr(Now)
+                    '' Debug.Print "pi2 " & CStr(Now)
                 Else
                     End
                 End If
@@ -274,12 +274,12 @@ Private Sub IReport_repRun(imgo As MGO, sh As StatusHandler)
             ffld.freezePanesAtTheEnd mlt
             
             
-            'Debug.Print "4. end before assigning dynamic colors " & CStr(Now)
+            '' Debug.Print "4. end before assigning dynamic colors " & CStr(Now)
             
             dc.assignDynamicColorsrange
             dc.recalcColors
             
-            'Debug.Print "5. after final recalc " & CStr(Now)
+            '' Debug.Print "5. after final recalc " & CStr(Now)
             
             ' ffld.autoFitContent
         End If

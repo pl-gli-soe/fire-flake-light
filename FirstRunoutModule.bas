@@ -27,7 +27,7 @@ Public Function firstRunout(r As Range, caly_zasieg As Range) As String
     ' prosciej byc nie moze
     Set ebal_flag = rng
     
-    ' Debug.Print ebal_flag
+    ' ' Debug.Print ebal_flag
     
     Do
     

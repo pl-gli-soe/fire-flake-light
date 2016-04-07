@@ -252,13 +252,13 @@ End Sub
 
 Private Sub budujemyPodIteracjeCommonDataListLayout(ByRef ic As Collection, ByRef mcd As CommonData, ByRef notYetReceivedWithPastEdaCollection As Collection)
 
-    ' Debug.Print "budujemyPodIteracjeCommonDataListLayout beg " & CStr(Now)
+    ' ' Debug.Print "budujemyPodIteracjeCommonDataListLayout beg " & CStr(Now)
     ' init ref variable
     ' this is a base from comment as well
     ' ==========================================================================
     Set baza = sh.Cells(mcd.rowFlag, 2)
 
-    Debug.Print mcd.comment & " " & mcd.additionalCommnet
+    ' Debug.Print mcd.comment & " " & mcd.additionalCommnet
     ' fill data from pop screen into comment in first cell (pn)
     ' ==========================================================================
     Dim k As Komentarz
@@ -331,7 +331,7 @@ Private Sub budujemyPodIteracjeCommonDataListLayout(ByRef ic As Collection, ByRe
     Set ostatniElementCommonDataTejIteracji = baza.Offset(0, flaga)
     
     
-    ' Debug.Print "budujemyPodIteracjeCommonDataListLayout end " & CStr(Now)
+    ' ' Debug.Print "budujemyPodIteracjeCommonDataListLayout end " & CStr(Now)
 End Sub
 
 
@@ -507,7 +507,7 @@ Private Function offsetFor(cm As String, r As Range) As String
     Dim tmp As Range
     Set tmp = r
         
-    ' Debug.Print tmp - ze to niby od Past due
+    ' ' Debug.Print tmp - ze to niby od Past due
     Do
     
         If CStr(tmp) = cm Then

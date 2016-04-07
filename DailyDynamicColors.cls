@@ -56,7 +56,7 @@ Private Sub IDynamicColors_assignDynamicColorsrange()
         Set zasiegCBala = przeliczCBala(4, 4)
     End If
     
-    ' Debug.Print zasiegDoNadaniaDynamicznychKolorow.Address
+    ' ' Debug.Print zasiegDoNadaniaDynamicznychKolorow.Address
 End Sub
 
 Private Function przeliczCBala(r, c) As Range

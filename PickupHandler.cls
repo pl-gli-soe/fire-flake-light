@@ -126,7 +126,12 @@ Public Sub takeDataFromPOP(m As MGO, mcd As CommonData)
                 
                 Set t = Nothing
                 Set t = New Transit
+                
+                ' those 2 resume next is for strange behavior in mgo
+                ' it's possible to have empty text in date & time
+                On Error Resume Next
                 t.mDeliveryDate = CDate(m.convertToDateFromMS9POP00Date(m.pMS9POP00.transEDA(Int(x))))
+                On Error Resume Next
                 t.mDeliveryTime = CDate(Format(txt_time, "hh:mm"))
                 t.mNotYetReceived = True
                 
@@ -134,6 +139,8 @@ Public Sub takeDataFromPOP(m As MGO, mcd As CommonData)
                 t.mName = m.pMS9POP00.transBL(Int(x))
                 t.mTRLR = m.pMS9POP00.transCONT(Int(x))
                 t.mst = m.pMS9POP00.transST(Int(x))
+                
+                On Error Resume Next
                 t.mPickupDate = CDate(m.convertToDateFromMS9POP00Date(CStr(m.pMS9POP00.transSDATE(Int(x)))))
                 ' tutaj nie jest zdefiniowane
                 ' t.mPickupTime = CDate(Format(Now, "hh:mm"))
@@ -175,7 +182,11 @@ Public Sub takeDataFromPO400(m As MGO, mcd As CommonData)
                         
                         Set t = Nothing
                         Set t = New Transit
+                        
+                        On Error Resume Next
                         t.mDeliveryDate = CDate(m.convertToDateFromMS9PO400Date(m.pMS9PO400.EDA(Int(x))))
+                        
+                        On Error Resume Next
                         t.mDeliveryTime = CDate(Format(txt_time, "hh:mm"))
                         t.mNotYetReceived = True
                         
@@ -183,6 +194,8 @@ Public Sub takeDataFromPO400(m As MGO, mcd As CommonData)
                         t.mName = m.pMS9PO400.SID(Int(x))
                         t.mTRLR = m.pMS9PO400.TRLR(Int(x))
                         t.mst = m.pMS9PO400.st(Int(x))
+                        
+                        On Error Resume Next
                         t.mPickupDate = CDate(m.convertToDateFromMS9PO400Date(CStr(m.pMS9PO400.SDATE(Int(x)))))
                         ' tutaj nie jest zdefiniowane
                         ' t.mPickupTime = CDate(Format(Now, "hh:mm"))
@@ -226,12 +239,18 @@ Public Sub takeDataFromPPUM0(m As MGO, mcd As CommonData)
                     Set t = New Transit
                     
                     With m.pZK7PPUM0
+                    
+                        On Error Resume Next
                         t.mDeliveryDate = CDate(m.convertToDateFromZK7PPUM0Date(.DEL_DATE(Int(x))))
+                        
+                        On Error Resume Next
                         t.mDeliveryTime = CDate(Mid(.DEL_WINDW(Int(x)), 6, 2) & ":" & Right(.DEL_WINDW(Int(x)), 2))
                         t.mOnPo400 = False
                         t.mName = CStr(.PUS_NBR(Int(x)))
                         t.mNotYetReceived = True
                         t.mQty = CLng(.PART_QTY(Int(x)))
+                        
+                        On Error Resume Next
                         t.mPickupDate = CDate(m.convertToDateFromZK7PPUM0Date(.PU_DATE(Int(x))))
                         t.mRoute = CStr(.route(Int(x)))
                         

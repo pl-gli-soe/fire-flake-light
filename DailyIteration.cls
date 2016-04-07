@@ -106,7 +106,9 @@ Private Sub IIteration_createFullIteration(m As MGO)
     ' aby je uzyskac musimy stworzyc dane pod coverage
     ' zatem musimy pobrac rqmsy oraz pusy
     ' metoda zawiera prace nad rqmsami jak i pusami
-    fillItemCollection imgo
+    If Trim(mcd.errorLog) = "" Then
+        fillItemCollection imgo
+    End If
 
 End Sub
 
@@ -156,7 +158,7 @@ Private Sub test_on_downloaded_data()
     
     If ic.COUNT > 0 Then
         For Each ii In ic
-            ' Debug.Print "date: " & CStr(ii.getDate) & " rqm: " & CStr(ii.getRqm) & " COUNT: " & CStr(ii.getInTransits.COUNT)
+            ' ' Debug.Print "date: " & CStr(ii.getDate) & " rqm: " & CStr(ii.getRqm) & " COUNT: " & CStr(ii.getInTransits.COUNT)
             
         Next ii
     End If
@@ -182,15 +184,43 @@ Private Sub addRqmsAndDatesIntoItems(m As MGO, eic As ITERATION_CONFIG)
     ElseIf eic = CONFIG_NULL Then
         ' puste
         ' for now - no operation implemented
+    ElseIf eic = CONFIG_Z Then
+        zeros_logic DEFAULT_ZERO_RQMS
     Else
+    
         MsgBox "Ten text nie moze sie pojawic!"
-        End
+        ' End
     End If
 
 
     
     
 
+End Sub
+
+Private Sub zeros_logic(ile As Integer)
+    
+    Dim x As Integer
+    Dim tmpdate As Date
+    tmpdate = CDate(Format(Now, "yyyy-mm-dd"))
+    For x = 0 To ile - 1
+    
+    
+        If tmpdate <= mcd.rqmLimit Then
+        
+            ' jest OK nawet llimitacja rqmLimit juz ladnie lapie
+            ' ' Debug.Print "date: " & currDate & ", RQM in TOTAL: " & CStr(m.pZK7PDRQM.PLT_TOTAL(Int(x), Int(PLT_TOTAL_ROW)))
+            Set ii = Nothing
+            Set ii = New DailyItem
+            ii.setDate CDate(tmpdate + x)
+            ii.setRqm CLng(0)
+            
+            ic.Add ii
+        Else
+            Exit For
+        End If
+        
+    Next x
 End Sub
 
 Private Sub zk7pdrqm_logic(m As MGO)
@@ -347,7 +377,7 @@ Private Function petlaForX04(m As MGO, prevDate As Date, currDate As Date, PLT_T
             If currDate <= mcd.rqmLimit Then
             
                 ' jest OK nawet llimitacja rqmLimit juz ladnie lapie
-                ' Debug.Print "date: " & currDate & ", RQM in TOTAL: " & CStr(m.pZK7PDRQM.PLT_TOTAL(Int(x), Int(PLT_TOTAL_ROW)))
+                ' ' Debug.Print "date: " & currDate & ", RQM in TOTAL: " & CStr(m.pZK7PDRQM.PLT_TOTAL(Int(x), Int(PLT_TOTAL_ROW)))
                 Set ii = Nothing
                 Set ii = New DailyItem
                 ii.setDate currDate
@@ -417,6 +447,8 @@ Private Sub zjedzNaDolZaPomocaF8(m As MGO)
     Wend
 End Sub
 
+
+
 Private Sub ms9pop00_logic(m As MGO)
 
     ' assumption: we're still on ms9pop00 just double check it:
@@ -426,9 +458,14 @@ Private Sub ms9pop00_logic(m As MGO)
     If CStr(m.actualScreen) = "MS9POP00" Then
     
         ' slusznie jedynie tutaj kod moze sie uruchomic jesli wszystko poszlo tak jak nalezy
-        With m.pMS9POP00
-            
-        End With
+        
+        Dim currDate As Date, prevDate As Date
+        ' initialize
+        ' problem w tym ze nie tak latwo nalozyc poczatek istnienia tych dwoch zmiennych poniewaz koniec koncow
+        ' the prevDate ma pokazywac nie stan biezacy ale stan z poprzedniej iteracji
+        prevDate = CDate(Format(Now, "yyyy-mm-dd")) - 1
+        
+        take10FromPOP m, m.pMS9POP00, currDate, prevDate
     
     Else
         ' test nie poszedl pomyslnie cos jest nie tak skoro bylem na ekranie ms9pop00 a teraz juz nie jestem :/
@@ -436,6 +473,49 @@ Private Sub ms9pop00_logic(m As MGO)
         mcd.errorLog = CStr(ce.getFeedbackInfo())
         Exit Sub
     End If
+End Sub
+
+Private Sub take10FromPOP(ByRef m As MGO, ByRef pop As MS9POP00, ByRef cd As Date, ByRef pd As Date)
+
+    Dim x As Integer
+    Dim czy_klikneli_juz_f11 As Boolean
+    czy_klikneli_juz_f11 = False
+    With pop
+        ' pop screen have always 10 rows for balance
+        ' after 5th need to click F10
+        For x = 1 To 5
+            cd = CDate(m.convertToDateFromMS9POP00ShortDate(m.pMS9POP00.balance_on_pop_data(Int(x), 1)))
+            optionalFillWithZeroRqmsOnDownDays pd, cd
+            
+            
+            ' srawdzamy czy miescimy sie w limicie ilosc requirementsow jakie chcemy widziec w raporcie
+            If cd <= mcd.rqmLimit Then
+            
+                ' jest OK nawet llimitacja rqmLimit juz ladnie lapie
+                ' ' Debug.Print "date: " & currDate & ", RQM in TOTAL: " & CStr(m.pZK7PDRQM.PLT_TOTAL(Int(x), Int(PLT_TOTAL_ROW)))
+                Set ii = Nothing
+                Set ii = New DailyItem
+                ii.setDate cd
+                ii.setRqm CLng(pop.balance_on_pop_data(Int(x), 2))
+                
+                ic.Add ii
+            Else
+                Exit For
+            End If
+        
+            ' after 5th need to click F11
+            If Not czy_klikneli_juz_f11 Then
+                If x = 5 Then
+                    m.sendKeys "<pf11>"
+                    czy_klikneli_juz_f11 = True
+                    x = 1
+                End If
+            End If
+            
+            pd = cd
+        Next x
+    
+    End With
 End Sub
 
 Private Sub addPusesIntoItems(m As MGO)
@@ -696,8 +776,44 @@ Private Sub IIteration_czesciowyFillNaTejIteracji(r As Range, lt As LAYOUT_TYPE,
     ' teraz wazna rzecz drh.getIUterConfig robi juz dwie pieczenie na jednym ruszcie
     ' wyrzuca do iter_config nowa wartosc
     ' plus modyfikuje argument dzieki temu ze jest z przyrostkiem byref
-    mcd.iter_config = drh.getIterConfig(r)
+    '
+    ' 2015-06-17
+    ' kolejny temat wykorzystania drh w celu uzupelniania info o nieznanym plancie do tej pory z perspektywy fire flake
+    ' trzeba w prosty sposob zapytac jakiego rodzaju plantem jest plant zaproponowany przez usera!
     
+    
+    
+    
+    ' OBSOLETE! <- zrozumialem co bylo nie tak w kodzie - szczegolnie z getIterConfig(r)
+    ' ---------------------------------------------------------------------------------------------------------------------------
+    ' ---------------------------------------------------------------------------------------------------------------------------
+    ' z tym kodem to jest sroga masakra
+    ' jest dwa razy pod rzad uzyty ta sama methoda
+    ' poniewaz raz korzysta z jednej czesci a raz z drugiej w skrajnym przypadku, gdy plant nie zostal rozpoznany
+    ' nie ukrywam ze dodatkowym problem jest to ze dynamicznie wywolywany jest form
+    ' i moze temu - tak czy siak ten kod jest na tyle elastyczny ze podwojne jego wywolnie nie robi roznicy
+    ' za kadym razem jest osiagniecie celu i gdy juz on jest drugi raz kod w metodzie nie jest wykonywany
+    
+    ' ta dwie linie musza sie powtarzac!
+    ' mcd.iter_config = drh.getIterConfig(r)
+    ' using here handikap vba
+    
+    ' do not delete this repeatition!
+    
+    '
+    ' powyzszy komentarz trwal w wersji 05 poniewaz dwa razy uruchamialem kod get iter confing
+    ' z powodu srogiego babola w srodku tego kodu
+    ' ponizej juz widac ze uruchamiam to ostrojstwo ino raz
+    ' ---------------------------------------------------------------------------------------------------------------------------
+    ' ---------------------------------------------------------------------------------------------------------------------------
+    
+    ' implementacja zostala zmieniona i poprawiona!
+    ' 2015-08-03 - ostatnia zmiana
+    ' wykorzystanie w prawidlowy sposob wartosci eic
+    ' czesniej funkcja zapominala zwrocic jaka kolwiek wartosc
+    ' dlatego pojawial sie dziwny blad w pozniejszym kodzie!
+    ' gdyby nie msgbox ktore mowil ze nigdy nie powinien sie pojawic ciezko by bylo mi znalezc ten blad
+    mcd.iter_config = drh.getIterConfig(r)
     ' juz iter config ready zatem mozna jeszcze przypisac
     ' nalezy pamietac o tym ze ifComponent jest dosc mocno powiazany z pracy z poprzednia funkcja getIterConfig z racji tego
     ' wynik czy dany plant jest componentowy wynika z wartosci jaka przechwyci ogolna konfiguracja dane part numberu, czy tez
