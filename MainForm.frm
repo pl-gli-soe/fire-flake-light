@@ -1,10 +1,10 @@
 VERSION 5.00
 Begin {C62A69F0-16DC-11CE-9E98-00AA00574A4F} MainForm 
    Caption         =   "Main Form"
-   ClientHeight    =   8250
+   ClientHeight    =   1785
    ClientLeft      =   45
    ClientTop       =   375
-   ClientWidth     =   10575
+   ClientWidth     =   7005
    OleObjectBlob   =   "MainForm.frx":0000
    StartUpPosition =   1  'CenterOwner
 End
@@ -24,10 +24,10 @@ End Sub
 
 Private Sub BtnMoreLess_Click()
     If Me.BtnMoreLess.Caption Like "*More*" Then
-        Me.Height = 440
+        Me.Height = 465
         Me.BtnMoreLess.Caption = "Less"
     Else
-        Me.Height = 122
+        Me.Height = 110
         Me.BtnMoreLess.Caption = "More"
     End If
         
@@ -74,16 +74,7 @@ Private Sub BtnRunDaily_Click()
     
     Dim wybor_typu_layoutu As LAYOUT_TYPE
     
-    If Me.OptionButtonList.Value Then
-    
-        wybor_typu_layoutu = LIST_LAYOUT
-    ElseIf Me.OptionButtonCoverage.Value Then
-    
-        wybor_typu_layoutu = COV_LAYOUT
-    ElseIf Me.OptionButtonBox.Value Then
-    
-        wybor_typu_layoutu = BOX_LAYOUT
-    End If
+    wybor_typu_layoutu = LIST_LAYOUT
     
     If Me.DTPickerPUSLimit.Enabled Then
         ThisWorkbook.Sheets("register").Range("pusLimit") = CDate(Me.DTPickerPUSLimit.Value)
@@ -229,7 +220,7 @@ Private Sub UserForm_Initialize()
     Me.DTPickerPUSLimit = Now
     Me.DTPickerRQMLimit = Now
     
-    Me.Height = 122
+    Me.Height = 110
 
 
 
@@ -237,19 +228,7 @@ Private Sub UserForm_Initialize()
     Me.CheckBoxWeekNum.Value = True
     ThisWorkbook.Sheets("register").Range("weekNumOnTop") = 1
 
-
-    ' layout type
-    ' ============================================
     
-    With Me.LayoutTypeFrame
-        .Enabled = False
-    End With
-    
-    Me.OptionButtonList.Value = True
-    Me.OptionButtonCoverage.Value = False
-    Me.OptionButtonBox.Value = False
-    
-    ' ============================================
 
 
     ' history limit
@@ -288,11 +267,11 @@ Private Sub UserForm_Initialize()
     Set item_on_layout_color_list = ThisWorkbook.Sheets("register").Range("m10")
     Do
     
-        Me.ComboBoxColorLayout.AddItem item_on_layout_color_list
+        Me.ComboBoxColorLayout.AddItem CStr(item_on_layout_color_list)
         Set item_on_layout_color_list = item_on_layout_color_list.Offset(1, 0)
     Loop Until Trim(item_on_layout_color_list) = ""
     
-    Me.ComboBoxColorLayout.Value = ThisWorkbook.Sheets("register").Range("actualColorLayoutChoice")
+    Me.ComboBoxColorLayout.Value = CStr(ThisWorkbook.Sheets("register").Range("actualColorLayoutChoice"))
     
     Set item_on_layout_color_list = ThisWorkbook.Sheets("register").Range("m10")
     Do
@@ -341,9 +320,9 @@ Private Sub set_pop_data_left_right_thing_take_data_from_regiser_worksheet_on_in
     Do
     
         If r.Offset(0, 1) = "x" Then
-            Me.ListBoxInCellLeft.AddItem r
+            Me.ListBoxInCellLeft.AddItem CStr(r)
         Else
-            Me.ListBoxInCommentRight.AddItem r
+            Me.ListBoxInCommentRight.AddItem CStr(r)
         End If
         Set r = r.Offset(1, 0)
     Loop While r <> ""

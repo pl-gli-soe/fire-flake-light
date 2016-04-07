@@ -7,6 +7,10 @@ Attribute VB_Name = "VersionModule"
 ' odchudzenie ffa rowniez wchodzi w gre aby chodzil odrobine szybciej
 
 
+'4.02.14
+' -------------------------------------------------------------
+' pickup limit zaimplementowany znow
+
 '4.02.13
 ' -------------------------------------------------------------
 ' wersja 64 bitowa ma type mismatch to GlobalModule dalem dodatkowe deklaracje
@@ -15,6 +19,18 @@ Attribute VB_Name = "VersionModule"
 '#Else
 'Private Declare Function SHGetPathFromIDList Lib "shell32.dll" Alias "SHGetPathFromIDListA" (ByVal pidl As Long, ByVal pszPath As String) As Long
 '#End If
+' to powyzsze jednak nie wiele dalo
+' plus teraz duze zmiany jesli chodzi o layout
+' wyrzucilem z petli duzo wsadzilem tuz za nia
+' jak malowanie thin lines
+' freeze panes
+' filtering etc
+'
+'
+' zmiana z 2015-04-17
+' dodatkowo przeusniecie daty first runout o jeden dzien dalej jesli w ogole nie ma runoutu
+' w przypadku filtrowania i jest runout ostatniego dnia
+' minusy z plusami zaczna sie mieszac :D
 
 
 '4.02.12

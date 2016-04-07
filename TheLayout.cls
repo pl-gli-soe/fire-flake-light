@@ -86,6 +86,22 @@ Public Sub fillSolidFrame(rng As Range, kolor As Long)
     
 End Sub
 
+Public Sub fillRightThinLine(rng As Range, kolor As Long)
+
+
+    'rng.Borders(xlDiagonalDown).LineStyle = xlNone
+    'rng.Borders(xlDiagonalUp).LineStyle = xlNone
+
+
+    With rng.Borders(xlEdgeRight)
+        .LineStyle = xlContinuous
+        .Color = kolor
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    
+End Sub
+
 Public Sub fillSolidGridLines(rng As Range, kolor As Long)
     
     
@@ -167,37 +183,37 @@ Public Sub fillThinGridLines(rng As Range, kolor As Long)
     rng.Borders(xlDiagonalUp).LineStyle = xlNone
     With rng.Borders(xlEdgeLeft)
         .LineStyle = xlContinuous
-        .ColorIndex = 0
+        .Color = kolor
         .TintAndShade = 0
         .Weight = xlThin
     End With
     With rng.Borders(xlEdgeTop)
         .LineStyle = xlContinuous
-        .ColorIndex = 0
+        .Color = kolor
         .TintAndShade = 0
         .Weight = xlThin
     End With
     With rng.Borders(xlEdgeBottom)
         .LineStyle = xlContinuous
-        .ColorIndex = 0
+        .Color = kolor
         .TintAndShade = 0
         .Weight = xlThin
     End With
     With rng.Borders(xlEdgeRight)
         .LineStyle = xlContinuous
-        .ColorIndex = 0
+        .Color = kolor
         .TintAndShade = 0
         .Weight = xlThin
     End With
     With rng.Borders(xlInsideVertical)
         .LineStyle = xlContinuous
-        .ColorIndex = 0
+        .Color = kolor
         .TintAndShade = 0
         .Weight = xlThin
     End With
     With rng.Borders(xlInsideHorizontal)
         .LineStyle = xlContinuous
-        .ColorIndex = 0
+        .Color = kolor
         .TintAndShade = 0
         .Weight = xlThin
     End With

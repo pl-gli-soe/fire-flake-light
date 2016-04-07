@@ -66,4 +66,7 @@ Public f_cmnt As String
 Public rowFlag As Long
 
 
+' error log feedback
+Public errorLog As String
+
 
