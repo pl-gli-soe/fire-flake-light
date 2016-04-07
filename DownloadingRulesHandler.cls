@@ -23,25 +23,45 @@ Private r As Range
 '    CONFIG_M
 '    CONFIG_NULL
 'End Enum
-Private eic As ITERATION_CONFIG
+Public eic As ITERATION_CONFIG
 
 
 ' !!!!!!!!!
 ' to byla globalna zmienna zobaczymy jak sobie radzi w srodowisku jako komponent
 ' ------------------------------------------------------------------------------------
 Public DEOC As DynamicEventOnControls
+
+
+' dynamiczna kontrola at runtime zwiazana z przypisywaniem unrecognized plants
+' wraz ze zdefiniowaniem jaki rodzaj plantu to jest
+' ------------------------------------------------------------------------------------
+Public wizard As WizardHandler
 ' ------------------------------------------------------------------------------------
 
 
 Public ile_bedzie_plantow As Long
 Public overall_offset As Long
 
+' this combo is for RQM!
 Public c As Control
+' this combo is for Transit!
+' narazie od 4.03.04 brak implementacji pod sterowanie logika asnow :)
+Public c2 As Control
+' text box (plt)
 Public tbc As Control
+
+' labelka
+Public lblc As Control
 Public tb As TextBox
+
 Public cb As ComboBox
+Public cb2 As ComboBox
+
+
 Public lbl As Label
 
+
+' kolekcja obiektow DEOCow czyli - Public DEOC As DynamicEventOnControls
 Public control_events_coll As Collection
 
 
@@ -61,6 +81,10 @@ Public control_events_coll As Collection
 ' trzeba umiec przechwycic takie cos
 '
 ' druga procedura ponizej
+' arg s is pn first column
+' nie wiem czemu ale trzeba dwa razy wypisac ta procedure zeby zaczelo dzialac :D
+' zaczyna sie z tym lajtem taka sama jazda jak z hybrid gdzie bylo pelno dziur w kodzie
+' ktore ciezko bylo zalepic trzeba to lepiej zrobic
 Public Function getIterConfig(ByRef s As Range) As String ' offset 0,5 winien byc
 
 
@@ -82,11 +106,24 @@ Public Function getIterConfig(ByRef s As Range) As String ' offset 0,5 winien by
         'eic = CONFIG_ASM
         'getIterConfig = CStr(eic)
         's.Offset(0, 5) = CStr(eic)
+        
+        ' tymczasowe przypisanie wartosci minus 2
         getIterConfig = "-2" ' nie ma nawet takiego plantu
         s.Offset(0, 5) = "-2" ' nie ma plt
         
+        ' narazie powyzsze err zostawimy ale ruszymy momentalnie zmiejsca jesli chodzi o logike proszaca usera o zdanie co za dane to maja byc
+        
         ' teraz bardzo wazna sprawa w ten warunek wchodzi sie gdy okazuje sie ze dany plant nie zostal zapisany w bazie rejestru
         ' nalezy odpowiednio dopisac go
+        ' nalezaloby sie zastanowic czy faktycznie wyrzucac te -2
+        ' czy od razu z tego miejsca obsluzyc dana logike :D
+        
+        Set wizard = New WizardHandler
+        wizard.plt = s.Value
+        wizard.submit_changes_via_form Me, s, Int(getIterConfig)
+        
+        getIterConfig = CStr(wizard.getNewIterConfing())
+        ' s.Offset(0, 5) = CStr(wizrd.getNewSOffset0_5())
     Else
         ' getIterConfig = s.offset(0,5)
         ' Set tmp = Nothing
@@ -95,10 +132,21 @@ Public Function getIterConfig(ByRef s As Range) As String ' offset 0,5 winien by
         
         If tmp2 Is Nothing Then
             ' super nie tak cos poszlo
+            
+            ' tymczasowe przypisanie wartosci minus 1
             getIterConfig = "-1"
             s.Offset(0, 5) = "-1"
             
+            ' narazie powyzsze err zostawimy ale ruszymy momentalnie zmiejsca jesli chodzi o logike proszaca usera o zdanie co za dane to maja byc
+            
             ' "-1" ' jest plt ale  nie ma odpowiedniej konfiguracji
+            ' tutaj ta sama sytuacja czy od razu dynamicznie wypelniamy luke pytajac jednoczesnie usera?
+            Set wizard = New WizardHandler
+            wizard.plt = s.Value
+            wizard.submit_changes_via_form Me, s, Int(getIterConfig)
+            
+            getIterConfig = CStr(wizard.getNewIterConfing())
+            's.Offset(0, 5) = CStr(wizrd.getNewSOffset0_5())
         Else
             eic = Int(tmp2.Offset(0, 2))
             getIterConfig = CStr(eic)
@@ -184,23 +232,30 @@ Public Sub iteracja(x As Integer)
     cb.Value = getPlants().Item(Int(x)).Offset(0, 1)
     
     Set DEOC.Control = cb
-    DEOC.setHandlerName CStr(x)
     
-    control_events_coll.Add DEOC
-    whereAmI = Int(x)
     
-    Set c = DownloadingRulesForm.Controls.Add("Forms.Label.1", "Label" & CStr(x), True)
-    c.Left = LABEL_CMNT_0_L
-    c.Top = LABEL_CMNT_0_T + (OFFSET_FOR_NEW_PLT * CLng(x))
-    c.Width = LABEL_CMNT_0_W
-    c.Height = LABEL_CMNT_0_H
+    
+    
+    Set lblc = DownloadingRulesForm.Controls.Add("Forms.Label.1", "Label" & CStr(x), True)
+    lblc.Left = LABEL_CMNT_0_L
+    lblc.Top = LABEL_CMNT_0_T + (OFFSET_FOR_NEW_PLT * CLng(x))
+    lblc.Width = LABEL_CMNT_0_W
+    lblc.Height = LABEL_CMNT_0_H
     
     ' Set lbl = c
     ' r juz wczesniej zostalo zdimowane :)cda
     For Each r In getRqmSource
         ' cb.AddItem CStr(r)
-        If getPlants().Item(Int(x)).Offset(0, 1) = r Then c.Caption = r.Offset(0, 1)
+        If getPlants().Item(Int(x)).Offset(0, 1) = r Then lblc.Caption = r.Offset(0, 1)
     Next r
+    
+    Set DEOC.setLbl = lblc
+    
+    DEOC.setHandlerName CStr(x)
+    whereAmI = Int(x)
+    
+    control_events_coll.Add DEOC
+    
     
 End Sub
 

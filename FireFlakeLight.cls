@@ -74,6 +74,7 @@ Private Sub Class_Initialize()
     Set init_sh = begOfInputList.Parent
     Set continue_this_sheet = Nothing
     Set cebeer = New ContinueBrokenReportHandler
+    
 End Sub
 
 Private Sub Class_Terminate()
@@ -85,6 +86,7 @@ Private Sub Class_Terminate()
     sh.hide
     Set sh = Nothing
     Set cebeer = Nothing
+    Set wh = Nothing
     MsgBox "ready!"
 End Sub
 
@@ -109,6 +111,11 @@ Public Sub runDaily(limit As Date, lt As LAYOUT_TYPE, st As START_TYPE, daily_rq
         ' oczywiscie catch error musi byc na miejscu aby latwo by wylapac czy to aby napewno to o co nam chodzi
         ' =======================================================================================================
         
+        
+        ' zanim zaczniemy raport dobrze by bylo niezaleznie zrobic walidacje listy wejsciowej
+        
+        
+        
         Set rep = New DailyListReport
         ' metoda connect with input list bardziej by nazwa pasowala
         ' teraz wazna sprawa dzialanie calych iteracji opierac sie badzie na obiektach chwytajacych
@@ -117,9 +124,14 @@ Public Sub runDaily(limit As Date, lt As LAYOUT_TYPE, st As START_TYPE, daily_rq
         ' cala reszta pozostanie nothing dopoty dopoki nie uruchomie nastpenych metod.
         
         
+        
+        
+        
         ' trzy glowne metody pracy na kazdym raporcie light fire flake
         ' 1. init - przygotowuje rusztowanie pod wszystkie dane
         
+        
+        ' OBSOLETE?
         ' 2. connect with mgo chyba nie wymaga szerwszego komentarza
         '   uruchamia nam przy okazji wszelkie pomocniki obiektowe ktore pozwalaja nam zapomniec o pracy na adresach ale bezposrednio
         '   odnosiemy sie nazwami do pol sesji mgo
@@ -143,7 +155,7 @@ Public Sub runDaily(limit As Date, lt As LAYOUT_TYPE, st As START_TYPE, daily_rq
         MsgBox "ten msgbox nigdy nie moze sie pojawic"
     End If
     
-    
+    ' to jest troche chore ale narazie nie mam lepszego pomyslu
     rep.fakeDataChangeToRecalcFirstRunoutFormula
     ' rep.adjustLayoutAfterAllJobs
 

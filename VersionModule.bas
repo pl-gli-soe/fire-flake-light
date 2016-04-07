@@ -14,6 +14,43 @@ Attribute VB_Name = "VersionModule"
 ' odchudzenie ffa rowniez wchodzi w gre aby chodzil odrobine szybciej
 Public Sub msgbox_about(ictrl As IRibbonControl)
 
+
+
+    ' now in transit class we have new added lines: on error resume next
+    
+    ' ------------------------------------------------------------
+    ' On Error Resume Next
+    ' t.mDeliveryDate = CDate(m.convertToDateFromMS9POP00Date(m.pMS9POP00.transEDA(Int(x))))
+    ' On Error Resume Next
+    ' t.mDeliveryTime = CDate(Format(txt_time, "hh:mm"))
+    ' t.mNotYetReceived = True
+    ' ...
+    ' On Error Resume Next
+    ' t.mPickupDate = CDate(m.convertToDateFromMS9POP00Date(CStr(m.pMS9POP00.transSDATE(Int(x)))))
+    ' ------------------------------------------------------------
+    version_4_03_06 = "This is Fire Flake Light - the 4th generation of this tool" & Chr(10) & _
+        "" & Chr(10) & _
+        "VERSION 4.03.06" & Chr(10) & _
+        "Limited to daily report" & Chr(10) & _
+        " - custom events implemented for dynamic form for controlling logic on rqm downloading" & Chr(10) & _
+        " - added on error resume next in transit class to avoid errors when eda or eta is empty" & Chr(10) & _
+        " - first 03.xx with fix on XFR from 02.25 important!" & Chr(10) & _
+        " - dynamic wizard for new plants (unrecognized plants)" & Chr(10) & _
+        Chr(10)
+
+    
+    
+    version_4_03_05 = "This is Fire Flake Light - the 4th generation of this tool" & Chr(10) & _
+        "" & Chr(10) & _
+        "VERSION 4.03.05" & Chr(10) & _
+        " - custom events implemented for dynamic form for controlling logic on rqm downloading" & Chr(10) & _
+        " - " & Chr(10) & _
+        " - first 03.xx with fix on XFR from 02.25 important!" & Chr(10) & _
+        " - dynamic wizard for new plants (unrecognized plants)" & Chr(10) & _
+        Chr(10) & _
+        "TO BE IMPLEMENTED: " & Chr(10) & _
+        ""
+
     ' big changes in addRqmsAndDatesIntoItems in DailyIteration class
     '4.03.04 - ma poprawe z wersji 4.02.25
     ' -------------------------------------------------------------
@@ -24,6 +61,8 @@ Public Sub msgbox_about(ictrl As IRibbonControl)
         " - extra private subroutines zk7pdrqm_logic & ms9pop00_logic to seperate config on component" & Chr(10) & _
         " - rqm from zk7pdrqm logic added - config 0" & Chr(10) & _
         " - rqm from ms9pop00 logic to be added - config 1" & Chr(10) & _
+        " - rqm from zeros logic to be added - config 4?" & Chr(10) & _
+        " - added downloading rules handler for form and dynamic events for creation form ad hoc" & Chr(10) & _
         " - first 03.xx with fix on XFR from 02.25 important!" & Chr(10) & _
         Chr(10) & _
         "TO BE IMPLEMENTED: " & Chr(10) & _
@@ -113,8 +152,8 @@ Public Sub msgbox_about(ictrl As IRibbonControl)
         " - CONTINUE BROKEN REPORT still not working for internet connection breakdowns" & Chr(10) & _
         ""
     
-
-    MsgBox CStr(version_4_03_04)
+    MsgBox CStr(version_4_03_06)
+    
 End Sub
 
 '4.02.22

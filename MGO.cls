@@ -112,33 +112,77 @@ Public Function convertToDateFromMS9POP00Date(ms9po400_date As String) As Date
 
     convertToDateFromMS9POP00Date = Date
 
-    ' format daty dla scr MS9PO400 -    ' 27MR12
+    ' format daty dla scr MS9POP00 -    ' 27MR12
     ' -----------------------------------------------------------YEAR----------------------------------------MONTH-------------------------------------------------------YEAR-------------------------------
     convertToDateFromMS9POP00Date = CDate(CStr(2000 + Int(Right(ms9po400_date, 2))) & "-" & CStr(FromMGOMonth(Right(Left(ms9po400_date, 5), 2))) & "-" & CStr(Int(Left(ms9po400_date, 2))))
+End Function
+
+Public Function convertToDateFromMS9POP00ShortDate(ms9pop00_shortdate As String) As Date
+
+
+    ' instrukcja warunkowa wynika z powodu braku roku na ekranie zk7pdrqm i przez to program musi sam sie domyslec
+    ' ze faktycznie nastapila zmiana roku- sam rozwiazalem to tak ze zazwyczaj dzieje sie tak nie dobrze, gdy chcemy
+    ' stworzyc teardown nachodzi to na nowy rok, ale my jako ludzie zobaczymy tylko i wylacznie ze zaczynamy z powrotem
+    ' od stycznia... postanowi³em zatem zostawic na stale ten sam rok i w przyapdku gdy przejdziemy do stycznia
+    ' i sprawdzimy warunkiem to tak jakbysmy sie cofneli w czasie- cofniecie w czasie algorytm potraktuje jako coœ osobliwego
+    ' zgodnie z trywialnym zalozeniem doda plus jeden do aktualnego roku
+    '
+    '
+    '
+    ' na dzien 4 maja 2012
+    
+    
+    ' JN03  - example
+
+
+    '' Debug.Print CStr(Format(Now, "yyyy"))
+    '' Debug.Print CStr(FromMGOMonth(Right(zk7pdrqm_date, 2)))
+    '' Debug.Print CStr(Left(zk7pdrqm_date, 2))
+    '
+    '
+    '' Debug.Print CStr(CDate(CStr(Format(Now, "yyyy")) & "-" & CStr(FromMGOMonth(Right(zk7pdrqm_date, 2))) & "-" & CStr(Left(zk7pdrqm_date, 2))))
+ 
+    ' tutaj mamy troche malo pieknie gdzie zasieg ff jest na tyle maly ze 100 dni jest out of scope dzieki czemu wie ze przeskakujemy na nastepny dzien
+    ' jesli miedzy poszczegolnymi dniami iteracji jest az taka rozbieznosc moze sie zdarzyc ze bedzie 200 down days to wtedy fireflake
+    ' sie wysypie faktycznie :P
+    Dim tmp_date As Date
+    tmp_date = CDate(Format(Now, "yyyy-mm-dd")) - 100
+
+    If tmp_date <= CDate(CStr(Format(Now, "yyyy")) & "-" & CStr(FromMGOMonth(Left(ms9pop00_shortdate, 2))) & "-" & CStr(Right(ms9pop00_shortdate, 2))) Then
+        
+        '--------------------------------------------------YEAR-------------------------------------MONTH-------------------------------------DAY--------------
+        convertToDateFromMS9POP00ShortDate = CDate(CStr(Format(Now, "yyyy")) & "-" & CStr(FromMGOMonth(Left(ms9pop00_shortdate, 2))) & "-" & CStr(Right(ms9pop00_shortdate, 2)))
+    Else
+        '--------------------------------------------------YEAR-------------------------------------MONTH---------------------------------------------DAY--------------
+        convertToDateFromMS9POP00ShortDate = CDate(CStr(Int(Format(Now, "yyyy") + 1)) & "-" & CStr(FromMGOMonth(Left(ms9pop00_shortdate, 2))) & "-" & CStr(Right(ms9pop00_shortdate, 2)))
+    End If
 End Function
 
 
 
 Public Function convertToDateFromZK7PDRQMDate(zk7pdrqm_date As String) As Date
-
-' instrukcja warunkowa wynika z powodu braku roku na ekranie zk7pdrqm i przez to program musi sam sie domyslec
-' ze faktycznie nastapila zmiana roku- sam rozwiazalem to tak ze zazwyczaj dzieje sie tak nie dobrze, gdy chcemy
-' stworzyc teardown nachodzi to na nowy rok, ale my jako ludzie zobaczymy tylko i wylacznie ze zaczynamy z powrotem
-' od stycznia... postanowi³em zatem zostawic na stale ten sam rok i w przyapdku gdy przejdziemy do stycznia
-' i sprawdzimy warunkiem to tak jakbysmy sie cofneli w czasie- cofniecie w czasie algorytm potraktuje jako coœ osobliwego
-' zgodnie z trywialnym zalozeniem doda plus jeden do aktualnego roku
-'
-'
-'
-' na dzien 4 maja 2012
-
-
-    'Debug.Print CStr(Format(Now, "yyyy"))
-    'Debug.Print CStr(FromMGOMonth(Right(zk7pdrqm_date, 2)))
-    'Debug.Print CStr(Left(zk7pdrqm_date, 2))
+    
+    ' instrukcja warunkowa wynika z powodu braku roku na ekranie zk7pdrqm i przez to program musi sam sie domyslec
+    ' ze faktycznie nastapila zmiana roku- sam rozwiazalem to tak ze zazwyczaj dzieje sie tak nie dobrze, gdy chcemy
+    ' stworzyc teardown nachodzi to na nowy rok, ale my jako ludzie zobaczymy tylko i wylacznie ze zaczynamy z powrotem
+    ' od stycznia... postanowi³em zatem zostawic na stale ten sam rok i w przyapdku gdy przejdziemy do stycznia
+    ' i sprawdzimy warunkiem to tak jakbysmy sie cofneli w czasie- cofniecie w czasie algorytm potraktuje jako coœ osobliwego
+    ' zgodnie z trywialnym zalozeniem doda plus jeden do aktualnego roku
     '
     '
-    'Debug.Print CStr(CDate(CStr(Format(Now, "yyyy")) & "-" & CStr(FromMGOMonth(Right(zk7pdrqm_date, 2))) & "-" & CStr(Left(zk7pdrqm_date, 2))))
+    '
+    ' na dzien 4 maja 2012
+    
+    
+    ' 03.JN - example
+
+
+    '' Debug.Print CStr(Format(Now, "yyyy"))
+    '' Debug.Print CStr(FromMGOMonth(Right(zk7pdrqm_date, 2)))
+    '' Debug.Print CStr(Left(zk7pdrqm_date, 2))
+    '
+    '
+    '' Debug.Print CStr(CDate(CStr(Format(Now, "yyyy")) & "-" & CStr(FromMGOMonth(Right(zk7pdrqm_date, 2))) & "-" & CStr(Left(zk7pdrqm_date, 2))))
  
     ' tutaj mamy troche malo pieknie gdzie zasieg ff jest na tyle maly ze 100 dni jest out of scope dzieki czemu wie ze przeskakujemy na nastepny dzien
     ' jesli miedzy poszczegolnymi dniami iteracji jest az taka rozbieznosc moze sie zdarzyc ze bedzie 200 down days to wtedy fireflake
@@ -147,9 +191,9 @@ Public Function convertToDateFromZK7PDRQMDate(zk7pdrqm_date As String) As Date
     tmp_date = CDate(Format(Now, "yyyy-mm-dd")) - 100
 
     If tmp_date <= CDate(CStr(Format(Now, "yyyy")) & "-" & CStr(FromMGOMonth(Right(zk7pdrqm_date, 2))) & "-" & CStr(Left(zk7pdrqm_date, 2))) Then
-        'Debug.Print CStr(Format(Now, "yyyy"))
-        'Debug.Print CStr(FromMGOMonth(Right(zk7pdrqm_date, 2)))
-        'Debug.Print CStr(Left(zk7pdrqm_date, 2))
+        '' Debug.Print CStr(Format(Now, "yyyy"))
+        '' Debug.Print CStr(FromMGOMonth(Right(zk7pdrqm_date, 2)))
+        '' Debug.Print CStr(Left(zk7pdrqm_date, 2))
         
         '--------------------------------------------------YEAR-------------------------------------MONTH-------------------------------------DAY--------------
         convertToDateFromZK7PDRQMDate = CDate(CStr(Format(Now, "yyyy")) & "-" & CStr(FromMGOMonth(Right(zk7pdrqm_date, 2))) & "-" & CStr(Left(zk7pdrqm_date, 2)))
@@ -206,6 +250,8 @@ Public Function FromMGOMonth(mgo_month As String)
             FromMGOMonth = 11
         Case "DE"
             FromMGOMonth = 12
+        Case Else
+            FromMGOMonth = -1
     End Select
 End Function
 

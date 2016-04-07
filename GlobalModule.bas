@@ -30,6 +30,8 @@ Global Const LABEL_CMNT_0_H = 18
 
 Global Const CONFIG_REG_PLT_COLUMN = 18
 
+Global Const DEFAULT_ZERO_RQMS = 10
+
 
 
 
@@ -77,6 +79,7 @@ Public Enum ITERATION_CONFIG
     CONFIG_POP
     CONFIG_M
     CONFIG_NULL
+    CONFIG_Z
 End Enum
 
 Public Enum COMMENT_TYPE

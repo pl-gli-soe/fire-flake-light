@@ -243,7 +243,7 @@ End Function
 ' -------------------------- rqms on pop ----------------------------------------------------------
 Public Function balance_on_pop_data(wiersz As Integer, col As Integer) As String
     'row 8 - 12
-    'col 40, 46, 55, 65, 73, size 8
+    'col 40, 46, 56, 66, 73, size 8
     Dim kolumna As Integer
     Select Case col
         Case 1
@@ -251,9 +251,9 @@ Public Function balance_on_pop_data(wiersz As Integer, col As Integer) As String
         Case 2
             kolumna = 46
         Case 3
-            kolumna = 55
+            kolumna = 56
         Case 4
-            kolumna = 65
+            kolumna = 64
         Case 5
             kolumna = 73
     End Select
