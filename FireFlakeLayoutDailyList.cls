@@ -140,7 +140,7 @@ Private Sub Class_Initialize()
     Set sh = ActiveSheet
     
     Set reportRoute = sh.Range("a1")
-    reportRoute = "REPORT;DAILY;LIST;" & CStr(Now)
+    reportRoute = "REPORT;DAILY;LIST;" & CStr(Now) & ";RQM_LIM:" & CStr(ThisWorkbook.Sheets("register").Range("rqmLimit")) & ";PUS_LIM:" & CStr(ThisWorkbook.Sheets("register").Range("pusLimit"))
     
     Set poczatekRaportuDaily = sh.Range("b4")
     ' MsgBox commonDataColumns
