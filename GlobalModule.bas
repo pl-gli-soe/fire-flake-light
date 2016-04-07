@@ -5,6 +5,32 @@ Private Declare PtrSafe Function SHGetPathFromIDList Lib "shell32.dll" Alias "SH
 Private Declare Function SHGetPathFromIDList Lib "shell32.dll" Alias "SHGetPathFromIDListA" (ByVal pidl As Long, ByVal pszPath As String) As Long
 #End If
 
+Global Const OFFSET_FOR_NEW_PLT = 20
+Global Const INIT_RULES_FORM_WIDTH = 320
+Global Const INIT_RULES_FORM_HEIGHT = 88
+
+Global Const INIT_RULES_FORM_BTN_TOP = 36
+
+Global Const TEXTBOX_PLT_0_LEFT = 12
+Global Const TEXTBOX_RQM_0_LEFT = 54
+
+Global Const TEXTBOX_PLT_0_TOP = 10
+Global Const TEXTBOX_RQM_0_TOP = 10
+
+Global Const TEXTBOX_PLT_0_W = 36
+Global Const TEXTBOX_RQM_0_W = 72
+
+Global Const TEXTBOX_PLT_0_H = 18
+Global Const TEXTBOX_RQM_0_H = 18
+
+Global Const LABEL_CMNT_0_L = 132
+Global Const LABEL_CMNT_0_T = 10
+Global Const LABEL_CMNT_0_W = 174
+Global Const LABEL_CMNT_0_H = 18
+
+Global Const CONFIG_REG_PLT_COLUMN = 18
+
+
 
 
 ' delay time
@@ -20,6 +46,7 @@ Global Const C_HOUR = (0.041 + 0.001 * (2 / 3))
 Global Const INITIAL_TIMING_FOR_ONE_PN = 6
 
 Global sh As StatusHandler
+Global drh As DownloadingRulesHandler
 
 Public Enum ENUM_LEFT_RIGHT_LISTBOX
     MOVE_TO_LEFT_LISTBOX
@@ -46,9 +73,10 @@ End Enum
 
 
 Public Enum ITERATION_CONFIG
-    CONFIG_ONE
-    CONFIG_TWO
-    CONFIG_THREE
+    CONFIG_ASM
+    CONFIG_POP
+    CONFIG_M
+    CONFIG_NULL
 End Enum
 
 Public Enum COMMENT_TYPE
@@ -64,9 +92,11 @@ Public Function MGO_active(m As MGO) As Boolean
     
     If m Is Nothing Then
         MGO_active = False
-        MsgBox "mgo session is nothing!"
+        MsgBox "mgo class is nothing!"
         Exit Function
     End If
+    
+    
     
     If m.actualScreen <> "" Then
         MGO_active = True
@@ -109,6 +139,9 @@ End Function
 Public Sub refresh_register_worksheet()
 
 End Sub
+
+
+
 
 
 

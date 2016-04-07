@@ -39,7 +39,7 @@ Public Sub makeCommentBasedOnPopData(ByRef r As Range, ByRef mcd As CommonData)
         r.ClearComments
         r.AddComment CStr(cmnt_txt)
         r.comment.Shape.Width = 300
-        r.comment.Shape.Height = 140
+        r.comment.Shape.Height = 250
     End If
 End Sub
 
@@ -47,16 +47,22 @@ Private Function assignHerePopData(ByRef mcd As CommonData) As String
     assignHerePopData = ""
     
     assignHerePopData = "MS9POP00: " & Chr(10) & _
-        CStr(mcd.plt) & ", " & CStr(mcd.pn) & Chr(10) & Chr(10) & _
+        CStr(mcd.plt) & ", " & CStr(mcd.pn) & Chr(10) & _
+        "DUNS: " & CStr(mcd.duns) & Chr(10) & Chr(10) & _
         "COUNT_CMNT: " & CStr(mcd.count_cmnt) & Chr(10) & _
         "O_CMNT: " & CStr(mcd.o_cmnt) & Chr(10) & Chr(10) & _
+        "CBAL: " & CStr(mcd.cbal) & ", BBAL: " & CStr(mcd.bbal) & Chr(10) & _
+        "FUC: " & CStr(mcd.fupCode) & ", FMA FUC: " & CStr(mcd.fmaFupCode) & Chr(10) & _
+        "LOG: " & CStr(mcd.errorLog) & Chr(10) & Chr(10) & _
+        "PUS Limit: " & CStr(mcd.pusLimit) & ", RQM Limit: " & CStr(mcd.rqmLimit) & Chr(10) & Chr(10) & _
         "MODE: " & CStr(mcd.mode) & ", BANK: " & CStr(mcd.bank) & Chr(10) & _
         "OS: " & CStr(mcd.os) & ", DOH: " & CStr(mcd.doh) & Chr(10) & _
         "PNAME: " & CStr(mcd.partName) & Chr(10) & _
         "SUPP NAME: " & CStr(mcd.supplierName) & Chr(10) & _
-        "PCS TO GO: " & CStr(mcd.pcsToGo) & Chr(10) & _
-        "QHD: " & CStr(mcd.qhd) & ", TT: " & CStr(mcd.ttime) & Chr(10)
-
+        "PCS TO GO: " & CStr(mcd.pcsToGo) & ", STD PACK: " & CStr(mcd.stdPack) & Chr(10) & _
+        "QHD: " & CStr(mcd.qhd) & ", TT: " & CStr(mcd.ttime) & Chr(10) & Chr(10) & _
+        "ST: " & CStr(mcd.startType) & ", RT: " & CStr(mcd.runType) & ", LT: " & CStr(mcd.layoutType) & Chr(10)
+        
 End Function
 
 

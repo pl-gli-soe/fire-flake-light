@@ -11,7 +11,7 @@ Public Sub repRun(imgo As MGO, sh As StatusHandler)
 
 End Sub
 
-Public Sub repInit(zakres As Range, limit As Date, lt As LAYOUT_TYPE, st As START_TYPE, rqm_limit As Date)
+Public Sub repInit(zakres As Range, limit As Date, lt As LAYOUT_TYPE, st As START_TYPE, rqm_limit As Date, Optional mrowFlag As Long)
 
 End Sub
 

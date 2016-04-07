@@ -30,7 +30,7 @@ Private scr_ms3p9800 As MS3P9800
 Private Sub Class_Initialize()
     Set System = CreateObject("EXTRA.System")   ' Gets the system object
     Set Sessions = System.Sessions
-    Set sess0 = System.ActiveSession
+    Set sess0 = System.activeSession
     
     Set scr_ms9pop00 = New MS9POP00
     scr_ms9pop00.sesja = sess0
@@ -90,6 +90,10 @@ End Sub
 
 Public Property Get actualScreen() As String
     actualScreen = sess0.screen.getString(1, 2, 8)
+End Property
+
+Public Property Get activeSession() As Object
+    Set activeSession = sess0
 End Property
 
 
@@ -207,7 +211,7 @@ End Function
 Public Sub mgoInit()
     Set System = CreateObject("EXTRA.System")   ' Gets the system object
     Set Sessions = System.Sessions
-    Set sess0 = System.ActiveSession
+    Set sess0 = System.activeSession
     
     waitForMgo
 End Sub

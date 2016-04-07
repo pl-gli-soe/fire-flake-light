@@ -258,7 +258,7 @@ Private Sub budujemyPodIteracjeCommonDataListLayout(ByRef ic As Collection, ByRe
     ' ==========================================================================
     Set baza = sh.Cells(mcd.rowFlag, 2)
 
-    
+    Debug.Print mcd.comment & " " & mcd.additionalCommnet
     ' fill data from pop screen into comment in first cell (pn)
     ' ==========================================================================
     Dim k As Komentarz
@@ -310,12 +310,12 @@ Private Sub budujemyPodIteracjeCommonDataListLayout(ByRef ic As Collection, ByRe
     
     ' cmnt 1
     tl.fillThinFrame baza.Offset(0, flaga), CDbl(primaryColor)
-    baza.Offset(0, flaga) = ThisWorkbook.Sheets("input").Cells(mcd.rowFlag - 3, 3)
+    baza.Offset(0, flaga) = mcd.comment
     flaga = flaga + 1
     
     ' cmnt 2
     tl.fillThinFrame baza.Offset(0, flaga), CDbl(primaryColor)
-    baza.Offset(0, flaga) = ThisWorkbook.Sheets("input").Cells(mcd.rowFlag - 3, 4)
+    baza.Offset(0, flaga) = mcd.additionalCommnet
     flaga = flaga + 1
     
     ' not yet rec
@@ -638,7 +638,7 @@ Private Sub IFireFlakeLayout_buildLayoutForDatesLabels(ByRef c As Collection)
         Next y
         
         
-        If Not addBackground Then
+        If addBackground Then
             r.Font.Color = CDbl(blackColor)
             tl.fillSolidFrame r, CDbl(secondaryColor)
             
