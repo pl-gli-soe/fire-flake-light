@@ -48,21 +48,30 @@ Private Sub IDynamicColors_assignDynamicColorsrange()
 
     If flagaLiczenia Then
         ' Set zasiegDoNadaniaDynamicznychKolorow = ash.Range("b4")
-        Set zasiegDoNadaniaDynamicznychKolorow = przeliczZasieg(ash.Range("b4"))
+        Set zasiegDoNadaniaDynamicznychKolorow = przeliczZasieg(4, 2)
     End If
     
     ' Debug.Print zasiegDoNadaniaDynamicznychKolorow.Address
 End Sub
 
-Private Function przeliczZasieg(ByRef rr As Range) As Range
+Private Function przeliczZasieg(r, c) As Range
 
     
     ' Set przeliczZasieg = Nothing
+    Dim rr As Range
+    ' MsgBox ActiveSheet.Name
+    Set rr = Cells(Int(r), Int(c))
     
     Dim poczatek As Range
     Dim ost_wiersz_pierwszej_kolumny As Range
     Dim ost_kolumna As Range
     
+    
+    ' ale to jest uklad jak zaczynamy od 5 wiersza co nie jest prawdda
+    ' moze byc tak ze mamy tylko jeden wiersz danych
+    'If Trim(rr.Offset(2, 0)) <> "" Then
+    '    Set ost_wiersz_pierwszej_kolumny = rr.End(xlDown)
+    'End If
     
     Set ost_wiersz_pierwszej_kolumny = rr.End(xlDown)
     Set ost_kolumna = rr.End(xlToRight)
@@ -73,7 +82,7 @@ Private Function przeliczZasieg(ByRef rr As Range) As Range
     
     Set poczatek = rr.Offset(1, 1)
     
-    Set poczatek = ash.Range(poczatek, ash.Cells(ost_wiersz_pierwszej_kolumny.Row, ost_kolumna.Column))
+    Set poczatek = Range(poczatek, Cells(ost_wiersz_pierwszej_kolumny.Row, ost_kolumna.Column))
     Set przeliczZasieg = poczatek
 End Function
 

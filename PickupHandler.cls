@@ -298,14 +298,20 @@ Public Sub takeDataFromPH100(m As MGO, mcd As CommonData)
                                     ' i jesli mamy to przechodzimy i patrzymy jaka jest wartosc recv
                                     If .DTYP(Int(x)) = "RECV" Then
                                     
+                                        ' druga wersja to sprawdzenie czy recv jest na zero - to trzeba jako tako zignorowac
+                                        ' w poprzedniej podwersji byla to druga opcja
+                                        ' ale w sumie chodzi o to zeby sprawdzic to w pierwszej kolejnosci
+                                        ' zeby potem druga opcja zwiazana z porownywaniem nie zmienialal nam flagi not yet recv
+                                        If CLng(.qty(Int(x))) = 0 Then
+                                            ' NOP
+                                    
                                         ' jesli wartosc recv jest taka sama jak pusa to znaczy ze zostal on pieknie przyjety
-                                        If CLng(.qty(Int(x))) = CLng(t.mQty) Then
+                                        ElseIf CLng(.qty(Int(x))) = CLng(t.mQty) Then
                                             t.mNotYetReceived = False
                                             t.mQty = 0
                                             
-                                        ' druga wersja to sprawdzenie czy recv jest na zero - to trzeba jako tako zignorowac
-                                        ElseIf CLng(.qty(Int(x))) = 0 Then
-                                            ' NOP
+                                        
+                                        
                                         
                                         ' trzecia opcja to w ogole przyjecie pusa na wartosc inna niz wartosc pusa
                                         ElseIf CLng(.qty(Int(x))) <> CLng(t.mQty) Then

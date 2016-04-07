@@ -6,6 +6,35 @@ Attribute VB_Name = "VersionModule"
 ' w mysl o tym czego wlasciwie potrzebuje uzytkownik musze pomyslec ile faktycznie jest narzedzi potrzebnych a ile nie
 ' odchudzenie ffa rowniez wchodzi w gre aby chodzil odrobine szybciej
 
+
+'4.02.21
+' -------------------------------------------------------------
+' z wersji 4.02.20 wicaz hold na to ponizej
+' szybki powrot do cebeera
+' i malych niedociagniec miedzy innymi gdy nastepuje disconnection na systemie mainframe
+' ff dalej ciagnie swoja logike wstawiajac jednak tylko pn i plt :D
+' no i buduje wlasciwie cale rusztowanie bez bolu
+' trzeba by to dopisac
+'
+' poprawiona logik ana ppus0 poniewaz fil zrobilem z perspektywy delivery date a nie pickup
+' robilo to dziure na kilka dni miedzy ppus0 a ph100
+'
+' poprawiona dziwny blad podczas uruchamiania nowego ff'a od pustych raportow
+' gubil jakos mozliwosc przeliczania
+' prawdopodobnie podczas usuwania wszytkich raportow register gubil sie
+' wsadzajac activeshhet jako input stad typ dynamic colors nie radzil sobie z tematem i na koniec pierwszego raportu
+' zwracal nieokreslony blad
+' od tej pory wszsytko powinno dzialac jednak gdzies tam sie czai historia zwiazana z nazewnictwem pewnie
+
+
+'4.02.20
+' -------------------------------------------------------------
+' szybki powrot do cebeera
+' i malych niedociagniec miedzy innymi gdy nastepuje disconnection na systemie mainframe
+' ff dalej ciagnie swoja logike wstawiajac jednak tylko pn i plt :D
+' no i buduje wlasciwie cale rusztowanie bez bolu
+' trzeba by to dopisac
+
 '4.02.19
 ' -------------------------------------------------------------
 ' w miedzy czasie pojawil sie problem w klasie dynamic colors nie wiadomo czemu range nie chce sie dopasowac

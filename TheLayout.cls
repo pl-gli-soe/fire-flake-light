@@ -13,7 +13,7 @@ Public Sub initLayout()
     ' Sheets("daily").Activate
     ' Sheets("register").Range("lastRow") = last_row() + 4
     ' Sheets("register").Range("allParts") = last_row() - 5
-    Sheets.Add
+    Sheets.Add Before:=Worksheets(Worksheets.COUNT)
     ' If IsMissing(for_template) Then
         ' ActiveSheet.NAME = "daily " & CStr(Sheets.COUNT)
     Sheets("register").Range("sheetName") = ActiveSheet.Name

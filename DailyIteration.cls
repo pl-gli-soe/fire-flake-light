@@ -414,7 +414,8 @@ Private Sub addPusesIntoItems(m As MGO)
     ' bedzie potem mozliwosci modyfikowania tej wartosci z formularza startowego :D
     ' powyzszy komentarz zostal juz chyba uniewazniony poniewaz form juz udostepnia wraz z sheetem register
     ' mozliwosc odpowiedniej malwersacji na danych
-    m.pZK7PPUS0.DELIVERY_DATE_FROM = m.convertToMgoLongDate(CDate(Now - HOW_MANY_DAYS_FOR_PPUS0))
+    ' m.pZK7PPUS0.DELIVERY_DATE_FROM = m.convertToMgoLongDate(CDate(Now - HOW_MANY_DAYS_FOR_PPUS0))
+    m.pZK7PPUS0.PICKUP_DATE_FROM = m.convertToMgoLongDate(CDate(Now - HOW_MANY_DAYS_FOR_PPUS0))
     m.submit
     m.sendKeys "<pf12>"
     
