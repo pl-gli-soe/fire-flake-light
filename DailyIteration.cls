@@ -39,6 +39,7 @@ Private imgo As MGO
 Private HOW_MANY_DAYS_FOR_PPUS0 As Range
 
 
+Private drh As DownloadingRulesHandler
 
 
 Private ce As CatchError
@@ -56,6 +57,8 @@ Private Sub Class_Initialize()
     
     Set push = New PickupHandler
     
+    Set drh = New DownloadingRulesHandler
+    
 End Sub
 
 
@@ -67,6 +70,8 @@ Private Sub Class_Terminate()
     Set fireFlake_Layout = Nothing
     Set notYetReceivedWithPastEdaCollection = Nothing
     Set push = Nothing
+    
+    Set drh = Nothing
 End Sub
 
 Private Sub IIteration_addColorFlavour()

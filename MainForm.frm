@@ -153,12 +153,6 @@ Private Sub BtnRunDaily_Click()
     Application.EnableEvents = True
 End Sub
 
-Private Sub BtnRunWeekly_Click()
-    Me.hide
-    MsgBox "not yet implemented"
-    Me.show
-End Sub
-
 Private Sub CheckBoxPUSLimit_Click()
     If Not Me.CheckBoxPUSLimit.Value Then
         Me.DTPickerPUSLimit.Enabled = False

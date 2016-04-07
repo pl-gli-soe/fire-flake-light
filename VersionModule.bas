@@ -28,6 +28,22 @@ Public Sub msgbox_about(ictrl As IRibbonControl)
     ' On Error Resume Next
     ' t.mPickupDate = CDate(m.convertToDateFromMS9POP00Date(CStr(m.pMS9POP00.transSDATE(Int(x)))))
     ' ------------------------------------------------------------
+    
+    version_4_03_09 = "This is Fire Flake Light - the 4th generation of this tool" & Chr(10) & _
+        "" & Chr(10) & _
+        "VERSION 4.03.09" & Chr(10) & _
+        "Limited to daily report" & Chr(10) & _
+        " - changed on calendar week logic (ISO 8601)" & _
+        Chr(10)
+    
+    version_4_03_07 = "This is Fire Flake Light - the 4th generation of this tool" & Chr(10) & _
+        "" & Chr(10) & _
+        "VERSION 4.03.07" & Chr(10) & _
+        "Limited to daily report" & Chr(10) & _
+        " - changed on logic from continue broken report" & _
+        Chr(10)
+    
+    
     version_4_03_06 = "This is Fire Flake Light - the 4th generation of this tool" & Chr(10) & _
         "" & Chr(10) & _
         "VERSION 4.03.06" & Chr(10) & _
@@ -152,7 +168,7 @@ Public Sub msgbox_about(ictrl As IRibbonControl)
         " - CONTINUE BROKEN REPORT still not working for internet connection breakdowns" & Chr(10) & _
         ""
     
-    MsgBox CStr(version_4_03_06)
+    MsgBox CStr(version_4_03_09)
     
 End Sub
 

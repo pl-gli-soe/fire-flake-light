@@ -81,6 +81,7 @@ Public Sub reset_report_inner()
             Set dc = New DailyDynamicColors
             dc.assignDynamicColorsrange
             dc.recalcColors
+    
             
         End If
         

@@ -569,13 +569,13 @@ Private Sub IFireFlakeLayout_buildLayoutForCommonData()
                 Then
             r.Interior.Color = primaryColor
             r.Font.Color = blackColor
-            r.Font.size = r.Font.size + 1
+            'r.Font.size = r.Font.size + 1
         Else
             r.Interior.Color = secondaryColor
             r.Font.Color = blackColor
         End If
         
-        r.Font.size = r.Font.size + 2
+        'r.Font.size = r.Font.size + 2
         
         
     Next r
@@ -621,7 +621,7 @@ Private Sub IFireFlakeLayout_buildLayoutForDatesLabels(ByRef c As Collection)
         
         ' poczatek weeknum w poniedzialek tj. drugi arg == 2
         If CLng(weekNumOnTop) = 1 Then
-            r.Offset(-2, 0) = Application.WorksheetFunction.WeekNum(CDate(CDate(Format(Now, "yyyy-mm-dd")) - 1 + x), 2)
+            r.Offset(-2, 0) = Application.WorksheetFunction.IsoWeekNum(CDate(CDate(Format(Now, "yyyy-mm-dd")) - 1 + x))
             r.Offset(-2, 0).HorizontalAlignment = xlLeft
         End If
         
