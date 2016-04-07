@@ -60,7 +60,7 @@ Public Sub run_ff(ictrl As IRibbonControl)
     MainForm.show
 End Sub
 
-Public Sub continue_ff()
+Public Sub continue_ff(ictrl As IRibbonControl)
     runReport DAILY, LIST_LAYOUT, CONTINUE_BROKEN_ONE, Now, Now
 End Sub
 

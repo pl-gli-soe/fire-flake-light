@@ -22,7 +22,7 @@ Attribute VB_Name = "VersionModule"
 ' Set input_rng_flag = init_sh.Range("a2")
 ' Set report_rng_flag = active_sh.Range("b5")
 '
-'
+' CEBEER! :D
 
 '4.02.16
 ' -------------------------------------------------------------
