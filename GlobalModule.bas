@@ -32,6 +32,8 @@ Global Const CONFIG_REG_PLT_COLUMN = 18
 
 Global Const DEFAULT_ZERO_RQMS = 10
 
+Global Const EXTRA_DAYS_FOR_HISTORY = 20
+
 
 
 
