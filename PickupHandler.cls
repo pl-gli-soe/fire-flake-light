@@ -162,6 +162,8 @@ Public Sub takeDataFromPO400(m As MGO, mcd As CommonData)
     If ce.noNSRissue(m) Then
     
         Do
+            ' mgo refresh
+            m.refresh
             For x = 0 To 7
             
                 ' czy pusta linia to jest
@@ -230,6 +232,7 @@ Public Sub takeDataFromPPUM0(m As MGO, mcd As CommonData)
 
     
     Do
+        m.refresh
         For x = 0 To 19 - 7
         
             If Trim(m.pZK7PPUM0.plt(Int(x))) <> "" Then
@@ -278,7 +281,7 @@ Public Sub takeDataFromPH100(m As MGO, mcd As CommonData)
         .plt = mcd.plt
         .pn = mcd.pn
         .setDTYP "RECV", "ASN"
-        .DATE_FROM = m.convertToMgoShortDate(CDate(Now - HOW_MANY_DAYS_FOR_PPUS0))
+        .DATE_FROM = m.convertToMgoShortDate(CDate(Now - CLng(HOW_MANY_DAYS_FOR_PPUS0) - CLng(EXTRA_DAYS_FOR_HISTORY)))
         m.submit
         
         

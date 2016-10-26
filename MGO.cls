@@ -25,7 +25,12 @@ Private scr_zk7pprhr As ZK7PPRHR
 Private scr_zk7ppud0 As ZK7PPUD0
 Private scr_ms3p9800 As MS3P9800
 
-
+Public Sub refresh()
+    
+    Set System = CreateObject("EXTRA.System")   ' Gets the system object
+    Set Sessions = System.Sessions
+    Set sess0 = System.activeSession
+End Sub
 
 Private Sub Class_Initialize()
     Set System = CreateObject("EXTRA.System")   ' Gets the system object

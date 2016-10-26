@@ -28,6 +28,31 @@ Public Sub msgbox_about(ictrl As IRibbonControl)
     ' On Error Resume Next
     ' t.mPickupDate = CDate(m.convertToDateFromMS9POP00Date(CStr(m.pMS9POP00.transSDATE(Int(x)))))
     ' ------------------------------------------------------------
+    version_5_02 = "This is Fire Flake Light - the 5th generation of this tool" & Chr(10) & _
+        "" & Chr(10) & _
+        "VERSION 5.02" & Chr(10) & _
+        "fix on ppus0 screen shorter scope inline with history" & Chr(10) & _
+        Chr(10)
+    
+    version_5_01 = "This is Fire Flake Light - the 5th generation of this tool" & Chr(10) & _
+        "" & Chr(10) & _
+        "VERSION 5.01" & Chr(10) & _
+        "MGO refresh fix new functionality for long working on MGO screens" & Chr(10) & _
+        Chr(10)
+    
+    version_5_00 = "This is Fire Flake Light - the 5th generation of this tool" & Chr(10) & _
+        "" & Chr(10) & _
+        "VERSION 5.00" & Chr(10) & _
+        "Fix on PUS History limit" & Chr(10) & _
+        "Show more form fixed" & Chr(10) & _
+        Chr(10)
+    
+    version_4_03_10 = "This is Fire Flake Light - the 4th generation of this tool" & Chr(10) & _
+        "" & Chr(10) & _
+        "VERSION 4.03.10" & Chr(10) & _
+        "Limited to daily report" & Chr(10) & _
+        " - bug fixed on parts with DOH = .00" & _
+        Chr(10)
     
     version_4_03_09 = "This is Fire Flake Light - the 4th generation of this tool" & Chr(10) & _
         "" & Chr(10) & _
@@ -168,7 +193,7 @@ Public Sub msgbox_about(ictrl As IRibbonControl)
         " - CONTINUE BROKEN REPORT still not working for internet connection breakdowns" & Chr(10) & _
         ""
     
-    MsgBox CStr(version_4_03_09)
+    MsgBox CStr(version_5_02)
     
 End Sub
 

@@ -549,6 +549,8 @@ Private Sub addPusesIntoItems(m As MGO)
     '
     ' =====================================
     
+    Set push = New PickupHandler
+    
     
     m.sendKeys "<Clear>"
     m.sendKeys "zk7ppus0 <Enter>"
@@ -560,7 +562,7 @@ Private Sub addPusesIntoItems(m As MGO)
     ' powyzszy komentarz zostal juz chyba uniewazniony poniewaz form juz udostepnia wraz z sheetem register
     ' mozliwosc odpowiedniej malwersacji na danych
     ' m.pZK7PPUS0.DELIVERY_DATE_FROM = m.convertToMgoLongDate(CDate(Now - HOW_MANY_DAYS_FOR_PPUS0))
-    m.pZK7PPUS0.PICKUP_DATE_FROM = m.convertToMgoLongDate(CDate(Now - HOW_MANY_DAYS_FOR_PPUS0))
+    m.pZK7PPUS0.DELIVERY_DATE_FROM = m.convertToMgoLongDate(CDate(Now - HOW_MANY_DAYS_FOR_PPUS0))
     m.submit
     m.sendKeys "<pf12>"
     
@@ -592,11 +594,14 @@ Private Sub addPusesIntoItems(m As MGO)
         ' ======================================
     Else
     
+        
+    
         ' tutaj sprawa duzo prostsza poniewaz sciagamy tylko i wylacznie asny
         ' bierzemy pod uwage tylko i wylaczenie dane z ms9po400
         ' ======================================
         
         ' cudowne uproszczenie implementacji dzieki zmiennej typu slownik
+        push.gotopo400 = True
         fillTransitCollectionFromMs9po400 m, push, mcd
         
         ' ======================================
@@ -749,7 +754,9 @@ Private Function checkIsDouble(s As String) As Double
 
     s = Replace(s, ".", ",")
     
-    If Trim(s) = "" Then
+    If Not IsNumeric(s) Then
+        checkIsDouble = CDbl("0")
+    ElseIf Trim(s) = "" Then
         checkIsDouble = CDbl("0")
     Else
         checkIsDouble = CDbl(Trim(s))

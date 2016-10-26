@@ -145,6 +145,12 @@ Private Sub BtnRunDaily_Click()
     End If
     
     
+    ' wydaje mi sie ze brakuje tutaj synchro ilosci dni historii
+    ' ------------------------------------------------------------
+     ThisWorkbook.Sheets("register").Range("HOW_MANY_DAYS_FOR_PPUS0") = CLng(Me.ComboBoxHistoryLimit.Value)
+    ' ------------------------------------------------------------
+    
+    
     ThisWorkbook.Sheets("register").Range("LAYOUT_TYPE") = wybor_typu_layoutu
     ThisWorkbook.Sheets("register").Range("RUN_TYPE") = DAILY
     ThisWorkbook.Sheets("register").Range("START_TYPE") = FROM_THE_BEGINNING
@@ -262,6 +268,11 @@ Private Sub ComboBoxColorLayout_Change()
         Set item_on_layout_color_list = item_on_layout_color_list.Offset(1, 0)
     Loop Until Trim(item_on_layout_color_list) = ""
     
+End Sub
+
+Private Sub ComboBoxHistoryLimit_Change()
+    ThisWorkbook.Sheets("register").Range("HOW_MANY_DAYS_FOR_PPUS0") = _
+        Me.ComboBoxHistoryLimit.Value
 End Sub
 
 Private Sub UserForm_Initialize()

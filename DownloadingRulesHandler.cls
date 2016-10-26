@@ -188,7 +188,7 @@ End Sub
 Private Sub guziki_na_dol()
     DownloadingRulesForm.BtnAdd.Top = CLng(INIT_RULES_FORM_BTN_TOP) + CLng(overall_offset)
     DownloadingRulesForm.BtnRemove.Top = CLng(INIT_RULES_FORM_BTN_TOP) + CLng(overall_offset)
-    DownloadingRulesForm.BtnHide.Top = CLng(INIT_RULES_FORM_BTN_TOP) + CLng(overall_offset)
+    DownloadingRulesForm.BTNHide.Top = CLng(INIT_RULES_FORM_BTN_TOP) + CLng(overall_offset)
 End Sub
 
 Private Sub ustaw_wielkosc_calego_forma()

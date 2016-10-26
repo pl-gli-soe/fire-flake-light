@@ -1,6 +1,6 @@
 Attribute VB_Name = "ExportThisProjectMod"
 ' working great!
-Global Const REPO_PATH = "C:\WORKSPACE\macros\fire_flakes\LIGHT\THE 4th\repo\"
+Global Const REPO_PATH = "C:\WORKSPACE\macros\fire_flakes\LIGHT\repo\"
 
 Private Sub export_this_project()
     
